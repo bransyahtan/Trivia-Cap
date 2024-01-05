@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Image,
   ImageBackground,
@@ -8,11 +9,47 @@ import {
   TouchableOpacity,
   View,
 } from "react-native"
-import React from "react"
 import MyButton from "../components/Button"
 import TopUpButton from "../components/TopUpButton"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+interface UserInfo {
+  picture?: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+}
 
 export default function HomeScreen() {
+  const [user, setUser] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+    try {
+      const data = await AsyncStorage.getItem("user");
+      console.log(data);
+      if (data) {
+        const userData = JSON.parse(data) as UserInfo;
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error("Error getting user data:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("user");
+
+      setUser(null);
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <ImageBackground
       source={require("../../assets/images/bg1.png")}
@@ -48,13 +85,19 @@ export default function HomeScreen() {
           </View>
 
           <View style={{ marginTop: 80, alignItems: "center" }}>
-            <MyButton text="Play Game" background="#39A7FF" textColor="white" />
-            <MyButton text="Logout" background="#BE3144" textColor="white" />
+            <MyButton text="Play Game" background="#39A7FF" textColor="white"
+              navigateTo="Login"
+              />
+            <MyButton text="Logout" background="#BE3144" textColor="white" 
+              navigateTo="Login"
+              onPress={handleLogout}
+
+              />
           </View>
         </View>
       </ScrollView>
     </ImageBackground>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
