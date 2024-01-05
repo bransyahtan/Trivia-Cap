@@ -51,7 +51,7 @@ export default function LoginScreen() {
       console.log(result);
       if (result.type == "success") {
         getUserInfo(result?.authentication?.accessToken || "");
-        navigate.navigate("MainApp" as never);
+        navigate.navigate("SelectProfile" as never);
       }
     } else {
       // navigate.navigate("Home" as never);
