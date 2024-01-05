@@ -5,13 +5,14 @@ import HomeScreen from "../screen/HomeScreen"
 import ProfileScreen from "../screen/ProfileScreen"
 import ShopScreen from "../screen/ShopScreen"
 import LoginScreen from "../screen/LoginScreen"
+import LobyScreen from "../screen/LobyScreen"
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 
 const MainApp = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName="Home">
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Shop" component={ShopScreen} options={{ headerShown: false }} />
       <Tab.Screen
@@ -27,7 +28,12 @@ const Route = () => {
   return (
     <Stack.Navigator initialRouteName="MainApp">
       <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Loby" component={LobyScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   )
 }

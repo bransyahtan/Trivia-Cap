@@ -19,26 +19,11 @@ export default function LoginScreen() {
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
         <StatusBar />
         <View style={{ alignItems: "center" }}>
-          <View style={{ marginTop: 100 }}>
+          <View style={{ marginTop: 12 }}>
             <Image
-              source={require("../../assets/images/Logo.png")}
-              style={{ width: 200, height: 200 }}
+              source={require("../../assets/images/1.png")}
+              style={{ width: 500, height: 500 }}
             />
-          </View>
-
-          <View>
-            <Text
-              style={{
-                color: "white",
-                fontSize: 40,
-                fontWeight: "bold",
-                width: 224,
-                textAlign: "center",
-                marginTop: 30,
-              }}
-            >
-              Trivia Cap
-            </Text>
           </View>
 
           <View style={{ marginTop: 10, alignItems: "center" }}>
