@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages/home');
 });
 
 Route::get('/quizes', [QuizeController::class, 'index']);
@@ -29,3 +29,11 @@ Route::get('/test', function () {
         "message" => "Learn Laravel"
     ]);
 });
+
+// Route::get('/kuis', function () {
+//     return view('pages/kuis/kuis');
+// });
+
+// Route::get('/kuis/detail/{id}', function () {
+//     return view('pages/kuis/detail');
+// });
