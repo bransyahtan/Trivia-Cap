@@ -38,11 +38,11 @@ const MainApp = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Shop"
         component={ShopScreen}
         options={{ headerShown: false }}
-      /> */}
+      /> 
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
