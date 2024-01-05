@@ -6,7 +6,7 @@ import SelectProfileScreen from "../screen/SelectProfileScreen";
 import ShopScreen from "../screen/ShopScreen";
 import LoginScreen from "../screen/LoginScreen";
 import LobyScreen from "../screen/LobyScreen";
-import ProfileScreen from "../screen/ProfiileScreen";
+import ProfileScreen from "../screen/ProfileScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,7 +35,7 @@ const MainApp = () => {
 
 const Route = () => {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="MainApp">
       <Stack.Screen
         name="MainApp"
         component={MainApp}

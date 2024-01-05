@@ -13,6 +13,7 @@ import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
+import axios from "axios";
 
 interface UserInfo {
   picture?: string;
@@ -50,8 +51,19 @@ export default function LoginScreen() {
       const result = await promptAsync();
       console.log(result);
       if (result.type == "success") {
-        getUserInfo(result?.authentication?.accessToken || "");
-        navigate.navigate("SelectProfile" as never);
+        const user = await getUserInfo(
+          result?.authentication?.accessToken || ""
+        );
+        const response = await axios.post(
+          "http://192.168.18.188:8080/api/v1/user",
+          {
+            email: user.email,
+            avatar: user.picture,
+            name: user.name,
+          }
+        );
+        await AsyncStorage.setItem("user", JSON.stringify(response.data.data));
+        // navigate.navigate("SelectProfile" as never);
       }
     } else {
       // navigate.navigate("Home" as never);
@@ -71,7 +83,7 @@ export default function LoginScreen() {
     }
   };
 
-  const getUserInfo = async (token: string) => {
+  const getUserInfo = async (token: string): Promise<UserInfo> => {
     if (!token) return;
     try {
       const response = await fetch(
@@ -83,8 +95,8 @@ export default function LoginScreen() {
 
       const user = await response.json();
 
-      await AsyncStorage.setItem("user", JSON.stringify(user));
       setAuthInProgress(false);
+      return user;
     } catch (error) {
       console.log("Error fetching user info:", error);
       setAuthInProgress(false);
