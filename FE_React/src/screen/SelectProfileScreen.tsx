@@ -25,7 +25,7 @@ const data = [
   { id: 9, image: require("../../assets/avatar/avatar9.png") },
 ];
 
-export default function ProfileScreen() {
+export default function SelectProfileScreen() {
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => handleAvatarClick(item.id)}
@@ -37,7 +37,6 @@ export default function ProfileScreen() {
 
   const handleAvatarClick = (avatarId: number) => {
     console.log(`Avatar clicked: ${avatarId}`);
-    // Tambahkan logika atau pemrosesan tambahan sesuai kebutuhan
   };
 
   return (
@@ -62,7 +61,12 @@ export default function ProfileScreen() {
             <MyTextInput placeholder="Your Name" />
           </View>
           <View style={{ marginTop: 5, alignItems: "center" }}>
-            <MyButton text="Continue" background="#39A7FF" textColor="white" />
+            <MyButton
+              text="Continue"
+              background="#39A7FF"
+              textColor="white"
+              navigateTo="MainApp"
+            />
           </View>
         </View>
       </ScrollView>

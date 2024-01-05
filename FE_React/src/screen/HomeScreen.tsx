@@ -8,9 +8,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native"
-import MyButton from "../components/Button"
-import TopUpButton from "../components/TopUpButton"
+} from "react-native";
+import MyButton from "../components/Button";
+import TopUpButton from "../components/TopUpButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface UserInfo {
@@ -85,14 +85,19 @@ export default function HomeScreen() {
           </View>
 
           <View style={{ marginTop: 80, alignItems: "center" }}>
-            <MyButton text="Play Game" background="#39A7FF" textColor="white"
-              navigateTo="Login"
-              />
-            <MyButton text="Logout" background="#BE3144" textColor="white" 
+            <MyButton
+              text="Play Game"
+              background="#39A7FF"
+              textColor="white"
+              navigateTo="Lobby"
+            />
+            <MyButton
+              text="Logout"
+              background="#BE3144"
+              textColor="white"
               navigateTo="Login"
               onPress={handleLogout}
-
-              />
+            />
           </View>
         </View>
       </ScrollView>
