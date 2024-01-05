@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages/home');
 });
 
+Route::get('/kuis', function () {
+    return view('pages/kuis/kuis');
+});
 
-Route::get('/test', function () {
-    return response()->json([
-        'status' => "OK",
-        "message" => "Learn Laravel"
-    ]);
+Route::get('/kuis/detail/{id}', function () {
+    return view('pages/kuis/detail');
 });
