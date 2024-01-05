@@ -15,4 +15,30 @@ class QuizeController extends Controller
             "data" => $quizes
         ]);
     }
+
+    public function store()
+    {
+        $value = request()->validate([
+            'question' => 'required',
+            'a' => 'required',
+            'b' => 'required',
+            'c' => 'required',
+            'answer' => 'required',
+        ]);
+
+        Quiz::create($value);
+    }
+
+    public function create()
+    {
+        // return view('')
+    }
+
+    public function show($quize)
+    {
+    }
+
+    public function addView()
+    {
+    }
 }

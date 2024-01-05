@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuizeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/quizes', [QuizeController::class, 'index']);
+Route::get('/quizes/add', [QuizeController::class, 'create']);
+Route::post('/quizes/add', [QuizeController::class, 'store']);
 
 
 Route::get('/test', function () {
