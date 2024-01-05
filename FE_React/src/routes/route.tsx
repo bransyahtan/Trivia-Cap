@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screen/HomeScreen";
 import ProfileScreen from "../screen/ProfileScreen";
-import ShopScreen from "../screen/ShopScreen";
+// import ShopScreen from "../screen/ShopScreen";
 import LoginScreen from "../screen/LoginScreen";
 
 const Stack = createStackNavigator();
@@ -17,11 +17,11 @@ const MainApp = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Shop"
         component={ShopScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
