@@ -2,9 +2,11 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screen/HomeScreen";
-import ProfileScreen from "../screen/ProfileScreen";
+import SelectProfileScreen from "../screen/SelectProfileScreen";
 import ShopScreen from "../screen/ShopScreen";
 import LoginScreen from "../screen/LoginScreen";
+import LobyScreen from "../screen/LobyScreen";
+import ProfileScreen from "../screen/ProfiileScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,6 +44,16 @@ const Route = () => {
       <Stack.Screen
         name="Login"
         component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Lobby"
+        component={LobyScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SelectProfile"
+        component={SelectProfileScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   FlatList,
   Image,
@@ -9,9 +9,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native"
-import MyTextInput from "../components/FormInput"
-import MyButton from "../components/Button"
+} from "react-native";
+import MyTextInput from "../components/FormInput";
+import MyButton from "../components/Button";
 
 const data = [
   { id: 1, image: require("../../assets/avatar/avatar1.png") },
@@ -23,9 +23,9 @@ const data = [
   { id: 7, image: require("../../assets/avatar/avatar7.png") },
   { id: 8, image: require("../../assets/avatar/avatar8.png") },
   { id: 9, image: require("../../assets/avatar/avatar9.png") },
-]
+];
 
-export default function ProfileScreen() {
+export default function SelectProfileScreen() {
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => handleAvatarClick(item.id)}
@@ -33,12 +33,11 @@ export default function ProfileScreen() {
     >
       <Image source={item.image} style={styles.avatarImage} />
     </TouchableOpacity>
-  )
+  );
 
   const handleAvatarClick = (avatarId: number) => {
-    console.log(`Avatar clicked: ${avatarId}`)
-    // Tambahkan logika atau pemrosesan tambahan sesuai kebutuhan
-  }
+    console.log(`Avatar clicked: ${avatarId}`);
+  };
 
   return (
     <ImageBackground
@@ -62,12 +61,17 @@ export default function ProfileScreen() {
             <MyTextInput placeholder="Your Name" />
           </View>
           <View style={{ marginTop: 5, alignItems: "center" }}>
-            <MyButton text="Continue" background="#39A7FF" textColor="white" />
+            <MyButton
+              text="Continue"
+              background="#39A7FF"
+              textColor="white"
+              navigateTo="MainApp"
+            />
           </View>
         </View>
       </ScrollView>
     </ImageBackground>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -82,4 +86,4 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginBottom: 8,
   },
-})
+});

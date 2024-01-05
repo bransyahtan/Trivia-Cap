@@ -51,7 +51,7 @@ export default function LoginScreen() {
       console.log(result);
       if (result.type == "success") {
         getUserInfo(result?.authentication?.accessToken || "");
-        navigate.navigate("MainApp" as never);
+        navigate.navigate("SelectProfile" as never);
       }
     } else {
       // navigate.navigate("Home" as never);
@@ -93,7 +93,7 @@ export default function LoginScreen() {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/bg.png")}
+      source={require("../../assets/images/bg1.png")}
       style={{ flex: 1, opacity: 0.95 }}
     >
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>

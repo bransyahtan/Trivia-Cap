@@ -1,4 +1,6 @@
-import React from "react"
+import { useNavigation } from "@react-navigation/core";
+import React from "react";
+import { FaAnglesLeft } from "react-icons/fa6";
 import {
   FlatList,
   Image,
@@ -7,16 +9,18 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
-} from "react-native"
+} from "react-native";
 
 const data = [
   { id: 1, name: "User 1", avatar: require("../../assets/avatar/avatar1.png") },
   { id: 2, name: "User 2", avatar: require("../../assets/avatar/avatar2.png") },
   { id: 3, name: "com", avatar: require("../../assets/avatar/avatar-bot.png") },
-]
+];
 
 export default function LobyScreen() {
+  const navigation = useNavigation();
   const renderItem = ({ item }: any) => (
     <View style={styles.table}>
       <View style={styles.avatarContainer}>
@@ -24,7 +28,7 @@ export default function LobyScreen() {
         <Text style={styles.avatarName}>{item.name}</Text>
       </View>
     </View>
-  )
+  );
 
   return (
     <ImageBackground
@@ -34,6 +38,19 @@ export default function LobyScreen() {
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
         <StatusBar />
         <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("MainApp" as never);
+            }}
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 1,
+            }}
+          >
+            <FaAnglesLeft color="white" fontSize={25} />
+          </TouchableOpacity>
           <View style={{ marginTop: 52 }}>
             <View style={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <Text
@@ -81,7 +98,7 @@ export default function LobyScreen() {
         </View>
       </ScrollView>
     </ImageBackground>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -104,4 +121,4 @@ const styles = StyleSheet.create({
   avatarName: {
     color: "white",
   },
-})
+});
