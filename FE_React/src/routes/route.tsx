@@ -7,9 +7,28 @@ import ShopScreen from "../screen/ShopScreen";
 import LoginScreen from "../screen/LoginScreen";
 import LobyScreen from "../screen/LobyScreen";
 import ProfileScreen from "../screen/ProfileScreen";
+import EditProfileScreen from "../screen/EditProfileScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const ProfileStack = createStackNavigator();
+
+const ProfileStackNavigator = () => {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{ headerShown: false }}
+      />
+    </ProfileStack.Navigator>
+  );
+};
 
 const MainApp = () => {
   return (
@@ -26,7 +45,7 @@ const MainApp = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStackNavigator}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>

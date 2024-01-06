@@ -62,7 +62,9 @@ export default function LoginScreen() {
             name: user.name,
           }
         );
-        await AsyncStorage.setItem("user", JSON.stringify(response.data.data));
+
+        console.log(response.data);
+        // await AsyncStorage.setItem("user", JSON.stringify(response.data.data));
         // navigate.navigate("SelectProfile" as never);
       }
     } else {
