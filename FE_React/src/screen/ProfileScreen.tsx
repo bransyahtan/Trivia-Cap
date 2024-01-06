@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Image,
-  ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -21,7 +20,7 @@ interface UserInfo {
   name: string;
 }
 
-export default function HomeScreen() {
+export default function ProfileScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState<UserInfo | null>(null);
 
@@ -42,25 +41,14 @@ export default function HomeScreen() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem("user");
-
-      setUser(null);
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
   const handleTopUp = () => {
     navigation.navigate("Shop" as never);
     console.log("aaaa");
   };
 
   return (
-    <ImageBackground
-      source={require("../../assets/images/bg1.png")}
-      style={{ flex: 1, opacity: 0.95 }}
+    <View
+      style={{ flex: 1, backgroundColor: "black", justifyContent: "center" }}
     >
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
@@ -73,7 +61,7 @@ export default function HomeScreen() {
             style={{ width: 430, height: 130, borderRadius: 65, marginTop: 30 }}
           />
 
-          <View style={{ marginTop: 20 }}>
+          <View style={{ marginTop: 20, alignItems: "center" }}>
             <Image
               source={require("../../assets/avatar/avatar1.png")}
               style={{
@@ -89,24 +77,59 @@ export default function HomeScreen() {
                 fontSize: 25,
                 fontWeight: "bold",
                 textAlign: "center",
+                marginTop: 10,
               }}
             >
               Antonio Berewendo
             </Text>
           </View>
 
-          <View style={{ marginTop: 80, alignItems: "center" }}>
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: "row",
+              justifyContent: "center",
+              borderWidth: 1,
+              borderRadius: 8,
+              borderColor: "white",
+              overflow: "hidden",
+            }}
+          >
+            <View style={styles.statBox}>
+              <Text style={styles.statText}>PLAY</Text>
+              <Text style={styles.statText}>3</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.statText}>WINS</Text>
+              <Text style={styles.statText}>2</Text>
+            </View>
+          </View>
+
+          <View style={{ marginTop: 60, alignItems: "center" }}>
             <MyButton
               text="Edit Profile"
-              background="#39A7FF"
+              background="purple"
               textColor="white"
               navigateTo="EditProfile"
             />
           </View>
         </View>
       </ScrollView>
-    </ImageBackground>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  statBox: {
+    backgroundColor: "transparent",
+    padding: 10,
+    marginHorizontal: 10,
+    borderRadius: 8,
+  },
+  statText: {
+    color: "white",
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+});
