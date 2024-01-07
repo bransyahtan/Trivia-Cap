@@ -21,6 +21,8 @@ Route::get('/', function () {
 Route::get('/quizes', [QuizeController::class, 'index']);
 Route::get('/quizes/add', [QuizeController::class, 'create']);
 Route::post('/quizes/add', [QuizeController::class, 'store']);
+Route::get('/quizes/{id}', [QuizeController::class, 'show']);
+Route::delete('/quizes/{id}', [QuizeController::class, 'destroy']);
 
 
 Route::get('/test', function () {
@@ -30,9 +32,6 @@ Route::get('/test', function () {
     ]);
 });
 
-// Route::get('/kuis', function () {
-//     return view('pages/kuis/kuis');
-// });
 
 // Route::get('/kuis/detail/{id}', function () {
 //     return view('pages/kuis/detail');
