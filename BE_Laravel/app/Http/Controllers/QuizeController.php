@@ -58,4 +58,13 @@ class QuizeController extends Controller
         Quiz::destroy($id);
         return redirect('/quizes')->with('success-delete', 'Quiz has been deleted');
     }
+
+    public function findAll()
+    {
+        $quizes = Quiz::all();
+        return response()->json([
+            'status' => 'OK',
+            'data' => $quizes
+        ]);
+    }
 }
