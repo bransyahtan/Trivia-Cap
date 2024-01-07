@@ -10,22 +10,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MyTextInput from "../components/FormInput";
-import MyButton from "../components/Button";
 
-const data = [
-  { id: 1, image: require("../../assets/avatar/avatar1.png") },
-  { id: 2, image: require("../../assets/avatar/avatar2.png") },
-  { id: 3, image: require("../../assets/avatar/avatar3.png") },
-  { id: 4, image: require("../../assets/avatar/avatar4.png") },
-  { id: 5, image: require("../../assets/avatar/avatar5.png") },
-  { id: 6, image: require("../../assets/avatar/avatar6.png") },
-  { id: 7, image: require("../../assets/avatar/avatar7.png") },
-  { id: 8, image: require("../../assets/avatar/avatar8.png") },
-  { id: 9, image: require("../../assets/avatar/avatar9.png") },
-];
+import MyButton from "../components/Button";
+import TopUpButton from "../components/TopUpButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/core";
+
+interface UserInfo {
+  picture?: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+}
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
+  const [user, setUser] = useState<UserInfo | null>(null);
+
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => handleAvatarClick(item.id)}
@@ -37,49 +38,114 @@ export default function ProfileScreen() {
 
   const handleAvatarClick = (avatarId: number) => {
     console.log(`Avatar clicked: ${avatarId}`);
-    // Tambahkan logika atau pemrosesan tambahan sesuai kebutuhan
   };
 
+  const getUser = async () => {
+    try {
+      const data = await AsyncStorage.getItem("user");
+      console.log(data);
+      if (data) {
+        const userData = JSON.parse(data) as UserInfo;
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error("Error getting user data:", error);
+    }
+  };
+
+  const handleTopUp = () => {
+    navigation.navigate("Shop" as never);
+    console.log("aaaa");
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
-    <ImageBackground
-      source={require("../../assets/images/bg1.png")}
-      style={{ flex: 1, opacity: 0.95 }}
+    <View
+      style={{ flex: 1, backgroundColor: "black", justifyContent: "center" }}
     >
-      <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
+      <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
+
+        <TopUpButton onPress={handleTopUp} />
+
         <View style={{ alignItems: "center" }}>
-          <View>
-            <FlatList
-              data={data}
-              numColumns={3}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id.toString()}
-              contentContainerStyle={{ marginTop: 30 }}
+          <Image
+            source={require("../../assets/images/2.png")}
+            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 30 }}
+          />
+
+          <View style={{ marginTop: 20, alignItems: "center" }}>
+            <Image
+              source={require("../../assets/avatar/avatar1.png")}
+              style={{
+                width: 130,
+                height: 130,
+                borderRadius: 65,
+                alignSelf: "center",
+              }}
             />
+            <Text
+              style={{
+                color: "white",
+                fontSize: 25,
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: 10,
+              }}
+            >
+              Antonio Berewendo
+            </Text>
           </View>
 
-          <View style={{ marginTop: 50 }}>
-            <MyTextInput placeholder="Your Name" />
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: "row",
+              justifyContent: "center",
+              borderWidth: 1,
+              borderRadius: 8,
+              borderColor: "white",
+              overflow: "hidden",
+            }}
+          >
+            <View style={styles.statBox}>
+              <Text style={styles.statText}>PLAY</Text>
+              <Text style={styles.statText}>3</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.statText}>WINS</Text>
+              <Text style={styles.statText}>2</Text>
+            </View>
           </View>
-          <View style={{ marginTop: 5, alignItems: "center" }}>
-            <MyButton text="Continue" background="#39A7FF" textColor="white" />
+
+          <View style={{ marginTop: 60, alignItems: "center" }}>
+            <MyButton
+              text="Edit Profile"
+              background="purple"
+              textColor="white"
+              navigateTo="EditProfile"
+            />
           </View>
         </View>
       </ScrollView>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  avatarContainer: {
-    flex: 1,
-    alignItems: "center",
-    margin: 8,
+  statBox: {
+    backgroundColor: "transparent",
+    padding: 10,
+    marginHorizontal: 10,
+    borderRadius: 8,
   },
-  avatarImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: 8,
+  statText: {
+    color: "white",
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
