@@ -12,6 +12,7 @@ import {
 import MyButton from "../components/Button";
 import TopUpButton from "../components/TopUpButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/core";
 
 interface UserInfo {
   picture?: string;
@@ -21,6 +22,7 @@ interface UserInfo {
 }
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const [user, setUser] = useState<UserInfo | null>(null);
 
   useEffect(() => {
@@ -50,6 +52,11 @@ export default function HomeScreen() {
     }
   };
 
+  const handleTopUp = () => {
+    navigation.navigate("Shop" as never);
+    console.log("aaaa");
+  };
+
   return (
     <ImageBackground
       source={require("../../assets/images/bg1.png")}
@@ -58,7 +65,7 @@ export default function HomeScreen() {
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
 
-        <TopUpButton />
+        <TopUpButton onPress={handleTopUp} />
 
         <View style={{ alignItems: "center" }}>
           <Image

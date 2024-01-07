@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 const ShopScreen = () => {
   return (
     <View>
-      <Text>ShopScreen</Text>
+      <Text>test shope screen ya ni</Text>
     </View>
   );
 };

@@ -1,7 +1,8 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import React from "react"
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { useNavigation } from "@react-navigation/core";
 
-export default function TopUpButton() {
+export default function TopUpButton({ onPress }: any) {
   return (
     <View>
       <TouchableOpacity
@@ -20,8 +21,13 @@ export default function TopUpButton() {
           source={require("../../assets/images/diamond.png")}
           style={{ width: 20, height: 20, marginRight: 5 }}
         />
-        <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>55</Text>
+        <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+          55
+        </Text>
         <TouchableOpacity
+          onPress={() => {
+            console.log("allahuakbar BOOM");
+          }}
           style={{
             marginLeft: 10,
             backgroundColor: "#16FF00",
@@ -43,7 +49,7 @@ export default function TopUpButton() {
         </TouchableOpacity>
       </TouchableOpacity>
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

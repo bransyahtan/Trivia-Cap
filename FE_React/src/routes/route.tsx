@@ -9,9 +9,28 @@ import { Ionicons } from "@expo/vector-icons"; // Import icons from Expo
 import SelectProfileScreen from "../screen/SelectProfileScreen";
 import ShopScreen from "../screen/ShopScreen";
 import LobyScreen from "../screen/LobyScreen";
+import EditProfileScreen from "../screen/EditProfileScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const ProfileStack = createStackNavigator();
+
+const ProfileStackNavigator = () => {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{ headerShown: false }}
+      />
+    </ProfileStack.Navigator>
+  );
+};
 
 const MainApp = () => {
   return (
@@ -45,7 +64,7 @@ const MainApp = () => {
       /> */}
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStackNavigator}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>
@@ -54,7 +73,7 @@ const MainApp = () => {
 
 const Route = () => {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="MainApp">
       <Stack.Screen
         name="MainApp"
         component={MainApp}
