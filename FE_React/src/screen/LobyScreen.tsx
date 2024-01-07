@@ -28,13 +28,24 @@ export default function LobyScreen() {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/bg1.png")}
+      source={require("../../assets/images/bg_game.png")}
       style={{ flex: 1, opacity: 0.95 }}
     >
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
         <StatusBar />
+
+        <Image source={require("../../assets/images/2.png")} style={[styles.iconText]} />
+
+        <View style={[styles.score]}>
+          <Image
+            source={require("../../assets/images/score.png")}
+            style={{ width: 40, height: 40 }}
+          />
+          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>100</Text>
+        </View>
+
         <View style={{ alignItems: "center" }}>
-          <View style={{ marginTop: 52 }}>
+          <View style={{ marginTop: 80 }}>
             <View style={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <Text
                 style={{
@@ -103,5 +114,27 @@ const styles = StyleSheet.create({
   },
   avatarName: {
     color: "white",
+  },
+  iconText: {
+    width: 180,
+    height: 180,
+    marginRight: 5,
+    position: "absolute",
+    top: -55,
+    left: -30,
+    zIndex: 1,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  score: {
+    marginRight: 5,
+    position: "absolute",
+    top: 10,
+    left: 150,
+    zIndex: 1,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
   },
 })

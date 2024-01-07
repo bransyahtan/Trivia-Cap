@@ -6,6 +6,8 @@ import ProfileScreen from "../screen/ProfileScreen"
 import ShopScreen from "../screen/ShopScreen"
 import LoginScreen from "../screen/LoginScreen"
 import LobyScreen from "../screen/LobyScreen"
+import PlayScreen from "../screen/PlayScreen"
+import CongratsScreen from "../screen/CongratsScreen"
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -34,6 +36,12 @@ const Route = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Loby" component={LobyScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Play" component={PlayScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="Congrats"
+        component={CongratsScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   )
 }

@@ -1,14 +1,14 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React from "react"
 
-export default function TopUpButton() {
+export default function TopUpButton({onPress}:any) {
   return (
     <View>
       <TouchableOpacity
         style={{
           position: "absolute",
-          top: 10,
-          right: 10,
+          top: 20,
+          right: 15,
           zIndex: 1,
           backgroundColor: "rgba(0,0,0,0.5)",
           borderRadius: 10,
@@ -22,6 +22,7 @@ export default function TopUpButton() {
         />
         <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>55</Text>
         <TouchableOpacity
+          onPress={onPress}
           style={{
             marginLeft: 10,
             backgroundColor: "#16FF00",
