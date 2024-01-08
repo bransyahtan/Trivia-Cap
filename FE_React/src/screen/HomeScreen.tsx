@@ -16,7 +16,7 @@ export default function HomeScreen() {
   const navigation = useNavigation()
 
   const LoginNavigate = () => {
-    navigation.navigate("Login")
+    navigation.navigate("Login" as never)
   }
 
   return (
