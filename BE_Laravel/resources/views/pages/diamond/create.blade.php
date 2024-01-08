@@ -8,17 +8,16 @@
 
 @section('content')
     @include('components.sidebar')
-
     <div class="p-4 sm:ml-64 min-h-screen bg-slate-300">
         <div class="p-5 bg-white rounded-lg dark:border-gray-700">
-            <h1 class="text-4xl font-bold ">Add Avatar</h1>
+            <h1 class="text-4xl font-bold ">Add Diamond</h1>
             <div class="text-blue-500 my-2">
-                <a href="/avatars" class="hover:underline">Avatar</a>
+                <a href="/diamonds" class="hover:underline">Diamond</a>
                 <span>/</span>
                 <a href="#" class="hover:underline">Add</a>
             </div>
 
-            <form method="POST" action="/avatars/add" enctype="multipart/form-data">
+            <form method="POST" action="/diamonds/add">
                 @csrf
                 @if ($errors->any())
                     <div class="alert alert-danger flex items-center gap-5">
@@ -31,47 +30,23 @@
                     <tbody class="">
                         <tr>
                             <td class="w-1/6 text-right">
-                                <label for="name" class="font-semibold text-2xl">Name</label>
-                            </td>
-                            <td class="pt-5 pr-5">:</td>
-                            <td class="w-5/6">
-                                <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                    class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200"></input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="w-1/6 text-right pt-5">
                                 <label for="price" class="font-semibold text-2xl">Price</label>
                             </td>
                             <td class="pt-5 pr-5">:</td>
-                            <td class="w-5/6 pt-5">
+                            <td class="w-5/6">
                                 <input type="text" name="price" id="price" value="{{ old('price') }}"
                                     class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200"></input>
                             </td>
                         </tr>
-
                         <tr>
                             <td class="w-1/6 text-right pt-5">
-                                <label for="image" class="font-semibold text-2xl">Image</label>
+                                <label for="amount" class="font-semibold text-2xl">Amount</label>
                             </td>
                             <td class="pt-5 pr-5">:</td>
                             <td class="w-5/6 pt-5">
-                                <input type="file" name="image" id="image"
+                                <input type="text" name="amount" id="amount" value="{{ old('amount') }}"
                                     class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200"></input>
                             </td>
-                        </tr>
-                        <tr>
-                            <td class="w-1/6 text-right pt-5">
-                                <label for="premium" class="font-semibold text-2xl">Premium</label>
-                            </td>
-                            <td class="pt-5 pr-5">:</td>
-                            <td class="w-5/6 pt-5">
-                                <input type="checkbox" name="isPremium"
-                                    class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200"></input>
-                            </td>
-                        </tr>
-                        <tr>
-
                         </tr>
                     </tbody>
                 </table>
