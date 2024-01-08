@@ -110,13 +110,13 @@ export default function LoginScreen() {
       source={require("../../assets/images/bg1.png")}
       style={{ flex: 1, opacity: 0.95 }}
     >
-      <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
+      <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
         <View style={{ alignItems: "center" }}>
           <View style={{ marginTop: 12 }}>
             <Image
               source={require("../../assets/images/1.png")}
-              style={{ width: 500, height: 500 }}
+              style={{ width: 480, height: 480 }}
             />
           </View>
 

@@ -4,12 +4,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screen/HomeScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 // import ShopScreen from "../screen/ShopScreen";
-import LoginScreen from "../screen/LoginScreen";
 import { Ionicons } from "@expo/vector-icons"; // Import icons from Expo
 import SelectProfileScreen from "../screen/SelectProfileScreen";
 import ShopScreen from "../screen/ShopScreen";
 import LobyScreen from "../screen/LobyScreen";
 import EditProfileScreen from "../screen/EditProfileScreen";
+import LoginScreen from "../screen/LoginScreen";
+import PlayScreen from "../screen/PlayScreen";
+import CongratsScreen from "../screen/CongratsScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,7 +63,7 @@ const MainApp = () => {
         name="Shop"
         component={ShopScreen}
         options={{ headerShown: false }}
-      /> 
+      />
       <Tab.Screen
         name="Profile"
         component={ProfileStackNavigator}
@@ -89,9 +91,15 @@ const Route = () => {
         component={LobyScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="SelectProfile" component={SelectProfileScreen} />
       <Stack.Screen
-        name="SelectProfile"
-        component={SelectProfileScreen}
+        name="Play"
+        component={PlayScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Congrats"
+        component={CongratsScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

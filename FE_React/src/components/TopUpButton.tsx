@@ -8,8 +8,8 @@ export default function TopUpButton({ onPress }: any) {
       <TouchableOpacity
         style={{
           position: "absolute",
-          top: 10,
-          right: 10,
+          top: 20,
+          right: 15,
           zIndex: 1,
           backgroundColor: "rgba(0,0,0,0.5)",
           borderRadius: 10,
@@ -25,9 +25,7 @@ export default function TopUpButton({ onPress }: any) {
           55
         </Text>
         <TouchableOpacity
-          onPress={() => {
-            console.log("allahuakbar BOOM");
-          }}
+          onPress={onPress}
           style={{
             marginLeft: 10,
             backgroundColor: "#16FF00",
