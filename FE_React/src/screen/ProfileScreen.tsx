@@ -55,7 +55,7 @@ export default function ProfileScreen() {
 
   const handleTopUp = () => {
     navigation.navigate("Shop" as never);
-    console.log("aaaa");
+    console.log("whyyy boommmmm");
   };
 
   useEffect(() => {
