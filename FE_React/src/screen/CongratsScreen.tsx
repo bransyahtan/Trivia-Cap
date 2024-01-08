@@ -15,7 +15,7 @@ export default function CongratsScreen() {
   const navigation = useNavigation()
 
   const LoginNavigate = () => {
-    navigation.navigate("Login")
+    navigation.navigate("Login" as never)
   }
 
   return (
