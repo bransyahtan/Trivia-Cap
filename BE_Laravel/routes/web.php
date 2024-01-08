@@ -35,3 +35,7 @@ Route::delete('/avatars/{id}', [AvatarController::class, 'destroy']);
 
 // API
 Route::get('/api/quizes', [QuizeController::class, "findAll"]);
+Route::get('/api/quizes/{id}', [QuizeController::class, "findById"]);
+
+Route::get('/api/avatars', [AvatarController::class, "findAll"]);
+Route::get('/api/avatars/{id}', [AvatarController::class, "findById"]);

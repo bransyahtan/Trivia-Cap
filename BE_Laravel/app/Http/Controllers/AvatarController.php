@@ -50,4 +50,22 @@ class AvatarController extends Controller
         Avatar::destroy($id);
         return redirect('/avatars')->with('success-delete', 'Avatars has been deleted');
     }
+
+    public function findAll()
+    {
+        $avatars = Avatar::all();
+        return response()->json([
+            'status' => 'OK',
+            'data' => $avatars
+        ]);
+    }
+
+    public function findById(string $id)
+    {
+        $avatar = Avatar::findById($id);
+        return response()->json([
+            'status' => 'OK',
+            'data' => $avatar
+        ]);
+    }
 }

@@ -67,4 +67,13 @@ class QuizeController extends Controller
             'data' => $quizes
         ]);
     }
+
+    public function findById(string $id)
+    {
+        $quizes = Quiz::findById($id);
+        return response()->json([
+            'status' => 'OK',
+            'data' => $quizes
+        ]);
+    }
 }
