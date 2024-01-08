@@ -35,7 +35,7 @@
                             </td>
                             <td class="pt-5 pr-5">:</td>
                             <td class="w-5/6">
-                                <textarea type="text" name="question" id="question"
+                                <textarea type="text" name="question" id="question" value="{{ old('question') }}"
                                     class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200 resize-y"></textarea>
                             </td>
                         </tr>
@@ -45,7 +45,7 @@
                             </td>
                             <td class="pt-5 pr-5">:</td>
                             <td class="w-5/6 pt-5">
-                                <input type="text" name="a" id="a"
+                                <input type="text" name="a" id="a" value="{{ old('a') }}"
                                     class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200"></input>
                             </td>
                         </tr>
@@ -55,7 +55,7 @@
                             </td>
                             <td class="pt-5 pr-5">:</td>
                             <td class="w-5/6 pt-5">
-                                <input type="text" name="b" id="b"
+                                <input type="text" name="b" id="b" value="{{ old('b') }}"
                                     class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200"></input>
                             </td>
                         </tr>
@@ -65,7 +65,7 @@
                             </td>
                             <td class="pt-5 pr-5">:</td>
                             <td class="w-5/6 pt-5">
-                                <input type="text" name="c" id="c"
+                                <input type="text" name="c" id="c" value="{{ old('c') }}"
                                     class="block outline-none focus:outline-none bg-gray-200 py-1 px-3 rounded-lg border border-gray-400 shadow w-full focus:ring focus:ring-purple-200"></input>
                             </td>
                         </tr>

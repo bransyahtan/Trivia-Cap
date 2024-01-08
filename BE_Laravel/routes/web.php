@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\QuizeController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,13 @@ Route::get('/quizes/add', [QuizeController::class, 'create']);
 Route::post('/quizes/add', [QuizeController::class, 'store']);
 Route::get('/quizes/{id}', [QuizeController::class, 'show']);
 Route::delete('/quizes/{id}', [QuizeController::class, 'destroy']);
+
+Route::get('/avatars', [AvatarController::class, 'index']);
+Route::get('/avatars/add', [AvatarController::class, 'create']);
+Route::post('/avatars/add', [AvatarController::class, 'store']);
+Route::get('/avatars/{id}', [AvatarController::class, 'show']);
+Route::delete('/avatars/{id}', [AvatarController::class, 'destroy']);
+
 
 // API
 Route::get('/api/quizes', [QuizeController::class, "findAll"]);
