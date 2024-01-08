@@ -12,6 +12,7 @@ import EditProfileScreen from "../screen/EditProfileScreen";
 import LoginScreen from "../screen/LoginScreen";
 import PlayScreen from "../screen/PlayScreen";
 import CongratsScreen from "../screen/CongratsScreen";
+import Leaderboard from "../screen/LeaderboardScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -20,12 +21,24 @@ const ProfileStack = createStackNavigator();
 const ProfileStackNavigator = () => {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
-      />
-      <ProfileStack.Screen
+      <Tab.Navigator initialRouteName="Profile">
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Shop"
+          component={ShopScreen}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+      </Tab.Navigator>
+      <Tab.Screen
         name="EditProfile"
         component={EditProfileScreen}
         options={{ headerShown: false }}
@@ -100,6 +113,11 @@ const Route = () => {
       <Stack.Screen
         name="Congrats"
         component={CongratsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Leaderboard"
+        component={Leaderboard}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
