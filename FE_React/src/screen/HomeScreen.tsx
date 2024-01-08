@@ -5,14 +5,20 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native"
 import React from "react"
 import MyButton from "../components/Button"
 import TopUpButton from "../components/TopUpButton"
+import { useNavigation } from "@react-navigation/native"
 
 export default function HomeScreen() {
+  const navigation = useNavigation()
+
+  const LoginNavigate = () => {
+    navigation.navigate("Login")
+  }
+
   return (
     <ImageBackground
       source={require("../../assets/images/bg1.png")}
@@ -21,7 +27,7 @@ export default function HomeScreen() {
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
 
-        <TopUpButton />
+        <TopUpButton onPress={LoginNavigate} />
 
         <View style={{ alignItems: "center" }}>
           <Image
