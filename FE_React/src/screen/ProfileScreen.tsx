@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -27,18 +27,18 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState<UserInfo | null>(null);
 
-  const renderItem = ({ item }: any) => (
-    <TouchableOpacity
-      onPress={() => handleAvatarClick(item.id)}
-      style={styles.avatarContainer}
-    >
-      <Image source={item.image} style={styles.avatarImage} />
-    </TouchableOpacity>
-  );
+  // const renderItem = ({ item }: any) => (
+  //   <TouchableOpacity
+  //     onPress={() => handleAvatarClick(item.id)}
+  //     style={styles.avatarContainer}
+  //   >
+  //     <Image source={item.image} style={styles.avatarImage} />
+  //   </TouchableOpacity>
+  // );
 
-  const handleAvatarClick = (avatarId: number) => {
-    console.log(`Avatar clicked: ${avatarId}`);
-  };
+  // const handleAvatarClick = (avatarId: number) => {
+  //   console.log(`Avatar clicked: ${avatarId}`);
+  // };
 
   const getUser = async () => {
     try {
@@ -55,7 +55,7 @@ export default function ProfileScreen() {
 
   const handleTopUp = () => {
     navigation.navigate("Shop" as never);
-    console.log("aaaa");
+    console.log("whyyy boommmmm");
   };
 
   useEffect(() => {
@@ -147,5 +147,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
+  },
+  avatarContainer: {
+    flex: 1,
+    alignItems: "center",
+    margin: 8,
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 8,
   },
 });
