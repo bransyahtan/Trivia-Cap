@@ -22,8 +22,11 @@ const ShoppingPanel: React.FC = () => {
       <StatusBar />
       <TopUpButton />
       <View style={styles.container}>
-        <Text style={styles.title}>Shopping Panel</Text>
-        <View style={styles.cardsContainer}>
+      <Image
+        source={require('../../assets/images/shop.png')} // 
+        style={styles.image}
+      />    
+          <View style={styles.cardsContainer}>
           <View style={styles.cardWrapper}>
             <DiamondShopCard />
           </View>
@@ -57,8 +60,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardWrapper: {
+    flexDirection: "row",
     width: "45%",
     alignItems: "center",
+  },
+  image: {
+    width: 300, 
+    height: 300,
+    marginTop: -80,
   },
 });
 
