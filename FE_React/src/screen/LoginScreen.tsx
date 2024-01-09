@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
 import axios from "axios";
+import { API, BASE_URL } from "../utils/api";
 
 interface UserInfo {
   picture?: string;
@@ -54,14 +55,11 @@ export default function LoginScreen() {
         const user = await getUserInfo(
           result?.authentication?.accessToken || ""
         );
-        const response = await axios.post(
-          "http://192.168.18.188:8080/api/v1/user",
-          {
-            email: user.email,
-            avatar: user.picture,
-            name: user.name,
-          }
-        );
+        const response = await API.post("/api/v1/user", {
+          email: user.email,
+          avatar: user.picture,
+          name: user.name,
+        });
 
         console.log(response.data);
         // await AsyncStorage.setItem("user", JSON.stringify(response.data.data));
