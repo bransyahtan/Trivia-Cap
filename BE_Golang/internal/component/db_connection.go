@@ -9,22 +9,23 @@ import (
 )
 
 func GetDataBaseConnection(cnf *config.Config) *gorm.DB {
-
+	
 	dsn := fmt.Sprintf("host=%s "+
 		"port=%s "+
 		"user=%s "+
 		"password=%s "+
 		"dbname=%s "+
 		"sslmode=disable", cnf.Database.Host, cnf.Database.Port, cnf.Database.User, cnf.Database.Password, cnf.Database.Name)
+	
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
 	}
-
+	
 	err = migrate(db)
 	if err != nil {
 		log.Fatalln(err)
 	}
-
+	
 	return db
 }

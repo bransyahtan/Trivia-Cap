@@ -4,7 +4,9 @@ type Config struct {
 	Server   Server
 	Database Database
 	//Cloudinary Cloudinary
-	//SecretKey  SecretKey
+	SecretKey  SecretKey
+	Midtrans   Midtrans
+	URLLARAVEL URLLARAVEL
 }
 
 type Server struct {
@@ -28,4 +30,13 @@ type Cloudinary struct {
 	CloudName string
 	ApiKey    string
 	ApiSecret string
+}
+
+type Midtrans struct {
+	Key    string
+	IsProd bool
+}
+
+type URLLARAVEL struct {
+	URL string
 }
