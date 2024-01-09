@@ -15,17 +15,17 @@ import MyButton from "../components/Button";
 import { API } from "../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const data = [
-  { id: 1, image: require("../../assets/avatar/avatar1.png") },
-  { id: 2, image: require("../../assets/avatar/avatar2.png") },
-  { id: 3, image: require("../../assets/avatar/avatar3.png") },
-  { id: 4, image: require("../../assets/avatar/avatar4.png") },
-  { id: 5, image: require("../../assets/avatar/avatar5.png") },
-  { id: 6, image: require("../../assets/avatar/avatar6.png") },
-  { id: 7, image: require("../../assets/avatar/avatar7.png") },
-  { id: 8, image: require("../../assets/avatar/avatar8.png") },
-  { id: 9, image: require("../../assets/avatar/avatar9.png") },
-];
+// const data = [
+//   { id: 1, image: require("../../assets/avatar/avatar1.png") },
+//   { id: 2, image: require("../../assets/avatar/avatar2.png") },
+//   { id: 3, image: require("../../assets/avatar/avatar3.png") },
+//   { id: 4, image: require("../../assets/avatar/avatar4.png") },
+//   { id: 5, image: require("../../assets/avatar/avatar5.png") },
+//   { id: 6, image: require("../../assets/avatar/avatar6.png") },
+//   { id: 7, image: require("../../assets/avatar/avatar7.png") },
+//   { id: 8, image: require("../../assets/avatar/avatar8.png") },
+//   { id: 9, image: require("../../assets/avatar/avatar9.png") },
+// ];
 
 export default function SelectProfileScreen() {
   const [avatar, setAvatar] = useState([]);
