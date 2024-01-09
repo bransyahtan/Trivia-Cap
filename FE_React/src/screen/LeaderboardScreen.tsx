@@ -68,6 +68,7 @@ const Leaderboard = () => {
           )}
         />
       </View>
+      {/* hehehe */}
     </ImageBackground>
   );
 };
