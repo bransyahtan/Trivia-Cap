@@ -10,7 +10,7 @@ class QuizeController extends Controller
 {
     public function index()
     {
-        return view('pages.quiz.index', ["quizes" => Quiz::all()]);
+        return view('pages.quiz.index', ["quizes" => Quiz::orderBy('created_at', 'desc')->get()]);
     }
 
     public function store()
@@ -61,7 +61,7 @@ class QuizeController extends Controller
 
     public function findAll()
     {
-        $quizes = Quiz::all();
+        $quizes = Quiz::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => 'OK',
             'data' => $quizes

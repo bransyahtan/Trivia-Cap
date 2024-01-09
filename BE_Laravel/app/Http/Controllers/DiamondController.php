@@ -9,7 +9,7 @@ class DiamondController extends Controller
 {
     public function index()
     {
-        return view('pages.diamond.index', ["diamonds" => Diamond::all()]);
+        return view('pages.diamond.index', ["diamonds" => Diamond::orderBy('created_at', 'desc')->get()]);
     }
 
     public function create()
@@ -38,7 +38,7 @@ class DiamondController extends Controller
 
     public function findAll()
     {
-        $diamonds = Diamond::all();
+        $diamonds = Diamond::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => 'OK',
             'data' => $diamonds

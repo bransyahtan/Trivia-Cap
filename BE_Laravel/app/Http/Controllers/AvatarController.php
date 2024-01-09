@@ -9,7 +9,7 @@ class AvatarController extends Controller
 {
     public function index()
     {
-        return view('pages.avatar.index', ["avatars" => Avatar::all()]);
+        return view('pages.avatar.index', ["avatars" => Avatar::orderBy('created_at', 'desc')->get()]);
     }
 
     public function create()
@@ -53,7 +53,7 @@ class AvatarController extends Controller
 
     public function findAll()
     {
-        $avatars = Avatar::all();
+        $avatars = Avatar::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => 'OK',
             'data' => $avatars

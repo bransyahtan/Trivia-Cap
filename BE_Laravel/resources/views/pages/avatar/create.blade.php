@@ -3,7 +3,7 @@
 @extends('components.layout')
 
 @section('title')
-    Quizes
+    Avatars
 @endsection
 
 @section('content')
