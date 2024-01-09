@@ -26,6 +26,7 @@ interface UserInfo {
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
+  // const navigate = useNavigation()
   const [authInProgress, setAuthInProgress] = useState(false);
   const navigate = useNavigation();
 
@@ -62,8 +63,8 @@ export default function LoginScreen() {
         });
 
         console.log(response.data);
-        // await AsyncStorage.setItem("user", JSON.stringify(response.data.data));
-        // navigate.navigate("SelectProfile" as never);
+        await AsyncStorage.setItem("user", response.data.token);
+        navigate.navigate("SelectProfile" as never);
       }
     } else {
       // navigate.navigate("Home" as never);

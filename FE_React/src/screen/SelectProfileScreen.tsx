@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import MyTextInput from "../components/FormInput";
 import MyButton from "../components/Button";
+import { API } from "../utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const data = [
   { id: 1, image: require("../../assets/avatar/avatar1.png") },
@@ -26,18 +28,38 @@ const data = [
 ];
 
 export default function SelectProfileScreen() {
+  const [avatar, setAvatar] = useState([]);
+
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => handleAvatarClick(item.id)}
       style={styles.avatarContainer}
     >
-      <Image source={item.image} style={styles.avatarImage} />
+      <Image source={item.image_url} style={styles.avatarImage} />
     </TouchableOpacity>
   );
 
   const handleAvatarClick = (avatarId: number) => {
     console.log(`Avatar clicked: ${avatarId}`);
   };
+
+  const getAvatar = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.get("api/v1/avatars", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      setAvatar(response.data.data);
+    } catch (error) {
+      console.error("Error fetching avatars:", error);
+    }
+  };
+  console.log(avatar);
+  useEffect(() => {
+    getAvatar();
+  }, []);
 
   return (
     <ImageBackground
@@ -49,12 +71,16 @@ export default function SelectProfileScreen() {
         <View style={{ alignItems: "center" }}>
           <View>
             <FlatList
-              data={data}
+              data={avatar}
               numColumns={3}
               renderItem={renderItem}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => item.id}
               contentContainerStyle={{ marginTop: 30 }}
             />
+
+            {/* {avatar ? (
+
+            )} */}
           </View>
 
           <View style={{ marginTop: 50 }}>

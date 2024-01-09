@@ -74,7 +74,7 @@ const MainApp = () => {
 
 const Route = () => {
   return (
-    <Stack.Navigator initialRouteName="MainApp">
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
         name="MainApp"
         component={MainApp}
@@ -103,6 +103,11 @@ const Route = () => {
       <Stack.Screen
         name="Leaderboard"
         component={Leaderboard}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SelectProfile"
+        component={SelectProfileScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
