@@ -12,6 +12,7 @@ import MyButton from "../components/Button";
 import TopUpButton from "../components/TopUpButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/core";
+import { jwtDecode } from "jwt-decode";
 
 interface UserInfo {
   picture?: string;
@@ -31,9 +32,8 @@ export default function HomeScreen() {
   const getUser = async () => {
     try {
       const data = await AsyncStorage.getItem("user");
-      console.log(data);
       if (data) {
-        const userData = JSON.parse(data) as UserInfo;
+        const userData = jwtDecode(data) as UserInfo;
         setUser(userData);
       }
     } catch (error) {

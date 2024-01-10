@@ -14,6 +14,7 @@ import MyTextInput from "../components/FormInput";
 import MyButton from "../components/Button";
 import { API } from "../utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 // const data = [
 //   { id: 1, image: require("../../assets/avatar/avatar1.png") },
@@ -30,8 +31,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function SelectProfileScreen() {
   const [avatar, setAvatar] = useState([]);
   const [username, setUsername] = useState("");
+  const navigation = useNavigation();
 
-  const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState({
+    image_url: "",
+    id_avatar: 0,
+  });
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -43,7 +48,7 @@ export default function SelectProfileScreen() {
   );
 
   const handleAvatarClick = (avatar) => {
-    setSelectedAvatar(avatar.image_url);
+    setSelectedAvatar({ image_url: avatar.image_url, id_avatar: avatar.id });
     // console.log("Avatar clicked:", avatar.image_url);
   };
 
@@ -67,8 +72,9 @@ export default function SelectProfileScreen() {
       const response = await API.put(
         "api/v1/update-profile",
         {
-          avatar: selectedAvatar,
+          avatar: selectedAvatar.image_url,
           name: username,
+          id_avatar: selectedAvatar.id_avatar,
         },
         {
           headers: {
@@ -76,7 +82,7 @@ export default function SelectProfileScreen() {
           },
         }
       );
-      console.log(response);
+      navigation.navigate("MainApp" as never);
     } catch (error) {
       console.log(error);
     }

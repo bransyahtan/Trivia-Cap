@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DiamondShopCard from "./DiamondShopCard";
 import AvatarShopCard from "./AvatarShopCard";
 import {
@@ -14,30 +14,87 @@ import {
   Button,
 } from "react-native";
 import TopUpButton from "../components/TopUpButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API } from "../utils/api";
+import axios from "axios";
+import * as WebBrowser from "expo-web-browser";
 
 const ShoppingPanel: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisibleDiamond, setModalVisibleDiamond] = useState(false);
+  const [modalVisibleAvatar, setModalVisibleAvatar] = useState(false);
+  const [avatar, setAvatar] = useState([]);
+  const [diamond, setDiamond] = useState([]);
 
+  const handleCLickAvatar = async (obj) => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.put("api/v1/update-profile", obj, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
 
-  const diamonds = [
-    { value: 50, imageSource: require("../../assets/images/diamond.png") },
-    { value: 100, imageSource: require("../../assets/images/diamond.png") },
-    { value: 250, imageSource: require("../../assets/images/diamond.png") },
-    { value: 500, imageSource: require("../../assets/images/diamond.png") },
-    { value: 700, imageSource: require("../../assets/images/diamond.png") },
-    { value: 1200, imageSource: require("../../assets/images/diamond.png") },
-  ];
+      if (response.data.Status == "OK") {
+      }
 
-  const avatars = [
-    { value: 50, imageSource: require("../../assets/avatar/avatar1.png") },
-    { value: 100, imageSource: require("../../assets/avatar/avatar2.png") },
-    { value: 250, imageSource: require("../../assets/avatar/avatar3.png") },
-    { value: 500, imageSource: require("../../assets/avatar/avatar4.png") },
-    { value: 700, imageSource: require("../../assets/avatar/avatar5.png") },
-    { value: 1200, imageSource: require("../../assets/avatar/avatar7.png") },
-  ];
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching avatars:", error);
+    }
+  };
 
+  const handleClickDiamond = async (obj) => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.post("api/v1/topup", obj, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      WebBrowser.openBrowserAsync(response.data.data.snap_url);
+    } catch (error) {
+      console.error("Error fetching diamond:", error);
+    }
+  };
+
+  const getDiamond = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await axios.get(
+        "https://7772-2404-8000-1004-1019-2c67-e014-b6d4-d34.ngrok-free.app/api/diamonds",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "ngrok-skip-browser-warning": true,
+          },
+        }
+      );
+      // console.log(response);
+      setDiamond(response.data.data);
+    } catch (error) {
+      console.error("Error fetching diamond:", error);
+    }
+  };
+
+  const getAvatar = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.get("api/v1/avatars", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      setAvatar(response.data.data);
+    } catch (error) {
+      console.error("Error fetching avatars:", error);
+    }
+  };
+  // console.log(avatar);
+
+  useEffect(() => {
+    getAvatar();
+    getDiamond();
+  }, []);
 
   return (
     <ImageBackground
@@ -48,131 +105,138 @@ const ShoppingPanel: React.FC = () => {
       <TopUpButton />
       <View style={styles.container}>
         <Image
-          source={require('../../assets/images/shop.png')}
+          source={require("../../assets/images/shop.png")}
           style={styles.image}
         />
         <View style={styles.cardsContainer}>
           <View style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <TouchableOpacity onPress={() => setModalVisibleDiamond(true)}>
               <DiamondShopCard />
             </TouchableOpacity>
           </View>
           <View style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => setModalVisible2(true)}>
+            <TouchableOpacity onPress={() => setModalVisibleAvatar(true)}>
               <AvatarShopCard />
             </TouchableOpacity>
           </View>
         </View>
       </View>
 
-
-{/* Diamond Modal */}
-  <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => {
-    setModalVisible(!modalVisible);
-  }}
->
-  <View style={styles.centeredView}>
-    <View style={styles.modalView}>
-      <ScrollView>
-        <View style={styles.diamondsContainer}>
-          {diamonds.reduce((rows, diamond, index) => {
-            const rowIndex = Math.floor(index / 2);
-            if (!rows[rowIndex]) {
-              rows[rowIndex] = [];
-            }
-            rows[rowIndex].push(
-              <TouchableOpacity
-                key={index}
-                style={styles.diamondItem}
-                onPress={() => {
-                  // Untuk Handle diamond setelah di click
-                  console.log(`Selected diamond value: ${diamond.value}`);
-                  setModalVisible(false);
-                }}
-              >
-                <Image
-                  source={diamond.imageSource}
-                  style={styles.diamondImage}
-                />
-                <Text style={styles.diamondValue}>{diamond.value}</Text>
-              </TouchableOpacity>
-            );
-            return rows;
-          }, []).map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.diamondsRow}>
-              {row}
-            </View>
-          ))}
+      {/* Diamond Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisibleDiamond}
+        onRequestClose={() => {
+          setModalVisibleDiamond(!modalVisibleDiamond);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <ScrollView>
+              <View style={styles.diamondsContainer}>
+                {diamond
+                  .reduce((rows, diamond, index) => {
+                    const rowIndex = Math.floor(index / 2);
+                    if (!rows[rowIndex]) {
+                      rows[rowIndex] = [];
+                    }
+                    rows[rowIndex].push(
+                      <TouchableOpacity
+                        key={index}
+                        style={styles.diamondItem}
+                        onPress={() =>
+                          handleClickDiamond({
+                            amount: diamond.price,
+                            amoutDiamond: diamond.amount,
+                          })
+                        }
+                      >
+                        {/* <Image
+                          source={diamond.imageSource}
+                          style={styles.diamondImage}
+                        /> */}
+                        <Text style={styles.diamondValue}>{diamond.price}</Text>
+                        <Text style={styles.diamondValue}>
+                          {diamond.amount}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                    return rows;
+                  }, [])
+                  .map((row, rowIndex) => (
+                    <View key={rowIndex} style={styles.diamondsRow}>
+                      {row}
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
+            <Button
+              title="Cancel"
+              onPress={() => setModalVisibleDiamond(!modalVisibleDiamond)}
+            />
+          </View>
         </View>
-      </ScrollView>
-      <Button
-        title="Cancel"
-        onPress={() => setModalVisible(!modalVisible)}
-      />
-    </View>
-  </View>
-</Modal>
+      </Modal>
 
-{/* Avatar Modal */}
+      {/* Avatar Modal */}
 
-<Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible2}
-  onRequestClose={() => {
-    setModalVisible2(!modalVisible2);
-  }}
->
-  <View style={styles.centeredView}>
-    <View style={styles.modalView}>
-      <ScrollView>
-        <View style={styles.diamondsContainer}>
-          {avatars.reduce((rows, diamond, index) => {
-            const rowIndex = Math.floor(index / 2);
-            if (!rows[rowIndex]) {
-              rows[rowIndex] = [];
-            }
-            rows[rowIndex].push(
-              <TouchableOpacity
-                key={index}
-                style={styles.diamondItem}
-                onPress={() => {
-                  // Untuk Handle avatar setelah di click
-                  console.log(`Selected avatar value: ${diamond.value}`);
-                  setModalVisible2(false);
-                }}
-              >
-                <Image
-                  source={diamond.imageSource}
-                  style={styles.avatarImage}
-                />
-                <Text style={styles.diamondValue}>{diamond.value}</Text>
-              </TouchableOpacity>
-            );
-            return rows;
-          }, []).map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.diamondsRow}>
-              {row}
-            </View>
-          ))}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisibleAvatar}
+        onRequestClose={() => {
+          setModalVisibleAvatar(!modalVisibleAvatar);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <ScrollView>
+              <View style={styles.diamondsContainer}>
+                {avatar
+                  .reduce((rows, avatar, index) => {
+                    const rowIndex = Math.floor(index / 2);
+                    if (!rows[rowIndex]) {
+                      rows[rowIndex] = [];
+                    }
+                    rows[rowIndex].push(
+                      <TouchableOpacity
+                        key={index}
+                        style={styles.diamondItem}
+                        onPress={() =>
+                          handleCLickAvatar({
+                            id_avatar: avatar.id,
+                            name: avatar.name,
+                            avatar: avatar.image_url,
+                          })
+                        }
+                      >
+                        <Image
+                          source={avatar.image_url}
+                          style={styles.avatarImage}
+                        />
+                        <Text style={styles.diamondValue}>{avatar.price}</Text>
+                      </TouchableOpacity>
+                    );
+                    return rows;
+                  }, [])
+                  .map((row, rowIndex) => (
+                    <View key={rowIndex} style={styles.diamondsRow}>
+                      {row}
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
+            <Button
+              title="Cancel"
+              onPress={() => setModalVisibleAvatar(!modalVisibleAvatar)}
+            />
+          </View>
         </View>
-      </ScrollView>
-      <Button
-        title="Cancel"
-        onPress={() => setModalVisible2(!modalVisible2)}
-      />
-    </View>
-  </View>
-</Modal>
-
-</ImageBackground>
+      </Modal>
+    </ImageBackground>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -200,7 +264,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 300, 
+    width: 300,
     height: 300,
     marginTop: -80,
   },
@@ -210,7 +274,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    flexDirection : "column",
+    flexDirection: "column",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -228,11 +292,11 @@ const styles = StyleSheet.create({
   diamondsContainer: {
     columnGap: 20,
     flexDirection: "row",
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
     alignItems: "center",
   },
   diamondsRow: {
-    flex : 1,
+    flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -255,8 +319,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   avatarImage: {
-    borderRadius : 50,
-    width: 80, 
+    borderRadius: 50,
+    width: 80,
     height: 80,
     marginBottom: 10,
   },

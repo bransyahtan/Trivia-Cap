@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
 import axios from "axios";
 import { API, BASE_URL } from "../utils/api";
+import { jwtDecode } from "jwt-decode";
 
 interface UserInfo {
   picture?: string;
@@ -51,7 +52,6 @@ export default function LoginScreen() {
     if (!user) {
       setAuthInProgress(true);
       const result = await promptAsync();
-      console.log(result);
       if (result.type == "success") {
         const user = await getUserInfo(
           result?.authentication?.accessToken || ""
@@ -67,9 +67,9 @@ export default function LoginScreen() {
         navigate.navigate("SelectProfile" as never);
       }
     } else {
-      // navigate.navigate("Home" as never);
-      console.log(user);
-      console.log("loaded locally");
+      navigate.navigate("MainApp" as never);
+      // console.log(user);
+      // console.log("loaded locally");
     }
   };
 
@@ -77,7 +77,7 @@ export default function LoginScreen() {
     try {
       const data = await AsyncStorage.getItem("user");
       if (!data) return null;
-      return JSON.parse(data) as UserInfo;
+      return jwtDecode(data) as UserInfo;
     } catch (error) {
       console.log("Error getting local user:", error);
       return null;
