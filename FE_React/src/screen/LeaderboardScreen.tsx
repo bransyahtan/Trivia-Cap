@@ -1,4 +1,3 @@
-// Leaderboard.js
 import React from "react"
 import { View, Text, FlatList, StyleSheet, ImageBackground, Image } from "react-native"
 
@@ -26,7 +25,10 @@ const Leaderboard = () => {
       style={{ flex: 1, opacity: 0.95 }}
     >
       <View style={styles.container}>
-        <Image source={require("../../assets/images/leaderboard.png")} style={styles.header} />
+        <Image
+          source={require("../../assets/images/leaderboard.png")}
+          style={styles.header}
+        />
 
         <View style={styles.winnerContainer}>
           <Image source={crown} style={styles.crown} />
@@ -41,14 +43,12 @@ const Leaderboard = () => {
             <View style={styles.item}>
               <Text style={styles.rank}>{item.id}</Text>
 
-              {/* Tambahkan komponen Image untuk menampilkan avatar */}
               <Image source={item.avatar} style={styles.avatar} />
 
               <View style={styles.playerInfo}>
                 <Text style={styles.playerName}>{item.name}</Text>
                 <Text style={styles.score}>{item.score} points</Text>
               </View>
-              {/* <Image source={crown} style={styles.crown} /> */}
               <Image source={item.medal} style={styles.medal} />
             </View>
           )}

@@ -21,7 +21,7 @@ const ProfileStack = createStackNavigator();
 const ProfileStackNavigator = () => {
   return (
     <ProfileStack.Navigator>
-      <Tab.Navigator initialRouteName="Profile">
+      <Tab.Navigator initialRouteName="EditProfile">
         <Tab.Screen
           name="Home"
           component={HomeScreen}
@@ -88,7 +88,7 @@ const MainApp = () => {
 
 const Route = () => {
   return (
-    <Stack.Navigator initialRouteName="MainApp">
+    <Stack.Navigator initialRouteName="Leaderboard">
       <Stack.Screen
         name="MainApp"
         component={MainApp}
