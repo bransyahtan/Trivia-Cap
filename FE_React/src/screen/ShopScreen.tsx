@@ -21,12 +21,12 @@ const ShoppingPanel: React.FC = () => {
 
 
   const diamonds = [
-    { value: 50, imageSource: require("../../assets/images/diamond.png") },
-    { value: 100, imageSource: require("../../assets/images/diamond.png") },
-    { value: 250, imageSource: require("../../assets/images/diamond.png") },
-    { value: 500, imageSource: require("../../assets/images/diamond.png") },
-    { value: 700, imageSource: require("../../assets/images/diamond.png") },
-    { value: 1200, imageSource: require("../../assets/images/diamond.png") },
+    { value: 50,  imageSource: require("../../assets/images/diamond1.png") },
+    { value: 100, imageSource: require("../../assets/images/diamond2.png") },
+    { value: 250, imageSource: require("../../assets/images/diamond3.png") },
+    { value: 500, imageSource: require("../../assets/images/diamond4.png") },
+    { value: 700, imageSource: require("../../assets/images/diamond5.png") },
+    { value: 1200, imageSource: require("../../assets/images/diamond6.png") },
   ];
 
   const avatars = [
