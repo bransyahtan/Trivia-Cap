@@ -3,8 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screen/HomeScreen";
 import ProfileScreen from "../screen/ProfileScreen";
-// import ShopScreen from "../screen/ShopScreen";
-import { Ionicons } from "@expo/vector-icons"; // Import icons from Expo
+import { Ionicons } from "@expo/vector-icons";
 import SelectProfileScreen from "../screen/SelectProfileScreen";
 import ShopScreen from "../screen/ShopScreen";
 import LobyScreen from "../screen/LobyScreen";
@@ -21,6 +20,7 @@ const ProfileStack = createStackNavigator();
 const ProfileStackNavigator = () => {
   return (
     <ProfileStack.Navigator>
+<<<<<<< HEAD
       <Tab.Navigator initialRouteName="EditProfile">
         <Tab.Screen
           name="Home"
@@ -39,6 +39,14 @@ const ProfileStackNavigator = () => {
         />
       </Tab.Navigator>
       <Tab.Screen
+=======
+      <ProfileStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+>>>>>>> 63b0221701c9961e6bae19b9c605c2a3f4caaf17
         name="EditProfile"
         component={EditProfileScreen}
         options={{ headerShown: false }}
@@ -55,14 +63,13 @@ const MainApp = () => {
           let iconName;
 
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline"; // Replace with your home icon names
+            iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Shop") {
-            iconName = focused ? "cart" : "cart-outline"; // Replace with your shop icon names
+            iconName = focused ? "cart" : "cart-outline";
           } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline"; // Replace with your profile icon names
+            iconName = focused ? "person" : "person-outline";
           }
 
-          // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
@@ -88,7 +95,11 @@ const MainApp = () => {
 
 const Route = () => {
   return (
+<<<<<<< HEAD
     <Stack.Navigator initialRouteName="Leaderboard">
+=======
+    <Stack.Navigator initialRouteName="Login">
+>>>>>>> 63b0221701c9961e6bae19b9c605c2a3f4caaf17
       <Stack.Screen
         name="MainApp"
         component={MainApp}
@@ -104,7 +115,6 @@ const Route = () => {
         component={LobyScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="SelectProfile" component={SelectProfileScreen} />
       <Stack.Screen
         name="Play"
         component={PlayScreen}
@@ -118,6 +128,11 @@ const Route = () => {
       <Stack.Screen
         name="Leaderboard"
         component={Leaderboard}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SelectProfile"
+        component={SelectProfileScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
