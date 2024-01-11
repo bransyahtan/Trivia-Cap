@@ -34,6 +34,15 @@ const ProfileStackNavigator = () => {
   );
 };
 
+<<<<<<< HEAD
+
+const Route = () => {
+  return (
+    <Stack.Navigator initialRouteName="MainApp">
+        <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+=======
 const MainApp = () => {
   return (
     <Tab.Navigator
@@ -78,13 +87,14 @@ const Route = () => {
       <Stack.Screen
         name="MainApp"
         component={MainApp}
+>>>>>>> 0574e87347630c959497b9d95b2353146939341d
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ headerShown: false }}
-      />
+        options={{ headerShown: false }}  
+      /> */}
       <Stack.Screen
         name="Lobby"
         component={LobyScreen}
