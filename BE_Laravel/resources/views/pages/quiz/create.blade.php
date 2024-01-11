@@ -77,27 +77,24 @@
                             <td class="w-5/6 pt-5">
                                 <div class="flex items-center space-x-4">
                                     <label for="optionA" class="relative">
-                                        <input type="radio" id="optionA" name="optionA" class="hidden options"
-                                            onclick="changeBackgroundColor('A')">
-                                        <div
+                                        <input type="radio" id="optionA" name="optionA" class=" options">
+                                        {{-- <div
                                             class="cursor-pointer w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full bg-white">
-                                            A</div>
+                                            A</div> --}}
                                     </label>
 
                                     <label for="optionB" class="relative">
-                                        <input type="radio" id="optionB" name="optionB" class="hidden options"
-                                            onclick="changeBackgroundColor('B')">
-                                        <div
+                                        <input type="radio" id="optionB" name="optionB" class=" options">
+                                        {{-- <div
                                             class="cursor-pointer w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full bg-white">
-                                            B</div>
+                                            B</div> --}}
                                     </label>
 
                                     <label for="optionC" class="relative">
-                                        <input type="radio" id="optionC" name="optionC" class="hidden options"
-                                            onclick="changeBackgroundColor('C')">
-                                        <div
+                                        <input type="radio" id="optionC" name="optionC" class=" options">
+                                        {{-- <div
                                             class="cursor-pointer w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full bg-white">
-                                            C</div>
+                                            C</div> --}}
                                     </label>
                                 </div>
                             </td>
