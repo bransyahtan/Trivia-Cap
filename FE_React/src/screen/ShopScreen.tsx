@@ -25,7 +25,15 @@ const ShoppingPanel: React.FC = () => {
   const [avatar, setAvatar] = useState([]);
   const [diamond, setDiamond] = useState([]);
 
-  const handleCLickAvatar = async (obj) => {
+  const diamonds = [
+    { value: 50, imageSource: require("../../assets/images/diamond1.png") },
+    { value: 100, imageSource: require("../../assets/images/diamond2.png") },
+    { value: 250, imageSource: require("../../assets/images/diamond3.png") },
+    { value: 500, imageSource: require("../../assets/images/diamond4.png") },
+    { value: 700, imageSource: require("../../assets/images/diamond5.png") },
+    { value: 1200, imageSource: require("../../assets/images/diamond6.png") },
+  ];
+  const handleCLickAvatar = async obj => {
     try {
       const token = await AsyncStorage.getItem("user");
       const response = await API.put("api/v1/update-profile", obj, {
@@ -43,7 +51,7 @@ const ShoppingPanel: React.FC = () => {
     }
   };
 
-  const handleClickDiamond = async (obj) => {
+  const handleClickDiamond = async obj => {
     try {
       const token = await AsyncStorage.getItem("user");
       const response = await API.post("api/v1/topup", obj, {
@@ -60,15 +68,12 @@ const ShoppingPanel: React.FC = () => {
   const getDiamond = async () => {
     try {
       const token = await AsyncStorage.getItem("user");
-      const response = await axios.get(
-        "http://192.168.18.238:8000/api/diamonds",
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            "ngrok-skip-browser-warning": true,
-          },
-        }
-      );
+      const response = await axios.get("http://192.168.18.238:8000/api/diamonds", {
+        headers: {
+          Authorization: "Bearer " + token,
+          "ngrok-skip-browser-warning": true,
+        },
+      });
       setDiamond(response.data.data);
     } catch (error) {
       console.error("Error fetching diamond:", error);
@@ -96,17 +101,11 @@ const ShoppingPanel: React.FC = () => {
   }, []);
 
   return (
-    <ImageBackground
-      source={require("../../assets/images/bg1.png")}
-      style={{ flex: 1, opacity: 0.95 }}
-    >
+    <ImageBackground source={require("../../assets/images/bg_game.png")} style={{ flex: 1, opacity: 0.95 }}>
       <StatusBar />
       <TopUpButton />
       <View style={styles.container}>
-        <Image
-          source={require("../../assets/images/shop.png")}
-          style={styles.image}
-        />
+        <Image source={require("../../assets/images/shop.png")} style={styles.image} />
         <View style={styles.cardsContainer}>
           <View style={styles.cardWrapper}>
             <TouchableOpacity onPress={() => setModalVisibleDiamond(true)}>
@@ -156,9 +155,7 @@ const ShoppingPanel: React.FC = () => {
                           style={styles.diamondImage}
                         /> */}
                         <Text style={styles.diamondValue}>{diamond.price}</Text>
-                        <Text style={styles.diamondValue}>
-                          {diamond.amount}
-                        </Text>
+                        <Text style={styles.diamondValue}>{diamond.amount}</Text>
                       </TouchableOpacity>
                     );
                     return rows;
@@ -170,10 +167,7 @@ const ShoppingPanel: React.FC = () => {
                   ))}
               </View>
             </ScrollView>
-            <Button
-              title="Cancel"
-              onPress={() => setModalVisibleDiamond(!modalVisibleDiamond)}
-            />
+            <Button title="Cancel" onPress={() => setModalVisibleDiamond(!modalVisibleDiamond)} />
           </View>
         </View>
       </Modal>
@@ -210,10 +204,7 @@ const ShoppingPanel: React.FC = () => {
                           })
                         }
                       >
-                        <Image
-                          source={avatar.image_url}
-                          style={styles.avatarImage}
-                        />
+                        <Image source={avatar.image_url} style={styles.avatarImage} />
                         <Text style={styles.diamondValue}>{avatar.price}</Text>
                       </TouchableOpacity>
                     );
@@ -226,10 +217,7 @@ const ShoppingPanel: React.FC = () => {
                   ))}
               </View>
             </ScrollView>
-            <Button
-              title="Cancel"
-              onPress={() => setModalVisibleAvatar(!modalVisibleAvatar)}
-            />
+            <Button title="Cancel" onPress={() => setModalVisibleAvatar(!modalVisibleAvatar)} />
           </View>
         </View>
       </Modal>
@@ -243,6 +231,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   title: {
     fontSize: 24,

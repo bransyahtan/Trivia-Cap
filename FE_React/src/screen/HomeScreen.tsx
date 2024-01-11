@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+
 import MyButton from "../components/Button";
 import TopUpButton from "../components/TopUpButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,6 +20,7 @@ import Modal from "react-native-modal";
 import { API } from "../utils/api";
 import ModalAvatar from "../components/ModalAvatar";
 import axios from "axios";
+import ModalEditProfile from "../components/ModalEditProfile";
 
 interface UserInfo {
   picture?: string;
@@ -36,15 +38,14 @@ export default function HomeScreen() {
 
   const getUserName = async () => {
     try {
-      // const token = await AsyncStorage.getItem("user");
-      // const response = await API.get("api/v1/detail-user", {
-      //   headers: {
-      //     Authorization: "Bearer " + token,
-      //   },
-      // });
       const token = await AsyncStorage.getItem("user");
+      const response = await API.get("api/v1/detail-user", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
       const user = jwtDecode(token) as UserInfo;
-      setName(user.name);
+      setName(response.data.data.name);
     } catch (error) {
       console.error(error.message);
     }
@@ -117,33 +118,45 @@ export default function HomeScreen() {
         >
           <ModalAvatar setTriggerFetch={setTriggerFetch} />
         </TouchableOpacity>
-
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/images/2.png")}
-            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 30 }}
+            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 10 }}
           />
-
           <View style={{ marginTop: 20 }}>
             <Image
               source={{
                 uri: avatar,
               }}
-              style={{ width: 130, height: 130, borderRadius: 65 }}
+              style={{
+                width: 130,
+                height: 130,
+                borderRadius: 65,
+                borderColor: "white",
+                borderWidth: 3,
+                shadowOffset: { width: 3, height: 1 },
+                shadowColor: "black",
+                shadowOpacity: 1,
+                shadowRadius: 1,
+              }}
             />
+
             <Text
               style={{
                 color: "white",
                 fontSize: 25,
                 fontWeight: "bold",
                 textAlign: "center",
+                marginTop: 10,
               }}
             >
               {name}
             </Text>
           </View>
-
-          <View style={{ marginTop: 80, alignItems: "center" }}>
+          <View style={{ top: -105, left: 40 }}>
+            I<ModalEditProfile />
+          </View>
+          <View style={{ marginTop: 50, alignItems: "center" }}>
             <MyButton
               text="Play Game"
               background="#39A7FF"
