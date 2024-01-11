@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import {
   Image,
   ImageBackground,
@@ -7,64 +7,79 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native"
-import MyButton from "../components/Button"
-import TopUpButton from "../components/TopUpButton"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useNavigation } from "@react-navigation/core"
-import ModalEditProfile from "../components/ModalEditProfile"
+  TouchableOpacity,
+  Button,
+} from "react-native";
+
+import MyButton from "../components/Button";
+import TopUpButton from "../components/TopUpButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/core";
+import { jwtDecode } from "jwt-decode";
+import Modal from "react-native-modal";
+import { API } from "../utils/api";
+import ModalAvatar from "../components/ModalAvatar";
+import ModalEditProfile from "../components/ModalEditProfile";
 
 interface UserInfo {
-  picture?: string
-  email: string
-  verified_email: boolean
-  name: string
+  picture?: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
 }
 
 export default function HomeScreen() {
-  const navigation = useNavigation()
-  const [user, setUser] = useState<UserInfo | null>(null)
-
-  useEffect(() => {
-    getUser()
-  }, [])
+  const navigation = useNavigation();
+  const [user, setUser] = useState<UserInfo | null>(null);
 
   const getUser = async () => {
     try {
-      const data = await AsyncStorage.getItem("user")
-      console.log(data)
+      const data = await AsyncStorage.getItem("user");
       if (data) {
-        const userData = JSON.parse(data) as UserInfo
-        setUser(userData)
+        const userData = jwtDecode(data) as UserInfo;
+        setUser(userData);
       }
     } catch (error) {
-      console.error("Error getting user data:", error)
+      console.error("Error getting user data:", error);
     }
-  }
+  };
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem("user")
-
-      setUser(null)
+      await AsyncStorage.removeItem("user");
+      setUser(null);
     } catch (error) {
-      console.error("Error during logout:", error)
+      console.error("Error during logout:", error);
     }
-  }
+  };
 
   const handleTopUp = () => {
-    navigation.navigate("Shop" as never)
-    console.log("aaaa")
-  }
+    navigation.navigate("Shop" as never);
+    console.log("aaaa");
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
-    <ImageBackground
-      source={require("../../assets/images/bg1.png")}
-      style={{ flex: 1, opacity: 0.95 }}
-    >
+    <ImageBackground source={require("../../assets/images/bg1.png")} style={{ flex: 1, opacity: 0.95 }}>
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
-        <TopUpButton />
+        <TopUpButton onPress={handleTopUp} />
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: 35,
+            right: -25,
+            zIndex: 1,
+            borderRadius: 10,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <ModalAvatar />
+        </TouchableOpacity>
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/images/2.png")}
@@ -102,24 +117,13 @@ export default function HomeScreen() {
             I<ModalEditProfile />
           </View>
           <View style={{ marginTop: 50, alignItems: "center" }}>
-            <MyButton
-              text="Play Game"
-              background="#39A7FF"
-              textColor="white"
-              navigateTo="Lobby"
-            />
-            <MyButton
-              text="Logout"
-              background="#BE3144"
-              textColor="white"
-              navigateTo="Login"
-              onPress={handleLogout}
-            />
+            <MyButton text="Play Game" background="#39A7FF" textColor="white" navigateTo="Lobby" />
+            <MyButton text="Logout" background="#BE3144" textColor="white" navigateTo="Login" onPress={handleLogout} />
           </View>
         </View>
       </ScrollView>
     </ImageBackground>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

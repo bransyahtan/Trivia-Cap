@@ -1,22 +1,47 @@
-import React, { useState } from "react"
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Modal,
-  Button,
-  Text,
-} from "react-native"
-import DiamondItem from "./DiamondItem"
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API } from "../utils/api";
 
-const ModalEditProfile: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false)
+export default function TopUpButton({ onPress }: any) {
+  const [diamond, setDiamond] = useState(0);
+           const [modalVisible, setModalVisible] = useState(false)
+  const diamondWallet = async () => {
+    const token = await AsyncStorage.getItem("user");
+    const response = await API.get("api/v1/detail-wallet", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    setDiamond(response.data.data.balance_diamond);
+  };
+
+  useEffect(() => {
+    diamondWallet();
+  }, []);
 
   return (
-    <>
-      <View>
+    <View>
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 15,
+          zIndex: 1,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          borderRadius: 10,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Image
+          source={require("../../assets/images/diamond.png")}
+          style={{ width: 20, height: 20, marginRight: 5 }}
+        />
+        <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+          {diamond}
+        </Text>
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
           style={{
