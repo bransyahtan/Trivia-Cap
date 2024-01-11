@@ -36,10 +36,16 @@ export default function MyButton({
         paddingVertical: 15,
         width: 300,
         borderRadius: 10,
-        marginTop: 20,
+        marginTop: 10,
+        marginBottom: 10,
         alignItems: "center",
         alignSelf: "auto",
         elevation: 5,
+        shadowOffset: {
+          width: 1,
+          height: 1,
+        }
+        
       }}
     >
       <Text style={{ color: textColor, fontWeight: "bold", fontSize: 17 }}>
