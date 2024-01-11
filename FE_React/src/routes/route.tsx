@@ -20,29 +20,12 @@ const ProfileStack = createStackNavigator();
 const ProfileStackNavigator = () => {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
-      />
-      <ProfileStack.Screen
-        name="EditProfile"
-        component={EditProfileScreen}
-        options={{ headerShown: false }}
-      />
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+      <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
     </ProfileStack.Navigator>
   );
 };
 
-<<<<<<< HEAD
-
-const Route = () => {
-  return (
-    <Stack.Navigator initialRouteName="MainApp">
-        <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-=======
 const MainApp = () => {
   return (
     <Tab.Navigator
@@ -62,21 +45,9 @@ const MainApp = () => {
         },
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Shop"
-        component={ShopScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileStackNavigator}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Shop" component={ShopScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 };
@@ -84,42 +55,17 @@ const MainApp = () => {
 const Route = () => {
   return (
     <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen
-        name="MainApp"
-        component={MainApp}
->>>>>>> 0574e87347630c959497b9d95b2353146939341d
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }} />
       {/* <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{ headerShown: false }}  
       /> */}
-      <Stack.Screen
-        name="Lobby"
-        component={LobyScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Play"
-        component={PlayScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Congrats"
-        component={CongratsScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Leaderboard"
-        component={Leaderboard}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SelectProfile"
-        component={SelectProfileScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Lobby" component={LobyScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Play" component={PlayScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Congrats" component={CongratsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Leaderboard" component={Leaderboard} options={{ headerShown: false }} />
+      <Stack.Screen name="SelectProfile" component={SelectProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
