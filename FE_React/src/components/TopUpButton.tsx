@@ -1,8 +1,25 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/core";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API } from "../utils/api";
 
 export default function TopUpButton({ onPress }: any) {
+  const [diamond, setDiamond] = useState(0);
+  const diamondWallet = async () => {
+    const token = await AsyncStorage.getItem("user");
+    const response = await API.get("api/v1/detail-wallet", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    setDiamond(response.data.data.balance_diamond);
+  };
+
+  useEffect(() => {
+    diamondWallet();
+  }, []);
+
   return (
     <View>
       <TouchableOpacity
@@ -22,7 +39,7 @@ export default function TopUpButton({ onPress }: any) {
           style={{ width: 20, height: 20, marginRight: 5 }}
         />
         <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
-          55
+          {diamond}
         </Text>
         <TouchableOpacity
           onPress={onPress}

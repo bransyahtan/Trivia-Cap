@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DiamondShopCard from "./DiamondShopCard";
 import AvatarShopCard from "./AvatarShopCard";
 import {
@@ -14,10 +14,16 @@ import {
   Button,
 } from "react-native";
 import TopUpButton from "../components/TopUpButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API } from "../utils/api";
+import axios from "axios";
+import * as WebBrowser from "expo-web-browser";
 
 const ShoppingPanel: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisibleDiamond, setModalVisibleDiamond] = useState(false);
+  const [modalVisibleAvatar, setModalVisibleAvatar] = useState(false);
+  const [avatar, setAvatar] = useState([]);
+  const [diamond, setDiamond] = useState([]);
 
   const diamonds = [
     { value: 50, imageSource: require("../../assets/images/diamond1.png") },
@@ -27,15 +33,72 @@ const ShoppingPanel: React.FC = () => {
     { value: 700, imageSource: require("../../assets/images/diamond5.png") },
     { value: 1200, imageSource: require("../../assets/images/diamond6.png") },
   ];
+  const handleCLickAvatar = async obj => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.put("api/v1/update-profile", obj, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
 
-  const avatars = [
-    { value: 50, imageSource: require("../../assets/avatar/avatar1.png") },
-    { value: 100, imageSource: require("../../assets/avatar/avatar2.png") },
-    { value: 250, imageSource: require("../../assets/avatar/avatar3.png") },
-    { value: 500, imageSource: require("../../assets/avatar/avatar4.png") },
-    { value: 700, imageSource: require("../../assets/avatar/avatar5.png") },
-    { value: 1200, imageSource: require("../../assets/avatar/avatar7.png") },
-  ];
+      // if (response.data.Status == "OK") {
+      // }s
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching avatars:", error);
+    }
+  };
+
+  const handleClickDiamond = async obj => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.post("api/v1/topup", obj, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      WebBrowser.openBrowserAsync(response.data.data.snap_url);
+    } catch (error) {
+      console.error("Error fetching diamond:", error);
+    }
+  };
+
+  const getDiamond = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await axios.get("http://192.168.18.238:8000/api/diamonds", {
+        headers: {
+          Authorization: "Bearer " + token,
+          "ngrok-skip-browser-warning": true,
+        },
+      });
+      setDiamond(response.data.data);
+    } catch (error) {
+      console.error("Error fetching diamond:", error);
+    }
+  };
+
+  const getAvatar = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.get("api/v1/avatars", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      setAvatar(response.data.data);
+    } catch (error) {
+      console.error("Error fetching avatars:", error);
+    }
+  };
+  // console.log(avatar);
+
+  useEffect(() => {
+    getAvatar();
+    getDiamond();
+  }, []);
 
   return (
     <ImageBackground source={require("../../assets/images/bg_game.png")} style={{ flex: 1, opacity: 0.95 }}>
@@ -45,12 +108,12 @@ const ShoppingPanel: React.FC = () => {
         <Image source={require("../../assets/images/shop.png")} style={styles.image} />
         <View style={styles.cardsContainer}>
           <View style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <TouchableOpacity onPress={() => setModalVisibleDiamond(true)}>
               <DiamondShopCard />
             </TouchableOpacity>
           </View>
           <View style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => setModalVisible2(true)}>
+            <TouchableOpacity onPress={() => setModalVisibleAvatar(true)}>
               <AvatarShopCard />
             </TouchableOpacity>
           </View>
@@ -61,16 +124,16 @@ const ShoppingPanel: React.FC = () => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={modalVisibleDiamond}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setModalVisibleDiamond(!modalVisibleDiamond);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <ScrollView>
               <View style={styles.diamondsContainer}>
-                {diamonds
+                {diamond
                   .reduce((rows, diamond, index) => {
                     const rowIndex = Math.floor(index / 2);
                     if (!rows[rowIndex]) {
@@ -80,14 +143,19 @@ const ShoppingPanel: React.FC = () => {
                       <TouchableOpacity
                         key={index}
                         style={styles.diamondItem}
-                        onPress={() => {
-                          // Untuk Handle diamond setelah di click
-                          console.log(`Selected diamond value: ${diamond.value}`);
-                          setModalVisible(false);
-                        }}
+                        onPress={() =>
+                          handleClickDiamond({
+                            amount: diamond.price,
+                            amoutDiamond: diamond.amount,
+                          })
+                        }
                       >
-                        <Image source={diamond.imageSource} style={styles.diamondImage} />
-                        <Text style={styles.diamondValue}>{diamond.value}</Text>
+                        {/* <Image
+                          source={diamond.imageSource}
+                          style={styles.diamondImage}
+                        /> */}
+                        <Text style={styles.diamondValue}>{diamond.price}</Text>
+                        <Text style={styles.diamondValue}>{diamond.amount}</Text>
                       </TouchableOpacity>
                     );
                     return rows;
@@ -99,7 +167,7 @@ const ShoppingPanel: React.FC = () => {
                   ))}
               </View>
             </ScrollView>
-            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
+            <Button title="Cancel" onPress={() => setModalVisibleDiamond(!modalVisibleDiamond)} />
           </View>
         </View>
       </Modal>
@@ -109,17 +177,17 @@ const ShoppingPanel: React.FC = () => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible2}
+        visible={modalVisibleAvatar}
         onRequestClose={() => {
-          setModalVisible2(!modalVisible2);
+          setModalVisibleAvatar(!modalVisibleAvatar);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <ScrollView>
               <View style={styles.diamondsContainer}>
-                {avatars
-                  .reduce((rows, diamond, index) => {
+                {avatar
+                  .reduce((rows, avatar, index) => {
                     const rowIndex = Math.floor(index / 2);
                     if (!rows[rowIndex]) {
                       rows[rowIndex] = [];
@@ -128,13 +196,16 @@ const ShoppingPanel: React.FC = () => {
                       <TouchableOpacity
                         key={index}
                         style={styles.diamondItem}
-                        onPress={() => {
-                          console.log(`Selected avatar value: ${diamond.value}`);
-                          setModalVisible2(false);
-                        }}
+                        onPress={() =>
+                          handleCLickAvatar({
+                            id_avatar: avatar.id,
+                            name: avatar.name,
+                            avatar: avatar.image_url,
+                          })
+                        }
                       >
-                        <Image source={diamond.imageSource} style={styles.avatarImage} />
-                        <Text style={styles.diamondValue}>{diamond.value}</Text>
+                        <Image source={avatar.image_url} style={styles.avatarImage} />
+                        <Text style={styles.diamondValue}>{avatar.price}</Text>
                       </TouchableOpacity>
                     );
                     return rows;
@@ -146,7 +217,7 @@ const ShoppingPanel: React.FC = () => {
                   ))}
               </View>
             </ScrollView>
-            <Button title="Cancel" onPress={() => setModalVisible2(!modalVisible2)} />
+            <Button title="Cancel" onPress={() => setModalVisibleAvatar(!modalVisibleAvatar)} />
           </View>
         </View>
       </Modal>
