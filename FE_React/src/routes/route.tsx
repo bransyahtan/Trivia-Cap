@@ -47,58 +47,20 @@ const ProfileStackNavigator = () => {
   );
 };
 
-const MainApp = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline"; // Replace with your home icon names
-          } else if (route.name === "Shop") {
-            iconName = focused ? "cart" : "cart-outline"; // Replace with your shop icon names
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline"; // Replace with your profile icon names
-          }
-
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Shop"
-        component={ShopScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileStackNavigator}
-        options={{ headerShown: false }}
-      />
-    </Tab.Navigator>
-  );
-};
 
 const Route = () => {
   return (
     <Stack.Navigator initialRouteName="MainApp">
-      <Stack.Screen
-        name="MainApp"
-        component={MainApp}
+        <Stack.Screen
+        name="Home"
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ headerShown: false }}
-      />
+        options={{ headerShown: false }}  
+      /> */}
       <Stack.Screen
         name="Lobby"
         component={LobyScreen}
