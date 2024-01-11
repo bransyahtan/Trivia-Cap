@@ -1,36 +1,36 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import { useNavigation } from "@react-navigation/core";
+import React, { useState } from "react"
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Modal,
+  Button,
+  Text,
+} from "react-native"
+import DiamondItem from "./DiamondItem"
 
-export default function TopUpButton({ onPress }: any) {
+const ModalEditProfile: React.FC = () => {
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
-    <View>
-      <TouchableOpacity
-        style={{
-          position: "absolute",
-          top: 20,
-          right: 15,
-          zIndex: 1,
-          backgroundColor: "rgba(0,0,0,0.5)",
-          borderRadius: 10,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Image
-          source={require("../../assets/images/diamond.png")}
-          style={{ width: 20, height: 20, marginRight: 5 }}
-        />
-        <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
-          55
-        </Text>
+    <>
+      <View>
         <TouchableOpacity
-          onPress={onPress}
+          onPress={() => setModalVisible(true)}
           style={{
-            marginLeft: 10,
+            width: 25,
+            height: 25,
             backgroundColor: "#16FF00",
-            paddingHorizontal: 8,
             borderRadius: 5,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            top: 20,
+            left: 350,
+            zIndex: 2,
           }}
         >
           <Text
@@ -45,9 +45,103 @@ export default function TopUpButton({ onPress }: any) {
             +
           </Text>
         </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
-  );
+
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 15,
+            zIndex: 1,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            borderRadius: 10,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            source={require("../../assets/images/diamond.png")}
+            style={{ width: 25, height: 25, marginRight: 5 }}
+          />
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>55</Text>
+
+          <View style={styles.container}>
+            <View style={styles.cardsContainer}>
+              <View style={styles.cardWrapper}></View>
+              <View style={styles.cardWrapper}></View>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+      ////
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible)
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <ScrollView>
+              <View>
+                <DiamondItem />
+              </View>
+            </ScrollView>
+            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
+          </View>
+        </View>
+      </Modal>
+    </>
+  )
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "white",
+  },
+  cardsContainer: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  cardWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: 300,
+    height: 300,
+    marginTop: -80,
+  },
+  centeredView: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    flexDirection: "column",
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+})
+export default ModalEditProfile

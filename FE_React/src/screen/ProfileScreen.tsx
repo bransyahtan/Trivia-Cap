@@ -72,7 +72,7 @@ export default function ProfileScreen() {
         <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
           <StatusBar />
 
-          <TopUpButton onPress={handleTopUp} />
+          <TopUpButton />
 
           <View style={{ alignItems: "center" }}>
             <Image

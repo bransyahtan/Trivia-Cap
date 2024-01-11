@@ -64,11 +64,11 @@ export default function HomeScreen() {
     >
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
-        <TopUpButton onPress={handleTopUp} />
+        <TopUpButton />
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/images/2.png")}
-            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 50 }}
+            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 10 }}
           />
           <View style={{ marginTop: 20 }}>
             <Image
