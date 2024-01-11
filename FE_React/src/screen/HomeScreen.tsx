@@ -80,11 +80,10 @@ export default function HomeScreen() {
         >
           <ModalAvatar />
         </TouchableOpacity>
-
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/images/2.png")}
-            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 50 }}
+            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 10 }}
           />
           <View style={{ marginTop: 20 }}>
             <Image
