@@ -34,8 +34,8 @@ const ShoppingPanel: React.FC = () => {
         },
       });
 
-      if (response.data.Status == "OK") {
-      }
+      // if (response.data.Status == "OK") {
+      // }s
 
       console.log(response.data);
     } catch (error) {
@@ -61,7 +61,7 @@ const ShoppingPanel: React.FC = () => {
     try {
       const token = await AsyncStorage.getItem("user");
       const response = await axios.get(
-        "https://7772-2404-8000-1004-1019-2c67-e014-b6d4-d34.ngrok-free.app/api/diamonds",
+        "http://192.168.18.238:8000/api/diamonds",
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -69,7 +69,6 @@ const ShoppingPanel: React.FC = () => {
           },
         }
       );
-      // console.log(response);
       setDiamond(response.data.data);
     } catch (error) {
       console.error("Error fetching diamond:", error);

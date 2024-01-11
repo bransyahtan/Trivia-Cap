@@ -7,12 +7,17 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
+  Button,
 } from "react-native";
 import MyButton from "../components/Button";
 import TopUpButton from "../components/TopUpButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/core";
 import { jwtDecode } from "jwt-decode";
+import Modal from "react-native-modal";
+import { API } from "../utils/api";
+import ModalAvatar from "../components/ModalAvatar";
 
 interface UserInfo {
   picture?: string;
@@ -24,10 +29,6 @@ interface UserInfo {
 export default function HomeScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState<UserInfo | null>(null);
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   const getUser = async () => {
     try {
@@ -44,7 +45,6 @@ export default function HomeScreen() {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("user");
-
       setUser(null);
     } catch (error) {
       console.error("Error during logout:", error);
@@ -56,6 +56,10 @@ export default function HomeScreen() {
     console.log("aaaa");
   };
 
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <ImageBackground
       source={require("../../assets/images/bg1.png")}
@@ -64,6 +68,20 @@ export default function HomeScreen() {
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
         <TopUpButton onPress={handleTopUp} />
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: 35,
+            right: -25,
+            zIndex: 1,
+            borderRadius: 10,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <ModalAvatar />
+        </TouchableOpacity>
+
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/images/2.png")}
@@ -85,7 +103,6 @@ export default function HomeScreen() {
             >
               User
             </Text>
-            I
           </View>
 
           <View style={{ marginTop: 80, alignItems: "center" }}>
