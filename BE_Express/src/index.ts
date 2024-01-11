@@ -1,11 +1,8 @@
 import express, { Request, Response } from "express";
-import { WebSocketServer } from "ws";
-
-const wss = new WebSocketServer({
-  noServer: true,
-});
+import webSocket from "./ws";
 
 const app = express();
+const ws = webSocket();
 const port = 3000;
 
 app.get("/", (req: Request, res: Response) => {
@@ -15,16 +12,5 @@ app.get("/", (req: Request, res: Response) => {
 const s = app.listen(port, () => {
   console.log("Listening on :" + port);
 });
-s.on("upgrade", (req, socket, head) => {
-  console.log("Upgrade..\nperform Auth...");
 
-  wss.handleUpgrade(req, socket, head, ws => {
-    wss.emit("connection", ws, req);
-  });
-});
-wss.on("connection", ws => {
-  console.log("New client conected");
-  ws.send("connection established");
-
-  ws.on("close", () => console.log("Client Disconnected"));
-});
+s.on("upgrade", ws);
