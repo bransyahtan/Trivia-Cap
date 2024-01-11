@@ -56,7 +56,7 @@ export default function LobyScreen() {
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("MainApp" as never);
+              navigation.navigate("Home" as never);
             }}
             style={{
               position: "absolute",
@@ -106,7 +106,7 @@ export default function LobyScreen() {
               data={data}
               horizontal={false}
               renderItem={renderItem}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={(item) => item.id.toString()}
               contentContainerStyle={{ marginTop: 30 }}
             />
             V

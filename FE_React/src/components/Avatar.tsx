@@ -10,9 +10,10 @@ import {
   TouchableOpacity,
   View,
   Button,
+  Alert,
 } from "react-native";
 
-export const Avatar = () => {
+export const Avatar = ({ setTriggerFetch }) => {
   const [avatar, setAvatar] = useState([]);
   const handleCLickAvatar = async (obj) => {
     try {
@@ -23,10 +24,8 @@ export const Avatar = () => {
         },
       });
 
-      // if (response.data.Status == "OK") {
-      // }s
-
       console.log(response.data);
+      setTriggerFetch((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching avatars:", error);
     }

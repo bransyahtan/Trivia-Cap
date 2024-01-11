@@ -18,6 +18,7 @@ import { jwtDecode } from "jwt-decode";
 import Modal from "react-native-modal";
 import { API } from "../utils/api";
 import ModalAvatar from "../components/ModalAvatar";
+import axios from "axios";
 
 interface UserInfo {
   picture?: string;
@@ -29,6 +30,40 @@ interface UserInfo {
 export default function HomeScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [triggerFetch, setTriggerFetch] = useState(0);
+
+  const getUserName = async () => {
+    try {
+      // const token = await AsyncStorage.getItem("user");
+      // const response = await API.get("api/v1/detail-user", {
+      //   headers: {
+      //     Authorization: "Bearer " + token,
+      //   },
+      // });
+      const token = await AsyncStorage.getItem("user");
+      const user = jwtDecode(token) as UserInfo;
+      setName(user.name);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const getUserAvatar = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.get("api/v1/detail-user", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log(response);
+      setAvatar(response.data.data.avatar);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const getUser = async () => {
     try {
@@ -53,12 +88,13 @@ export default function HomeScreen() {
 
   const handleTopUp = () => {
     navigation.navigate("Shop" as never);
-    console.log("aaaa");
   };
 
   useEffect(() => {
     getUser();
-  }, []);
+    getUserName();
+    getUserAvatar();
+  }, [triggerFetch]);
 
   return (
     <ImageBackground
@@ -79,7 +115,7 @@ export default function HomeScreen() {
             alignItems: "center",
           }}
         >
-          <ModalAvatar />
+          <ModalAvatar setTriggerFetch={setTriggerFetch} />
         </TouchableOpacity>
 
         <View style={{ alignItems: "center" }}>
@@ -90,7 +126,9 @@ export default function HomeScreen() {
 
           <View style={{ marginTop: 20 }}>
             <Image
-              source={require("../../assets/avatar/avatar1.png")}
+              source={{
+                uri: avatar,
+              }}
               style={{ width: 130, height: 130, borderRadius: 65 }}
             />
             <Text
@@ -101,7 +139,7 @@ export default function HomeScreen() {
                 textAlign: "center",
               }}
             >
-              User
+              {name}
             </Text>
           </View>
 
