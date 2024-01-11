@@ -14,10 +14,16 @@ const MyTextInput = (props: any) => {
         paddingHorizontal: 10,
         backgroundColor: "#fff",
         borderRadius: 10,
+        borderWidth: 2,
+        borderColor: "grey",
         width: 300,
-        paddingVertical: 15,
+        paddingVertical: 12,
         marginTop: 20,
         elevation: 5,
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        }
       }}
     ></TextInput>
   )

@@ -6,26 +6,14 @@ import {
   StyleSheet,
   Text,
   View,
-<<<<<<< HEAD
 } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import MyButton from "../components/Button"
 import * as Google from "expo-auth-session/providers/google"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from "@react-navigation/native"
 import * as WebBrowser from "expo-web-browser"
 import axios from "axios"
-=======
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import MyButton from "../components/Button";
-import * as Google from "expo-auth-session/providers/google";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-import * as WebBrowser from "expo-web-browser";
-import axios from "axios";
-import { API, BASE_URL } from "../utils/api";
->>>>>>> 63b0221701c9961e6bae19b9c605c2a3f4caaf17
 
 interface UserInfo {
   picture?: string
@@ -34,32 +22,17 @@ interface UserInfo {
   name: string
 }
 
+// test
 WebBrowser.maybeCompleteAuthSession()
 
 export default function LoginScreen() {
-<<<<<<< HEAD
   const [authInProgress, setAuthInProgress] = useState(false)
   const navigate = useNavigation()
-=======
-  // const navigate = useNavigation()
-  const [authInProgress, setAuthInProgress] = useState(false);
-  const navigate = useNavigation();
->>>>>>> 63b0221701c9961e6bae19b9c605c2a3f4caaf17
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     webClientId:
       "226355358927-33ikf3sl0pbvc283t9vk7ehmcrb26nda.apps.googleusercontent.com",
   })
-
-  // useEffect(() => {
-  //   if (
-  //     authInProgress &&
-  //     response?.type === "success" &&
-  //     response.authentication
-  //   ) {
-  //     getUserInfo(response.authentication.accessToken);
-  //   }
-  // }, [response]);
 
   const handleEffect = async () => {
     const user = await getLocalUser()
@@ -69,7 +42,6 @@ export default function LoginScreen() {
       const result = await promptAsync()
       console.log(result)
       if (result.type == "success") {
-<<<<<<< HEAD
         const user = await getUserInfo(result?.authentication?.accessToken || "")
         const response = await axios.post("http://192.168.18.188:8080/api/v1/user", {
           email: user.email,
@@ -77,23 +49,8 @@ export default function LoginScreen() {
           name: user.name,
         })
 
-        console.log(response.data)
-        // await AsyncStorage.setItem("user", JSON.stringify(response.data.data));
-        // navigate.navigate("SelectProfile" as never);
-=======
-        const user = await getUserInfo(
-          result?.authentication?.accessToken || ""
-        );
-        const response = await API.post("/api/v1/user", {
-          email: user.email,
-          avatar: user.picture,
-          name: user.name,
-        });
-
-        console.log(response.data);
-        await AsyncStorage.setItem("user", response.data.token);
-        navigate.navigate("SelectProfile" as never);
->>>>>>> 63b0221701c9961e6bae19b9c605c2a3f4caaf17
+        await AsyncStorage.setItem("user", response.data.token)
+        navigate.navigate("SelectProfile" as never)
       }
     } else {
       // navigate.navigate("Home" as never);
@@ -132,7 +89,7 @@ export default function LoginScreen() {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/bg1.png")}
+      source={require("../../assets/images/bg-game.png")}
       style={{ flex: 1, opacity: 0.95 }}
     >
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>

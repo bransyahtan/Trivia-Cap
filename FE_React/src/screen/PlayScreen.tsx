@@ -4,6 +4,7 @@ import {
   ImageBackground,
   ScrollView,
   StatusBar,
+  StyleProp,
   Text,
   TouchableOpacity,
   View,
@@ -15,7 +16,7 @@ const PlayScreen = () => {
   const navigation = useNavigation()
 
   const LoginNavigate = () => {
-    navigation.navigate("Login")
+    navigation.navigate("Login" as never)
   }
 
   const [selectedOption, setSelectedOption] = useState(null)
@@ -120,7 +121,7 @@ const PlayScreen = () => {
   )
 }
 
-const styles = {
+const styles: StyleProp<any> = {
   optionButton: {
     flexDirection: "row",
     backgroundColor: "#39A7FF",

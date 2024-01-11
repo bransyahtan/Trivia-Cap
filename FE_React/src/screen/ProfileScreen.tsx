@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
   FlatList,
   Image,
@@ -9,23 +9,24 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
+} from "react-native"
 
-import MyButton from "../components/Button";
-import TopUpButton from "../components/TopUpButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/core";
+import MyButton from "../components/Button"
+import TopUpButton from "../components/TopUpButton"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from "@react-navigation/core"
+import ModalEditProfile from "../components/ModalEditProfile"
 
 interface UserInfo {
-  picture?: string;
-  email: string;
-  verified_email: boolean;
-  name: string;
+  picture?: string
+  email: string
+  verified_email: boolean
+  name: string
 }
 
 export default function ProfileScreen() {
-  const navigation = useNavigation();
-  const [user, setUser] = useState<UserInfo | null>(null);
+  const navigation = useNavigation()
+  const [user, setUser] = useState<UserInfo | null>(null)
 
   // const renderItem = ({ item }: any) => (
   //   <TouchableOpacity
@@ -42,97 +43,102 @@ export default function ProfileScreen() {
 
   const getUser = async () => {
     try {
-      const data = await AsyncStorage.getItem("user");
-      console.log(data);
+      const data = await AsyncStorage.getItem("user")
+      console.log(data)
       if (data) {
-        const userData = JSON.parse(data) as UserInfo;
-        setUser(userData);
+        const userData = JSON.parse(data) as UserInfo
+        setUser(userData)
       }
     } catch (error) {
-      console.error("Error getting user data:", error);
+      console.error("Error getting user data:", error)
     }
-  };
+  }
 
   const handleTopUp = () => {
-    navigation.navigate("Shop" as never);
-    console.log("whyyy boommmmm");
-  };
+    navigation.navigate("Shop" as never)
+    console.log("whyyy boommmmm")
+  }
 
   useEffect(() => {
-    getUser();
-  }, []);
+    getUser()
+  }, [])
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: "black", justifyContent: "center" }}
+    <ImageBackground
+      source={require("../../assets/images/bg_game.png")}
+      style={{ flex: 1, opacity: 0.95 }}
     >
-      <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-        <StatusBar />
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
+          <StatusBar />
 
-        <TopUpButton onPress={handleTopUp} />
+          <TopUpButton onPress={handleTopUp} />
 
-        <View style={{ alignItems: "center" }}>
-          <Image
-            source={require("../../assets/images/2.png")}
-            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 30 }}
-          />
-
-          <View style={{ marginTop: 20, alignItems: "center" }}>
+          <View style={{ alignItems: "center" }}>
             <Image
-              source={require("../../assets/avatar/avatar1.png")}
-              style={{
-                width: 130,
-                height: 130,
-                borderRadius: 65,
-                alignSelf: "center",
-              }}
+              source={require("../../assets/images/2.png")}
+              style={{ width: 430, height: 130, borderRadius: 65, marginTop: 30 }}
             />
-            <Text
+
+            <View style={{ marginTop: 20, alignItems: "center" }}>
+              <Image
+                source={require("../../assets/avatar/avatar1.png")}
+                style={{
+                  width: 130,
+                  height: 130,
+                  borderRadius: 65,
+                  alignSelf: "center",
+                }}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 25,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginTop: 10,
+                }}
+              >
+                Antonio Berewendo
+              </Text>
+            </View>
+
+            <View
               style={{
-                color: "white",
-                fontSize: 25,
-                fontWeight: "bold",
-                textAlign: "center",
-                marginTop: 10,
+                marginTop: 20,
+                flexDirection: "row",
+                justifyContent: "center",
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: "white",
+                overflow: "hidden",
               }}
             >
-              Antonio Berewendo
-            </Text>
-          </View>
-
-          <View
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              justifyContent: "center",
-              borderWidth: 1,
-              borderRadius: 8,
-              borderColor: "white",
-              overflow: "hidden",
-            }}
-          >
-            <View style={styles.statBox}>
-              <Text style={styles.statText}>PLAY</Text>
-              <Text style={styles.statText}>3</Text>
+              <View style={styles.statBox}>
+                <Text style={styles.statText}>PLAY</Text>
+                <Text style={styles.statText}>3</Text>
+              </View>
+              <View style={styles.statBox}>
+                <Text style={styles.statText}>WINS</Text>
+                <Text style={styles.statText}>2</Text>
+              </View>
             </View>
-            <View style={styles.statBox}>
-              <Text style={styles.statText}>WINS</Text>
-              <Text style={styles.statText}>2</Text>
-            </View>
-          </View>
 
-          <View style={{ marginTop: 60, alignItems: "center" }}>
-            <MyButton
-              text="Edit Profile"
+            <View style={{ marginTop: 60, alignItems: "center" }}>
+              {/* <MyButton
+              text="Edit "
               background="purple"
               textColor="white"
               navigateTo="EditProfile"
-            />
+            /> */}
+
+              <ModalEditProfile />
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
-  );
+        </ScrollView>
+      </View>
+    </ImageBackground>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -159,4 +165,4 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginBottom: 8,
   },
-});
+})
