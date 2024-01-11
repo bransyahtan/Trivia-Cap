@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type userRepository struct {
@@ -36,7 +37,7 @@ func (r *userRepository) RegisterUser(ctx context.Context, user domain.User) err
 func (r *userRepository) FetchUser(ctx context.Context) ([]domain.User, error) {
 	var users []domain.User
 	
-	err := r.DB.WithContext(ctx).Order("id desc").Find(&users).Error
+	err := r.DB.WithContext(ctx).Preload(clause.Associations).Order("id desc").Find(&users).Error
 	if err != nil {
 		return []domain.User{}, err
 	}

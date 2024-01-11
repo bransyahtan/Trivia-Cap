@@ -7,3 +7,7 @@ type TopupReq struct {
 	Name          string  `json:"name"`
 	Email         string  `json:"email"`
 }
+
+type TopupOrderIDReq struct {
+	OrderId string `json:"order_id"`
+}

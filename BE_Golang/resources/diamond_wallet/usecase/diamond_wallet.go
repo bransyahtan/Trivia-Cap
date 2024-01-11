@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"github.com/rdwansch/Trivia-Cap/dto"
 	"github.com/rdwansch/Trivia-Cap/internal/utils"
@@ -10,10 +11,17 @@ import (
 type diamondWalletUseCase struct {
 	diamondRepository domain.DiamondWalletRepository
 	randNumberService utils.RandNumberService
+	midtransService   domain.MidtransService
+	topUpRepository   domain.TopUpRepository
 }
 
-func NewDiamondWalletUseCase(diamondRepository domain.DiamondWalletRepository, randNumberService utils.RandNumberService) domain.DiamondWalletUseCase {
-	return &diamondWalletUseCase{diamondRepository, randNumberService}
+func NewDiamondWalletUseCase(diamondRepository domain.DiamondWalletRepository, randNumberService utils.RandNumberService, midtransService domain.MidtransService, topUpRepository domain.TopUpRepository) domain.DiamondWalletUseCase {
+	return &diamondWalletUseCase{
+		diamondRepository,
+		randNumberService,
+		midtransService,
+		topUpRepository,
+	}
 }
 
 func (u *diamondWalletUseCase) FindById(id int64) (dto.WalletResponse, error) {
@@ -43,11 +51,14 @@ func (u *diamondWalletUseCase) FindByAccountNumber(accountNumber string) (domain
 
 func (u *diamondWalletUseCase) Update(updateWallet dto.WalletUpdateReq) (dto.WalletResponse, error) {
 	var ctx = context.Background()
-	var domainWallet = domain.DiamondWallet{
+	var daimond = domain.DiamondWallet{
 		UserID:         updateWallet.UserId,
 		BalanceDiamond: updateWallet.BalanceDiamond,
 	}
-	err := u.diamondRepository.Update(ctx, &domainWallet)
+	
+	fmt.Println("Di =>", daimond)
+	
+	err := u.diamondRepository.Update(ctx, &daimond)
 	if err != nil {
 		return dto.WalletResponse{}, err
 	}
@@ -76,4 +87,33 @@ func (u *diamondWalletUseCase) CreateWallet(createWallet dto.WalletReq) (dto.Wal
 		AccountNumber:  createAccountNumber,
 		BalanceDiamond: createWallet.BalanceDiamond,
 	}, nil
+}
+
+func (u *diamondWalletUseCase) UpdateAfterTopUp(updateWallet dto.WalletUpdateReq) error {
+	ctx := context.Background()
+	
+	orderID := updateWallet.OrderId
+	
+	tuOrderID := domain.TopUp{OrderId: orderID}
+	
+	tuData, err := u.topUpRepository.FindTUByOrderID(ctx, &tuOrderID)
+	if err != nil {
+		return err
+	}
+	
+	status, err := u.midtransService.VerifyPayment(orderID)
+	if err != nil {
+		return err
+	}
+	
+	if status == "settlement" {
+		err := u.diamondRepository.Update(ctx, &domain.DiamondWallet{
+			UserID:         tuData.IdUser,
+			BalanceDiamond: uint64(tuData.AmountDiamond),
+		})
+		
+		return err
+	}
+	
+	return nil
 }

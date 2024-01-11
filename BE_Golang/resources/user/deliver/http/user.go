@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"github.com/rdwansch/Trivia-Cap/dto"
@@ -78,8 +77,6 @@ func (h *userHandler) FindOne(c *fiber.Ctx) error {
 		})
 	}
 	
-	fmt.Println("ini adalah email : ", payload.Email)
-	
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"code":   http.StatusOK,
 		"Status": http.StatusText(http.StatusOK),
@@ -101,9 +98,10 @@ func (h *userHandler) UpdateProfile(c *fiber.Ctx) error {
 	payload := component.GetPayloadData(c)
 	
 	reqUpdate = dto.UserUpdateProfileReq{
-		ID:     payload.ID,
-		Avatar: reqUpdate.Avatar,
-		Name:   reqUpdate.Name,
+		ID:       payload.ID,
+		Avatar:   reqUpdate.Avatar,
+		Name:     reqUpdate.Name,
+		IDAvatar: reqUpdate.IDAvatar,
 	}
 	
 	response, err := h.UserUseCase.UpdateProfile(reqUpdate)
