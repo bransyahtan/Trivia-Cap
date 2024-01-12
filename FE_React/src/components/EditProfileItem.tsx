@@ -14,35 +14,43 @@ import MyButton from "./Button"
 import { API } from "../utils/api"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-export default function SelectProfileScreen() {
+export default function EditProfileItem({ getUser }) {
   const [avatar, setAvatar] = useState([])
   const [username, setUsername] = useState("")
 
-  const [selectedAvatar, setSelectedAvatar] = useState("")
+  const [selectedAvatar, setSelectedAvatar] = useState({
+    avatar: "",
+    id_avatar: -1,
+  })
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => handleAvatarClick(item)}
       style={styles.avatarContainer}
     >
-      <Image source={item.image_url} style={styles.avatarImage} />
+      <Image source={item.avatar} style={styles.avatarImage} />
     </TouchableOpacity>
   )
 
   const handleAvatarClick = (avatar) => {
-    setSelectedAvatar(avatar.image_url)
+    console.log(avatar)
+    setSelectedAvatar({
+      avatar: avatar.avatar,
+      id_avatar: avatar.id_avatar,
+    })
     // console.log("Avatar clicked:", avatar.image_url);
   }
 
   const getAvatar = async () => {
     try {
       const token = await AsyncStorage.getItem("user")
-      const response = await API.get("api/v1/avatars", {
+      const response = await API.get("api/v1/my-avatars", {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       setAvatar(response.data.data)
+      console.log(response.data)
     } catch (error) {
       console.error("Error fetching avatars:", error)
     }
@@ -54,8 +62,9 @@ export default function SelectProfileScreen() {
       const response = await API.put(
         "api/v1/update-profile",
         {
-          avatar: selectedAvatar,
+          avatar: selectedAvatar.avatar,
           name: username,
+          id_avatar: selectedAvatar.id_avatar,
         },
         {
           headers: {
@@ -63,7 +72,7 @@ export default function SelectProfileScreen() {
           },
         },
       )
-      console.log(response)
+      getUser()
     } catch (error) {
       console.log(error)
     }
@@ -74,8 +83,6 @@ export default function SelectProfileScreen() {
     getAvatar()
   }, [])
 
-  console.log(username)
-  console.log(selectedAvatar)
   return (
     <>
       <StatusBar />
@@ -98,7 +105,6 @@ export default function SelectProfileScreen() {
             text="Save"
             background="#39A7FF"
             textColor="white"
-            navigateTo="MainApp"
             onPress={handleSubmit}
           />
         </View>
