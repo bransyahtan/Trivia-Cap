@@ -19,6 +19,7 @@ import { jwtDecode } from "jwt-decode";
 import Modal from "react-native-modal";
 import { API } from "../utils/api";
 import ModalAvatar from "../components/ModalAvatar";
+import axios from "axios";
 import ModalEditProfile from "../components/ModalEditProfile";
 
 interface UserInfo {
@@ -31,6 +32,39 @@ interface UserInfo {
 export default function HomeScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [triggerFetch, setTriggerFetch] = useState(0);
+
+  const getUserName = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.get("api/v1/detail-user", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      const user = jwtDecode(token) as UserInfo;
+      setName(response.data.data.name);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const getUserAvatar = async () => {
+    try {
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.get("api/v1/detail-user", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log(response);
+      setAvatar(response.data.data.avatar);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const getUser = async () => {
     try {
@@ -55,15 +89,19 @@ export default function HomeScreen() {
 
   const handleTopUp = () => {
     navigation.navigate("Shop" as never);
-    console.log("aaaa");
   };
 
   useEffect(() => {
     getUser();
-  }, []);
+    getUserName();
+    getUserAvatar();
+  }, [triggerFetch]);
 
   return (
-    <ImageBackground source={require("../../assets/images/bg1.png")} style={{ flex: 1, opacity: 0.95 }}>
+    <ImageBackground
+      source={require("../../assets/images/bg1.png")}
+      style={{ flex: 1, opacity: 0.95 }}
+    >
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
         <TopUpButton onPress={handleTopUp} />
@@ -78,7 +116,7 @@ export default function HomeScreen() {
             alignItems: "center",
           }}
         >
-          <ModalAvatar />
+          <ModalAvatar setTriggerFetch={setTriggerFetch} />
         </TouchableOpacity>
         <View style={{ alignItems: "center" }}>
           <Image
@@ -87,7 +125,9 @@ export default function HomeScreen() {
           />
           <View style={{ marginTop: 20 }}>
             <Image
-              source={require("../../assets/avatar/avatar1.png")}
+              source={{
+                uri: avatar,
+              }}
               style={{
                 width: 130,
                 height: 130,
@@ -110,15 +150,26 @@ export default function HomeScreen() {
                 marginTop: 10,
               }}
             >
-              Player 1
+              {name}
             </Text>
           </View>
           <View style={{ top: -105, left: 40 }}>
             I<ModalEditProfile />
           </View>
           <View style={{ marginTop: 50, alignItems: "center" }}>
-            <MyButton text="Play Game" background="#39A7FF" textColor="white" navigateTo="Lobby" />
-            <MyButton text="Logout" background="#BE3144" textColor="white" navigateTo="Login" onPress={handleLogout} />
+            <MyButton
+              text="Play Game"
+              background="#39A7FF"
+              textColor="white"
+              navigateTo="Lobby"
+            />
+            <MyButton
+              text="Logout"
+              background="#BE3144"
+              textColor="white"
+              navigateTo="Login"
+              onPress={handleLogout}
+            />
           </View>
         </View>
       </ScrollView>

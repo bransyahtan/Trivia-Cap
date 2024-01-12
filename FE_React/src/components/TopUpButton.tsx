@@ -17,6 +17,7 @@ import DiamondItem from "./DiamondItem"
 export default function TopUpButton({ onPress }: any) {
   const [diamond, setDiamond] = useState(0)
   const [modalVisible, setModalVisible] = useState(false)
+
   const diamondWallet = async () => {
     const token = await AsyncStorage.getItem("user")
     const response = await API.get("api/v1/detail-wallet", {
@@ -25,6 +26,7 @@ export default function TopUpButton({ onPress }: any) {
       },
     })
     setDiamond(response.data.data.balance_diamond)
+    // setDiamond(55);
   }
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function TopUpButton({ onPress }: any) {
   return (
     <>
       <View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             position: "absolute",
             top: 20,
@@ -45,70 +47,77 @@ export default function TopUpButton({ onPress }: any) {
             flexDirection: "row",
             alignItems: "center",
           }}
-        >
-          <Image
+        > */}
+        {/* <Image
             source={require("../../assets/images/diamond.png")}
             style={{ width: 20, height: 20, marginRight: 5 }}
           />
           <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
             {diamond}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
+          </Text> */}
+        <View
           style={{
-            width: 25,
-            height: 25,
-            backgroundColor: "#16FF00",
-            borderRadius: 5,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-            top: 20,
-            left: 350,
-            zIndex: 2,
+            backgroundColor: "red",
+            width: "auto",
           }}
         >
-          <Text
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
             style={{
-              color: "white",
-              fontSize: 20,
-              fontWeight: "bold",
-              textShadowColor: "black",
-              textShadowRadius: 10,
+              width: 25,
+              height: 25,
+              backgroundColor: "#16FF00",
+              borderRadius: 5,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              top: 20,
+              left: 300,
+              zIndex: 2,
             }}
           >
-            +
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 20,
+                fontWeight: "bold",
+                textShadowColor: "black",
+                textShadowRadius: 10,
+              }}
+            >
+              +
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: 20,
-            right: 15,
-            zIndex: 1,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            borderRadius: 10,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Image
-            source={require("../../assets/images/diamond.png")}
-            style={{ width: 25, height: 25, marginRight: 5 }}
-          />
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>55</Text>
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: 20,
+              right: 15,
+              zIndex: 1,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              borderRadius: 10,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={require("../../assets/images/diamond.png")}
+              style={{ width: 25, height: 25, marginRight: 5 }}
+            />
+            <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+              {diamond}
+            </Text>
 
-          <View style={styles.container}>
-            <View style={styles.cardsContainer}>
-              <View style={styles.cardWrapper}></View>
-              <View style={styles.cardWrapper}></View>
+            <View style={styles.container}>
+              <View style={styles.cardsContainer}>
+                <View style={styles.cardWrapper}></View>
+                <View style={styles.cardWrapper}></View>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
       ////
       <Modal
@@ -123,7 +132,7 @@ export default function TopUpButton({ onPress }: any) {
           <View style={styles.modalView}>
             <ScrollView>
               <View>
-                <DiamondItem />
+                <DiamondItem setTrigger={diamondWallet} />
               </View>
             </ScrollView>
             <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
@@ -182,3 +191,4 @@ const styles = StyleSheet.create({
     },
   },
 })
+// export default ModalEditProfile;

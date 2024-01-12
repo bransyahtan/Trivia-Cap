@@ -82,7 +82,7 @@ export default function SelectProfileScreen() {
           },
         }
       );
-      navigation.navigate("MainApp" as never);
+      navigation.navigate("Home" as never);
     } catch (error) {
       console.log(error);
     }
@@ -128,7 +128,7 @@ export default function SelectProfileScreen() {
               text="Continue"
               background="#39A7FF"
               textColor="white"
-              navigateTo="MainApp"
+              navigateTo="Home"
               onPress={handleSubmit}
             />
           </View>

@@ -11,7 +11,9 @@ import {
 } from "react-native";
 import { PiNotePencil } from "react-icons/pi";
 import { Avatar } from "./Avatar";
-const ModalAvatar: React.FC = () => {
+const ModalAvatar: React.FC<{
+  setTriggerFetch: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ setTriggerFetch }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -48,7 +50,7 @@ const ModalAvatar: React.FC = () => {
           <View style={styles.modalView}>
             <ScrollView>
               <View style={styles.selectProfileContainer}>
-                <Avatar />
+                <Avatar setTriggerFetch={setTriggerFetch} />
               </View>
             </ScrollView>
             <Button
