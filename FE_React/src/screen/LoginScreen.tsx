@@ -45,7 +45,7 @@ export default function LoginScreen() {
         navigate.navigate("SelectProfile" as never);
       }
     } else {
-      navigate.navigate("MainApp" as never);
+      navigate.navigate("Home" as never);
       // console.log(user);
       // console.log("loaded locally");
     }

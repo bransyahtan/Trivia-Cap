@@ -10,23 +10,26 @@ import {
   TouchableOpacity,
   View,
   Button,
+  Alert,
 } from "react-native";
 
-export const Avatar = () => {
+export const Avatar = ({ setTriggerFetch }) => {
   const [avatar, setAvatar] = useState([]);
   const handleCLickAvatar = async (obj) => {
     try {
       const token = await AsyncStorage.getItem("user");
-      const response = await API.put("api/v1/update-profile", obj, {
+      const response = await API.post("api/v1/add-avatar", obj, {
         headers: {
           Authorization: "Bearer " + token,
         },
       });
 
-      // if (response.data.Status == "OK") {
-      // }s
+      if (response.status == 500) {
+        alert("kosong");
+      }
 
       console.log(response.data);
+      setTriggerFetch((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching avatars:", error);
     }
@@ -50,8 +53,8 @@ export const Avatar = () => {
     getAvatar();
   }, []);
   return (
-    <View style={styles.centeredView}>
-      <View style={styles.modalView}>
+    <View>
+      <View>
         <ScrollView>
           <View style={styles.diamondsContainer}>
             {avatar
@@ -67,7 +70,7 @@ export const Avatar = () => {
                     onPress={() =>
                       handleCLickAvatar({
                         id_avatar: avatar.id,
-                        name: avatar.name,
+                        price: avatar.price,
                         avatar: avatar.image_url,
                       })
                     }
@@ -94,56 +97,13 @@ export const Avatar = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
     color: "white",
   },
-  cardsContainer: {
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: 20,
-  },
-  cardWrapper: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-    width: 300,
-    height: 300,
-    marginTop: -80,
-  },
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    flexDirection: "column",
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
+
   diamondsContainer: {
     columnGap: 20,
     flexDirection: "row",
