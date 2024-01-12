@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"github.com/rdwansch/Trivia-Cap/dto"
@@ -48,11 +47,11 @@ func (h *userHandler) RegisterUser(c *fiber.Ctx) error {
 	}
 	
 	token, err := h.UserUseCase.RegisterUser(newUser)
-	
 	if err != nil {
 		if err.Error() == "1" {
 			return c.Status(http.StatusOK).JSON(fiber.Map{
-				"token": token,
+				"token":       token,
+				"is_register": true,
 			})
 		}
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
@@ -69,6 +68,7 @@ func (h *userHandler) RegisterUser(c *fiber.Ctx) error {
 
 func (h *userHandler) FindOne(c *fiber.Ctx) error {
 	payload := component.GetPayloadData(c)
+	
 	user, err := h.UserUseCase.FindOne(payload.Email)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
@@ -77,8 +77,6 @@ func (h *userHandler) FindOne(c *fiber.Ctx) error {
 			"error":  err.Error(),
 		})
 	}
-	
-	fmt.Println("ini adalah email : ", payload.Email)
 	
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"code":   http.StatusOK,
@@ -101,9 +99,10 @@ func (h *userHandler) UpdateProfile(c *fiber.Ctx) error {
 	payload := component.GetPayloadData(c)
 	
 	reqUpdate = dto.UserUpdateProfileReq{
-		ID:     payload.ID,
-		Avatar: reqUpdate.Avatar,
-		Name:   reqUpdate.Name,
+		ID:       payload.ID,
+		Avatar:   reqUpdate.Avatar,
+		Name:     reqUpdate.Name,
+		IDAvatar: reqUpdate.IDAvatar,
 	}
 	
 	response, err := h.UserUseCase.UpdateProfile(reqUpdate)

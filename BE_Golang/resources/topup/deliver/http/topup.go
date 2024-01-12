@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"github.com/rdwansch/Trivia-Cap/dto"
@@ -18,6 +19,7 @@ func NewTopupHandler(app *fiber.App, tu domain.TopUpUseCase) {
 	
 	g := app.Group("/api/v1")
 	g.Post("/topup", component.TokenMiddleware(handler.InitializeTopUp))
+	g.Get("/check-by-order-id", handler.CheckDataTopUP)
 }
 
 func (h *topupHandler) InitializeTopUp(c *fiber.Ctx) error {
@@ -40,9 +42,11 @@ func (h *topupHandler) InitializeTopUp(c *fiber.Ctx) error {
 		Amount:        req.Amount,
 		AmountDiamond: req.AmountDiamond,
 		IdUser:        payload.ID,
-		Name:          payload.Name,
-		Email:         payload.Email,
+		//Name:          payload.Name,
+		Email: payload.Email,
 	}
+	
+	fmt.Println("NEWWWW >>>>>", newReq)
 	
 	res, err := h.TopUpUseCase.InitializeTopUp(newCtx, newReq)
 	
@@ -59,4 +63,24 @@ func (h *topupHandler) InitializeTopUp(c *fiber.Ctx) error {
 		"data":   res,
 	})
 	
+}
+
+func (h *topupHandler) CheckDataTopUP(c *fiber.Ctx) error {
+	var orderIDReq dto.TopupOrderIDReq
+	
+	err := c.BodyParser(&orderIDReq)
+	
+	data, err := h.FindTuByOrderID(orderIDReq.OrderId)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"code":   http.StatusInternalServerError,
+			"Status": http.StatusText(http.StatusInternalServerError),
+		})
+	}
+	
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"code":   http.StatusOK,
+		"Status": http.StatusText(http.StatusOK),
+		"data":   data,
+	})
 }

@@ -13,6 +13,7 @@ type User struct {
 	TopUp         []TopUp        `gorm:"foreignKey:IdUser;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	Notification  []Notification `gorm:"foreignKey:UserID;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	DiamondWallet DiamondWallet  `gorm:"foreignKey:UserID;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	Avatars       []MyAvatar     `gorm:"foreignKey:UserID;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 type UserRepository interface {

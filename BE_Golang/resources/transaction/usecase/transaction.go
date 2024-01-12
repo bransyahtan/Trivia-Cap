@@ -4,14 +4,15 @@ import (
 	"context"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"github.com/rdwansch/Trivia-Cap/dto"
+	"github.com/rdwansch/Trivia-Cap/resources/midtrans"
 )
 
 type transactionUseCase struct {
-	walletRepository      domain.DiamondWalletRepository
+	walletRepository      midtrans.DiamondWalletRepository
 	transactionRepository domain.TransactionRepository
 }
 
-func NewTransactionUseCase(walletRepository domain.DiamondWalletRepository, transactionRepository domain.TransactionRepository) domain.TransactionUseCase {
+func NewTransactionUseCase(walletRepository midtrans.DiamondWalletRepository, transactionRepository domain.TransactionRepository) domain.TransactionUseCase {
 	return &transactionUseCase{walletRepository, transactionRepository}
 }
 

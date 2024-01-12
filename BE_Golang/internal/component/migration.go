@@ -10,5 +10,7 @@ func migrate(db *gorm.DB) error {
 		domain.TopUp{},
 		domain.Notification{},
 		domain.DiamondWallet{},
-		domain.Transaction{})
+		domain.Transaction{},
+		domain.MyAvatar{},
+	)
 }

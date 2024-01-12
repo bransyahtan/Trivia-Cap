@@ -16,4 +16,5 @@ type WalletResponse struct {
 type WalletUpdateReq struct {
 	UserId         int64  `json:"user_id"`
 	BalanceDiamond uint64 `json:"balance_diamond"`
+	OrderId        string `json:"order_id"`
 }
