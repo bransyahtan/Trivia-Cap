@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Image,
   ImageBackground,
@@ -9,93 +9,63 @@ import {
   View,
   TouchableOpacity,
   Button,
-} from "react-native";
+} from "react-native"
 
-import MyButton from "../components/Button";
-import TopUpButton from "../components/TopUpButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/core";
-import { jwtDecode } from "jwt-decode";
-import Modal from "react-native-modal";
-import { API } from "../utils/api";
-import ModalAvatar from "../components/ModalAvatar";
-import axios from "axios";
-import ModalEditProfile from "../components/ModalEditProfile";
+import MyButton from "../components/Button"
+import TopUpButton from "../components/TopUpButton"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from "@react-navigation/core"
+import { jwtDecode } from "jwt-decode"
+import Modal from "react-native-modal"
+import { API } from "../utils/api"
+import ModalAvatar from "../components/ModalAvatar"
+import axios from "axios"
+import ModalEditProfile from "../components/ModalEditProfile"
+import { useIsFocused } from "@react-navigation/native"
 
 interface UserInfo {
-  picture?: string;
-  email: string;
-  verified_email: boolean;
-  name: string;
+  email: string
+  name: string
+  avatar: string
+  id: number
+  wallet: number
 }
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
-  const [user, setUser] = useState<UserInfo | null>(null);
-  const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [triggerFetch, setTriggerFetch] = useState(0);
-
-  const getUserName = async () => {
-    try {
-      const token = await AsyncStorage.getItem("user");
-      const response = await API.get("api/v1/detail-user", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      const user = jwtDecode(token) as UserInfo;
-      setName(response.data.data.name);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const getUserAvatar = async () => {
-    try {
-      const token = await AsyncStorage.getItem("user");
-      const response = await API.get("api/v1/detail-user", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      console.log(response);
-      setAvatar(response.data.data.avatar);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+  const navigation = useNavigation()
+  const isFocused = useIsFocused()
+  const [user, setUser] = useState<UserInfo | null>(null)
+  const [triggerFetch, setTriggerFetch] = useState(0)
 
   const getUser = async () => {
     try {
-      const data = await AsyncStorage.getItem("user");
-      if (data) {
-        const userData = jwtDecode(data) as UserInfo;
-        setUser(userData);
-      }
+      const response = await API.get("api/v1/detail-user", {
+        headers: {
+          Authorization: "Bearer " + (await AsyncStorage.getItem("user")),
+        },
+      })
+      setUser(response.data.data)
     } catch (error) {
-      console.error("Error getting user data:", error);
+      console.error("Error getting user data:", error)
     }
-  };
+  }
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem("user");
-      setUser(null);
+      await AsyncStorage.removeItem("user")
+      setUser(null)
     } catch (error) {
-      console.error("Error during logout:", error);
+      console.error("Error during logout:", error)
     }
-  };
+  }
 
   const handleTopUp = () => {
-    navigation.navigate("Shop" as never);
-  };
+    navigation.navigate("Shop" as never)
+  }
 
   useEffect(() => {
-    getUser();
-    getUserName();
-    getUserAvatar();
-  }, [triggerFetch]);
+    getUser()
+  }, [triggerFetch, isFocused])
 
   return (
     <ImageBackground
@@ -126,7 +96,7 @@ export default function HomeScreen() {
           <View style={{ marginTop: 20 }}>
             <Image
               source={{
-                uri: avatar,
+                uri: user?.avatar || "https://via.placeholder.com/150",
               }}
               style={{
                 width: 130,
@@ -150,11 +120,11 @@ export default function HomeScreen() {
                 marginTop: 10,
               }}
             >
-              {name}
+              {user?.name || "xxx"}
             </Text>
           </View>
           <View style={{ top: -105, left: 40 }}>
-            I<ModalEditProfile />
+            I<ModalEditProfile getUser={getUser} />
           </View>
           <View style={{ marginTop: 50, alignItems: "center" }}>
             <MyButton
@@ -174,7 +144,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
     </ImageBackground>
-  );
+  )
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})

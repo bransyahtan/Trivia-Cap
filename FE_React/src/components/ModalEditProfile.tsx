@@ -10,9 +10,9 @@ import {
   Button,
 } from "react-native"
 import { PiNotePencil } from "react-icons/pi"
-import SelectProfileScreen from "./EditProfileItem"
+import EditProfileItem from "./EditProfileItem"
 
-const ModalEditProfile: React.FC = () => {
+const ModalEditProfile = ({getUser}) => {
   const [modalVisible, setModalVisible] = useState(false)
 
   return (
@@ -45,7 +45,7 @@ const ModalEditProfile: React.FC = () => {
           <View style={styles.modalView}>
             <ScrollView>
               <View style={styles.selectProfileContainer}>
-                <SelectProfileScreen />
+                <EditProfileItem getUser={getUser}/>
               </View>
             </ScrollView>
             <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
   FlatList,
   Image,
@@ -9,12 +9,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import MyTextInput from "../components/FormInput";
-import MyButton from "../components/Button";
-import { API } from "../utils/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+} from "react-native"
+import MyTextInput from "../components/FormInput"
+import MyButton from "../components/Button"
+import { API } from "../utils/api"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from "@react-navigation/native"
 
 // const data = [
 //   { id: 1, image: require("../../assets/avatar/avatar1.png") },
@@ -29,14 +29,14 @@ import { useNavigation } from "@react-navigation/native";
 // ];
 
 export default function SelectProfileScreen() {
-  const [avatar, setAvatar] = useState([]);
-  const [username, setUsername] = useState("");
-  const navigation = useNavigation();
+  const [avatar, setAvatar] = useState([])
+  const [username, setUsername] = useState("")
+  const navigation = useNavigation()
 
   const [selectedAvatar, setSelectedAvatar] = useState({
     image_url: "",
     id_avatar: 0,
-  });
+  })
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -45,30 +45,30 @@ export default function SelectProfileScreen() {
     >
       <Image source={item.image_url} style={styles.avatarImage} />
     </TouchableOpacity>
-  );
+  )
 
   const handleAvatarClick = (avatar) => {
-    setSelectedAvatar({ image_url: avatar.image_url, id_avatar: avatar.id });
+    setSelectedAvatar({ image_url: avatar.image_url, id_avatar: avatar.id })
     // console.log("Avatar clicked:", avatar.image_url);
-  };
+  }
 
   const getAvatar = async () => {
     try {
-      const token = await AsyncStorage.getItem("user");
+      const token = await AsyncStorage.getItem("user")
       const response = await API.get("api/v1/avatars", {
         headers: {
           Authorization: "Bearer " + token,
         },
-      });
-      setAvatar(response.data.data);
+      })
+      setAvatar(response.data.data)
     } catch (error) {
-      console.error("Error fetching avatars:", error);
+      console.error("Error fetching avatars:", error)
     }
-  };
+  }
 
   const handleSubmit = async () => {
     try {
-      const token = await AsyncStorage.getItem("user");
+      const token = await AsyncStorage.getItem("user")
       const response = await API.put(
         "api/v1/update-profile",
         {
@@ -80,20 +80,20 @@ export default function SelectProfileScreen() {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
-      );
-      navigation.navigate("Home" as never);
+        },
+      )
+      navigation.navigate("Home" as never)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
-  console.log(avatar);
+  console.log(avatar)
   useEffect(() => {
-    getAvatar();
-  }, []);
-  console.log(username);
-  console.log(selectedAvatar);
+    getAvatar()
+  }, [])
+  console.log(username)
+  console.log(selectedAvatar)
   return (
     <ImageBackground
       source={require("../../assets/images/bg1.png")}
@@ -128,14 +128,13 @@ export default function SelectProfileScreen() {
               text="Continue"
               background="#39A7FF"
               textColor="white"
-              navigateTo="Home"
               onPress={handleSubmit}
             />
           </View>
         </View>
       </ScrollView>
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -150,4 +149,4 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginBottom: 8,
   },
-});
+})
