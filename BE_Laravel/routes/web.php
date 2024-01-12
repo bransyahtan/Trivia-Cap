@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AvatarController;
+use App\Http\Controllers\DiamondController;
+use App\Http\Controllers\QuizeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,10 +20,30 @@ Route::get('/', function () {
     return view('pages/home');
 });
 
-Route::get('/kuis', function () {
-    return view('pages/kuis/kuis');
-});
+// ADMIN PANEL
+Route::get('/quizes', [QuizeController::class, 'index']);
+Route::get('/quizes/add', [QuizeController::class, 'create']);
+Route::post('/quizes/add', [QuizeController::class, 'store']);
+Route::get('/quizes/{id}', [QuizeController::class, 'show']);
+Route::delete('/quizes/{id}', [QuizeController::class, 'destroy']);
 
-Route::get('/kuis/detail/{id}', function () {
-    return view('pages/kuis/detail');
-});
+Route::get('/avatars', [AvatarController::class, 'index']);
+Route::get('/avatars/add', [AvatarController::class, 'create']);
+Route::post('/avatars/add', [AvatarController::class, 'store']);
+Route::get('/avatars/{id}', [AvatarController::class, 'show']);
+Route::delete('/avatars/{id}', [AvatarController::class, 'destroy']);
+
+Route::get('/diamonds', [DiamondController::class, 'index']);
+Route::get('/diamonds/add', [DiamondController::class, 'create']);
+Route::post('/diamonds/add', [DiamondController::class, 'store']);
+Route::get('/diamonds/{id}', [DiamondController::class, 'show']);
+
+
+// API
+Route::get('/api/quizes', [QuizeController::class, "findAll"]);
+Route::get('/api/quizes/{id}', [QuizeController::class, "findById"]);
+
+Route::get('/api/avatars', [AvatarController::class, "findAll"]);
+Route::get('/api/avatars/{id}', [AvatarController::class, "findById"]);
+
+Route::get('/api/diamonds', [DiamondController::class, "findAll"]);

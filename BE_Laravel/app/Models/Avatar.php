@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Quiz extends Model
+class Avatar extends Model
 {
     use HasFactory;
 
-    protected $table = 'quizes';
+
+    protected $table = 'avatars';
 
     protected $fillable = [
-        'question',
-        'a',
-        'b',
-        'c',
-        'answer'
+        'name',
+        'price',
+        'image_url',
+        'isPremium',
     ];
 }
