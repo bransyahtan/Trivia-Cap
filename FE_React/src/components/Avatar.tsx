@@ -1,137 +1,170 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useEffect, useState } from "react"
-import { API } from "../utils/api"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import { API } from "../utils/api";
 import {
   Image,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Button,
-  Alert,
-} from "react-native"
+} from "react-native";
+import Modal from "react-native-modal";
+import Toast from "react-native-toast-message";
 
 export const Avatar = ({ setTriggerFetch }) => {
-  const [avatar, setAvatar] = useState([])
-  const handleCLickAvatar = async (obj) => {
+  const [avatar, setAvatar] = useState([]);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
+    useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [isFailedModalVisible, setIsFailedModalVisible] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+
+  const handleCLickAvatar = (avatar) => {
+    setSelectedAvatar(avatar);
+    setIsConfirmationModalVisible(true);
+  };
+
+  const confirmPurchase = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
-      const response = await API.post("api/v1/add-avatar", obj, {
-        headers: {
-          Authorization: "Bearer " + token,
+      const token = await AsyncStorage.getItem("user");
+      const response = await API.post(
+        "api/v1/add-avatar",
+        {
+          id_avatar: selectedAvatar.id,
+          price: selectedAvatar.price,
+          avatar: selectedAvatar.image_url,
         },
-      })
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
 
       if (response.status == 500) {
-        alert("kosong")
+        setIsFailedModalVisible(true);
+      } else {
+        setIsSuccessModalVisible(true);
+        setTriggerFetch((prev) => prev + 1);
       }
-
-      console.log(response.data)
-      setTriggerFetch((prev) => prev + 1)
     } catch (error) {
-      console.error("Error fetching avatars:", error)
+      setIsFailedModalVisible(true);
+    } finally {
+      setIsConfirmationModalVisible(false);
     }
-  }
+  };
 
   const getAvatar = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       const response = await API.get("api/v1/avatars", {
         headers: {
           Authorization: "Bearer " + token,
         },
-      })
-      setAvatar(response.data.data)
+      });
+      setAvatar(response.data.data);
     } catch (error) {
-      console.error("Error fetching avatars:", error)
+      console.error("Error fetching avatars:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    getAvatar()
-  }, [])
+    getAvatar();
+  }, []);
+
   return (
     <View>
-      <View>
-        <ScrollView>
-          <View style={styles.diamondsContainer}>
-            {avatar
-              .reduce((rows, avatar, index) => {
-                const rowIndex = Math.floor(index / 2)
-                if (!rows[rowIndex]) {
-                  rows[rowIndex] = []
-                }
-                rows[rowIndex].push(
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.diamondItem}
-                    onPress={() =>
-                      handleCLickAvatar({
-                        id_avatar: avatar.id,
-                        price: avatar.price,
-                        avatar: avatar.image_url,
-                      })
-                    }
-                  >
-                    <Image source={avatar.image_url} style={styles.avatarImage} />
-                    <Text
-                      style={{
-                        ...styles.diamondValue,
-                        color: parseInt(avatar.price) == 0 ? "gray" : "red",
-                      }}
-                    >
-                      {parseInt(avatar.price) == 0 ? "Free" : avatar.price}
-                    </Text>
-                  </TouchableOpacity>,
-                )
-                return rows
-              }, [])
-              .map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.diamondsRow}>
-                  {row}
-                </View>
-              ))}
-          </View>
-        </ScrollView>
-      </View>
+      <ScrollView>
+        <View style={styles.diamondsContainer}>
+          {avatar.map((avatar, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.diamondItem}
+              onPress={() => handleCLickAvatar(avatar)}
+            >
+              <Image
+                source={{ uri: avatar.image_url }}
+                style={styles.avatarImage}
+              />
+              <Text
+                style={{
+                  ...styles.diamondValue,
+                  color: parseInt(avatar.price) === 0 ? "gray" : "red",
+                }}
+              >
+                {parseInt(avatar.price) === 0 ? "Free" : avatar.price}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+      {/* confirmation modal */}
+      <Modal isVisible={isConfirmationModalVisible} style={styles.itemModal}>
+        <View style={styles.modalContent}>
+          <Text style={styles.confirmationText}>Confirm Purchase</Text>
+          <Image
+            source={{ uri: selectedAvatar ? selectedAvatar.image_url : "" }}
+            style={styles.avatarImage}
+          />
+          <Text
+            style={{
+              ...styles.diamondValue,
+              color:
+                selectedAvatar && parseInt(selectedAvatar.price) === 0
+                  ? "gray"
+                  : "red",
+            }}
+          >
+            {selectedAvatar
+              ? parseInt(selectedAvatar.price) === 0
+                ? "Free"
+                : selectedAvatar.price
+              : ""}
+          </Text>
+          <Button
+            title="Confirm"
+            onPress={confirmPurchase}
+            // style={{ marginTop: 10 }}
+          />
+          <Button
+            title="Cancel"
+            onPress={() => setIsConfirmationModalVisible(false)}
+            // style={{ marginTop: 10 }}
+          />
+        </View>
+      </Modal>
+      {/* success modal yeyeye */}
+      <Modal isVisible={isSuccessModalVisible} style={styles.itemModal}>
+        <View style={styles.modalContent}>
+          <Text style={styles.successText}>TERBELI YEY!</Text>
+          <Button title="OK" onPress={() => setIsSuccessModalVisible(false)} />
+        </View>
+      </Modal>
+      {/* failure modal */}
+      <Modal isVisible={isFailedModalVisible} style={styles.itemModal}>
+        <View style={styles.modalContentFailed}>
+          <Text style={styles.failedText}>Anda Miskin</Text>
+          <Button title="OK" onPress={() => setIsFailedModalVisible(false)} />
+        </View>
+      </Modal>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "white",
-  },
-
   diamondsContainer: {
-    columnGap: 20,
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
-  },
-  diamondsRow: {
-    flex: 1,
-    flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    marginBottom: 15,
   },
   diamondItem: {
     flexDirection: "column",
     alignItems: "center",
     marginBottom: 15,
     width: "48%",
-  },
-  diamondImage: {
-    width: 80,
-    height: 80,
-    marginBottom: 10,
   },
   diamondValue: {
     fontSize: 18,
@@ -143,4 +176,36 @@ const styles = StyleSheet.create({
     height: 80,
     marginBottom: 10,
   },
-})
+  itemModal: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  confirmationText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalContentFailed: {
+    backgroundColor: "#db7b7b",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  failedText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "red",
+  },
+  successText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+});
