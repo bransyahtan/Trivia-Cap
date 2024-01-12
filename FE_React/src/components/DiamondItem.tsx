@@ -6,44 +6,41 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { API } from "../utils/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import * as WebBrowser from "expo-web-browser";
+} from "react-native"
+import React, { useEffect, useState } from "react"
+import { API } from "../utils/api"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import axios from "axios"
+import * as WebBrowser from "expo-web-browser"
 
 export default function DiamondItem({ setTrigger }) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [diamond, setDiamond] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false)
+  const [diamond, setDiamond] = useState([])
 
   const getDiamond = async () => {
     try {
-      const token = await AsyncStorage.getItem("user");
+      const token = await AsyncStorage.getItem("user")
       // const response = await API.get("api/v1/diamonds", {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
       //   },
       // });
 
-      const response = await axios.get(
-        "http://192.168.18.238:8000/api/diamonds",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get("http://192.168.18.238:8000/api/diamonds", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
-      setDiamond(response.data.data);
+      setDiamond(response.data.data)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const handleClickDiamond = async (obj) => {
     try {
-      const token = await AsyncStorage.getItem("user");
+      const token = await AsyncStorage.getItem("user")
       const response = await API.post(
         "api/v1/topup",
         {
@@ -54,19 +51,19 @@ export default function DiamondItem({ setTrigger }) {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
-      );
-      WebBrowser.openBrowserAsync(response.data.data.snap_url);
-      setModalVisible(false);
-      setTrigger();
+        },
+      )
+      WebBrowser.openBrowserAsync(response.data.data.snap_url)
+      setModalVisible(false)
+      setTrigger()
     } catch (error) {
-      console.error("Error fetching diamond:", error);
+      console.error("Error fetching diamond:", error)
     }
-  };
+  }
 
   useEffect(() => {
-    getDiamond();
-  }, []);
+    getDiamond()
+  }, [])
 
   // const diamonds = [
   //   { value: 50, imageSource: require("../../assets/images/diamond.png") },
@@ -82,48 +79,53 @@ export default function DiamondItem({ setTrigger }) {
       <View>
         <ScrollView>
           <View style={styles.diamondsContainer}>
-            {/* {diamond
-              .reduce((rows, diamond, index) => {
-                const rowIndex = Math.floor(index / 2);
-                if (!rows[rowIndex]) {
-                  rows[rowIndex] = [];
-                }
-                rows[rowIndex].push(
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.diamondItem}
-                    onPress={() => {
-                      // Untuk Handle diamond setelah di click
-                      console.log(`Selected diamond value: ${diamond.value}`);
-                      setModalVisible(false);
-                    }}
-                  >
-                    <Text style={styles.diamondValue}>{diamond.price}</Text>
-                  </TouchableOpacity>
-                );
-                return rows;
-              }, [])
-              .map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.diamondsRow}>
-                  {row}
-                </View>
-              ))} */}
-            {diamond.map((d) => (
-              <View key={d.id} style={styles.diamondsRow}>
-                <TouchableOpacity
-                  style={styles.diamondItem}
-                  onPress={() => handleClickDiamond(d)}
+            {diamond.length == 0 && (
+              <View
+                style={{
+                  backgroundColor: "#eaeaea",
+                  width: 100,
+                  height: 100,
+                }}
+              ></View>
+            )}
+            <View style={styles.diamondsRow}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  marginBottom: 10,
+                  fontSize: 24,
+                }}
+              >
+                Shop Diamonds
+              </Text>
+              {diamond.map((d) => (
+                <View
+                  key={d.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                  <Text style={styles.diamondValue}>{d.amount}</Text>
-                  <Text>Rp.{parseInt(d.price).toLocaleString("en-ID")}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+                  <TouchableOpacity
+                    style={styles.diamondItem}
+                    onPress={() => handleClickDiamond(d)}
+                  >
+                    <Image
+                      source={require("../../assets/images/diamonds.png")}
+                      style={{ width: 120, height: 120 }}
+                    />
+                    <Text style={styles.diamondValue}>{d.amount}</Text>
+                    <Text>Rp.{parseInt(d.price).toLocaleString("en-ID")}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
           </View>
         </ScrollView>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -169,7 +171,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
     width: "48%",
+    backgroundColor: "#eaeaea",
+    paddingHorizontal: 60,
+    paddingBottom: 20,
+    borderRadius: 10,
   },
+
   diamondImage: {
     width: 80,
     height: 80,
@@ -178,6 +185,7 @@ const styles = StyleSheet.create({
   diamondValue: {
     fontSize: 18,
     fontWeight: "bold",
+    marginTop: -40,
   },
   avatarImage: {
     borderRadius: 50,
@@ -185,4 +193,4 @@ const styles = StyleSheet.create({
     height: 80,
     marginBottom: 10,
   },
-});
+})

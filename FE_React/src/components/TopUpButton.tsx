@@ -57,8 +57,9 @@ export default function TopUpButton({ onPress }: any) {
           </Text> */}
         <View
           style={{
-            backgroundColor: "red",
-            width: "auto",
+            position: "relative",
+            zIndex: 1,
+            height: 45,
           }}
         >
           <TouchableOpacity
@@ -71,10 +72,10 @@ export default function TopUpButton({ onPress }: any) {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              position: "relative",
+              position: "absolute",
               top: 20,
-              left: 300,
-              zIndex: 2,
+              right: 20,
+              zIndex: 9,
             }}
           >
             <Text
@@ -90,7 +91,7 @@ export default function TopUpButton({ onPress }: any) {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <View
             style={{
               position: "absolute",
               top: 20,
@@ -116,10 +117,10 @@ export default function TopUpButton({ onPress }: any) {
                 <View style={styles.cardWrapper}></View>
               </View>
             </View>
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
-      ////
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -191,4 +192,3 @@ const styles = StyleSheet.create({
     },
   },
 })
-// export default ModalEditProfile;
