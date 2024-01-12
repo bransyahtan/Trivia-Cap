@@ -7,12 +7,12 @@ type Diamonds struct {
 	Price     int64  `json:"price"`
 	Amount    int64  `json:"amount"`
 	CreatedAt string `json:"created_at"`
-	UpdateAt  string `json:"update_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type DiamondsResponse struct {
-	Status string    `json:"status"`
-	Data   []Avatars `json:"data"`
+	Status string     `json:"status"`
+	Data   []Diamonds `json:"data"`
 }
 
 type DiamondsRepository interface {

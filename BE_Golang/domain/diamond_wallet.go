@@ -20,6 +20,7 @@ type DiamondWalletRepository interface {
 	Update(ctx context.Context, diamondWallet *DiamondWallet) error
 	CreateWallet(ctx context.Context, diamondWallet *DiamondWallet) error
 	CheckUserByIdIsExist(ctx context.Context, id int64) bool
+	UpdateAfterPayAvatar(ctx context.Context, diamondWallet *DiamondWallet) error
 }
 
 type DiamondWalletUseCase interface {

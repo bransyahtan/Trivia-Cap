@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/swagger"
+	_ "github.com/rdwansch/Trivia-Cap/app/docs"
 	"github.com/rdwansch/Trivia-Cap/internal/component"
 	"github.com/rdwansch/Trivia-Cap/internal/config"
 	"github.com/rdwansch/Trivia-Cap/internal/utils"
@@ -48,10 +50,10 @@ func main() {
 	//usecase
 	midtransUseCase := _midtransUseCase.NewMidtransUseCase(cnf)
 	userUseCase := _userUU.NewUserUseCase(userRepository, diamondWalletRepository, randomNumber, midtransUseCase, myAvatarRepository)
-	topUpUseCase := _topupUseCase.NewTopUpUseCase(topupRepository, midtransUseCase, randomNumber, diamondWalletRepository)
+	topUpUseCase := _topupUseCase.NewTopUpUseCase(topupRepository, midtransUseCase, randomNumber, diamondWalletRepository, userRepository)
 	diamondWalletUseCase := _diamondWalletUseCase.NewDiamondWalletUseCase(diamondWalletRepository, randomNumber, midtransUseCase, topupRepository)
 	avatarUseCase := _avatarUsecase.NewAvatarUseCase(avatarRepository)
-	myAvatarUseCase := _myAvatarUseCase.NewAvatarUseCase(myAvatarRepository)
+	myAvatarUseCase := _myAvatarUseCase.NewAvatarUseCase(myAvatarRepository, diamondWalletRepository)
 	diamondsUseCase := _diamondUseCase.NewDiamondsUseCase(diamondsRepository)
 	
 	//goroutine redis
@@ -69,6 +71,18 @@ func main() {
 	_avatarHandler.NewAvatarHandler(app, avatarUseCase)
 	_myAvatarHandler.NewMyAvatarHandler(app, myAvatarUseCase)
 	_diamondHandler.NewDiamondHandler(app, diamondsUseCase)
+	
+	app.Get("/swagger/*", swagger.HandlerDefault)
+	
+	//app.Get("/swagger/*", swagger.New(swagger.Config{ // custom
+	//
+	//}))
+	
+	//swag.GetSwagger("gello")
+	
+	//app.Get("/swaggerKANG/*", swagger)
+	
+	//swag.Register(docs.SwaggerInfo.InstanceName(), docs.SwaggerInfo)
 	
 	log.Fatal(app.Listen(":8080"))
 	

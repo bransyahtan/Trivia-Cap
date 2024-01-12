@@ -15,4 +15,5 @@ type AvatarRequest struct {
 	Avatar   string `json:"avatar"`
 	UserID   int64  `json:"user_id"`
 	IDAvatar int64  `json:"id_avatar"`
+	Price    uint64 `json:"price"`
 }

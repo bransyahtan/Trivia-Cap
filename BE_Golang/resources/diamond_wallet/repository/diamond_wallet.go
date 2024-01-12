@@ -73,3 +73,24 @@ func (r *diamondWalletRepository) CheckUserByIdIsExist(ctx context.Context, id i
 	
 	return false
 }
+
+func (r *diamondWalletRepository) UpdateAfterPayAvatar(ctx context.Context, diamondWallet *domain.DiamondWallet) error {
+	var existingDiamondWallet domain.DiamondWallet
+	err := r.db.WithContext(ctx).Where("user_id = ?", diamondWallet.UserID).First(&existingDiamondWallet).Error
+	if err != nil {
+		return err // Kesalahan saat mencari data, misalnya database error
+	}
+	
+	if existingDiamondWallet.ID == 0 {
+		return errors.New("Data tidak ditemukan") // Data tidak ditemukan di database
+	}
+	
+	existingDiamondWallet.BalanceDiamond -= diamondWallet.BalanceDiamond
+	
+	err = r.db.WithContext(ctx).Model(&diamondWallet).Where("user_id = ?", diamondWallet.UserID).Updates(map[string]interface{}{"balance_diamond": existingDiamondWallet.BalanceDiamond}).Error
+	if err != nil {
+		return err
+	}
+	
+	return nil
+}

@@ -2,16 +2,18 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"github.com/rdwansch/Trivia-Cap/dto"
 )
 
 type avatarUseCase struct {
 	avatarRepository domain.MyAvatarRepository
+	repositoryWallet domain.DiamondWalletRepository
 }
 
-func NewAvatarUseCase(avatarRepository domain.MyAvatarRepository) domain.MyAvatarUseCase {
-	return &avatarUseCase{avatarRepository}
+func NewAvatarUseCase(avatarRepository domain.MyAvatarRepository, repositoryWallet domain.DiamondWalletRepository) domain.MyAvatarUseCase {
+	return &avatarUseCase{avatarRepository, repositoryWallet}
 }
 
 func (u *avatarUseCase) GetMyAvatarByUserID(req dto.AvatarUserIDReq) ([]dto.AvatarResponse, error) {
@@ -44,7 +46,18 @@ func (u *avatarUseCase) GetMyAvatarByUserID(req dto.AvatarUserIDReq) ([]dto.Avat
 
 func (u *avatarUseCase) AddAvatarToMyProfile(request dto.AvatarRequest) error {
 	ctx := context.Background()
-	err := u.avatarRepository.AddAvatarToMyProfile(ctx, &domain.MyAvatar{
+	
+	data, _ := u.repositoryWallet.FindByIdUser(ctx, request.UserID)
+	if data.BalanceDiamond < request.Price {
+		return fmt.Errorf("not enough diamond GOBLOG")
+	}
+	
+	err := u.repositoryWallet.UpdateAfterPayAvatar(ctx, &domain.DiamondWallet{
+		BalanceDiamond: request.Price,
+		UserID:         request.UserID,
+	})
+	
+	err = u.avatarRepository.AddAvatarToMyProfile(ctx, &domain.MyAvatar{
 		Avatar:   request.Avatar,
 		UserID:   request.UserID,
 		IDAvatar: request.IDAvatar,
@@ -53,6 +66,8 @@ func (u *avatarUseCase) AddAvatarToMyProfile(request dto.AvatarRequest) error {
 	if err != nil {
 		return err
 	}
+	
+	fmt.Println("HARGGGAAA ====>> ", request.Price)
 	
 	return nil
 }

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/rdwansch/Trivia-Cap/domain"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -17,9 +18,6 @@ func NewUserRepository(db *gorm.DB) domain.UserRepository {
 }
 
 func (r *userRepository) RegisterUser(ctx context.Context, user domain.User) error {
-	//existingData := domain.User{}
-	//r.DB.
-	
 	checkingEmail := r.DB.WithContext(ctx).Where("email = ?", user.Email).First(&user).RowsAffected
 	if checkingEmail > 0 {
 		return errors.New("1")
@@ -47,6 +45,7 @@ func (r *userRepository) FetchUser(ctx context.Context) ([]domain.User, error) {
 
 func (r *userRepository) FindOne(ctx context.Context, email string) (domain.User, error) {
 	var user domain.User
+	fmt.Println(email)
 	err := r.DB.WithContext(ctx).Preload("DiamondWallet").Where("email = ?", email).First(&user).Error
 	if err != nil {
 		return domain.User{}, err

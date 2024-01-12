@@ -42,8 +42,8 @@ func (h *topupHandler) InitializeTopUp(c *fiber.Ctx) error {
 		Amount:        req.Amount,
 		AmountDiamond: req.AmountDiamond,
 		IdUser:        payload.ID,
-		Name:          payload.Name,
-		Email:         payload.Email,
+		//Name:          payload.Name,
+		Email: payload.Email,
 	}
 	
 	fmt.Println("NEWWWW >>>>>", newReq)

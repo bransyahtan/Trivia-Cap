@@ -57,6 +57,7 @@ func (h *myAvatarHandler) AddAvatarToMyProfile(c *fiber.Ctx) error {
 		UserID:   payload.ID,
 		Avatar:   avatarReq.Avatar,
 		IDAvatar: avatarReq.IDAvatar,
+		Price:    avatarReq.Price,
 	}
 	err = h.myAvatarUseCase.AddAvatarToMyProfile(newData)
 	if err != nil {

@@ -47,11 +47,11 @@ func (h *userHandler) RegisterUser(c *fiber.Ctx) error {
 	}
 	
 	token, err := h.UserUseCase.RegisterUser(newUser)
-	
 	if err != nil {
 		if err.Error() == "1" {
 			return c.Status(http.StatusOK).JSON(fiber.Map{
-				"token": token,
+				"token":       token,
+				"is_register": true,
 			})
 		}
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
@@ -68,6 +68,7 @@ func (h *userHandler) RegisterUser(c *fiber.Ctx) error {
 
 func (h *userHandler) FindOne(c *fiber.Ctx) error {
 	payload := component.GetPayloadData(c)
+	
 	user, err := h.UserUseCase.FindOne(payload.Email)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{

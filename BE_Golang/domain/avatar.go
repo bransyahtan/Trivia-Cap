@@ -8,7 +8,7 @@ type Avatars struct {
 	ID        int64  `json:"id"`
 	Name      string `json:"name"`
 	Price     uint64 `json:"price"`
-	IsPremium bool   `json:"is_premium"`
+	IsPremium bool   `json:"isPremium"`
 	ImageURL  string `json:"image_url"`
 	CreatedAt string `json:"created_at"`
 	UpdateAt  string `json:"update_at"`

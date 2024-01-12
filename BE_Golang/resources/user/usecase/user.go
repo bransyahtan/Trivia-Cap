@@ -23,7 +23,8 @@ func NewUserUseCase(ur domain.UserRepository, diamondWalletRepository domain.Dia
 func (u *userUseCase) RegisterUser(user domain.User) (string, error) {
 	ctx := context.Background()
 	err := u.UserRepository.RegisterUser(ctx, user)
-	userByEmail, err := u.UserRepository.FindOne(ctx, user.Email)
+	
+	userByEmail, _ := u.UserRepository.FindOne(ctx, user.Email)
 	
 	gNumber := u.generateAccountNumber.GenerateAccountNumber()
 	
