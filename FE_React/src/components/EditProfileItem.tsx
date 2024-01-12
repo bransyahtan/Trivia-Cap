@@ -1,27 +1,30 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
-  ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
-} from "react-native"
-import MyTextInput from "./FormInput"
-import MyButton from "./Button"
-import { API } from "../utils/api"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+  Text,
+  Button,
+} from "react-native";
+import MyTextInput from "./FormInput";
+import MyButton from "./Button";
+import { API } from "../utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Modal from "react-native-modal";
+import Toast from "react-native-toast-message";
 
 export default function EditProfileItem({ getUser }) {
-  const [avatar, setAvatar] = useState([])
-  const [username, setUsername] = useState("")
-
+  const [avatar, setAvatar] = useState([]);
+  const [username, setUsername] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState({
     avatar: "",
     id_avatar: -1,
-  })
+  });
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -30,35 +33,32 @@ export default function EditProfileItem({ getUser }) {
     >
       <Image source={item.avatar} style={styles.avatarImage} />
     </TouchableOpacity>
-  )
+  );
 
   const handleAvatarClick = (avatar) => {
-    console.log(avatar)
     setSelectedAvatar({
       avatar: avatar.avatar,
       id_avatar: avatar.id_avatar,
-    })
-    // console.log("Avatar clicked:", avatar.image_url);
-  }
+    });
+  };
 
   const getAvatar = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       const response = await API.get("api/v1/my-avatars", {
         headers: {
           Authorization: "Bearer " + token,
         },
-      })
-      setAvatar(response.data.data)
-      console.log(response.data)
+      });
+      setAvatar(response.data.data);
     } catch (error) {
-      console.error("Error fetching avatars:", error)
+      console.error("Error fetching avatars:", error);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       const response = await API.put(
         "api/v1/update-profile",
         {
@@ -70,32 +70,36 @@ export default function EditProfileItem({ getUser }) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
-      )
-      getUser()
-    } catch (error) {
-      console.log(error)
-    }
-  }
+        }
+      );
 
-  console.log(avatar)
+      getUser();
+      setIsSuccessModalVisible(true);
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "An error occurred while updating the profile.",
+      });
+    }
+  };
+
   useEffect(() => {
-    getAvatar()
-  }, [])
+    getAvatar();
+  }, []);
 
   return (
     <>
       <StatusBar />
       <View style={{ alignItems: "center" }}>
-        <View>
-          <FlatList
-            data={avatar}
-            numColumns={3}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={{ marginTop: 30 }}
-          />
-        </View>
+        <FlatList
+          data={avatar}
+          numColumns={3}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ marginTop: 30 }}
+        />
 
         <View style={{ marginTop: 50 }}>
           <MyTextInput onChangeText={setUsername} placeholder="Your Username" />
@@ -109,8 +113,16 @@ export default function EditProfileItem({ getUser }) {
           />
         </View>
       </View>
+
+      {/* Success Modal */}
+      <Modal isVisible={isSuccessModalVisible} style={styles.successModal}>
+        <View style={styles.modalContent}>
+          <Text style={styles.successText}>Profile updated successfully!</Text>
+          <Button title="OK" onPress={() => setIsSuccessModalVisible(false)} />
+        </View>
+      </Modal>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -125,4 +137,19 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginBottom: 8,
   },
-})
+  successModal: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  successText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+});
