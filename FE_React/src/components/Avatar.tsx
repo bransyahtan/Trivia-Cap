@@ -56,6 +56,9 @@ export const Avatar = ({ setTriggerFetch }) => {
     <View>
       <View>
         <ScrollView>
+          <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
+            Shop Avatar
+          </Text>
           <View style={styles.diamondsContainer}>
             {avatar
               .reduce((rows, avatar, index) => {
