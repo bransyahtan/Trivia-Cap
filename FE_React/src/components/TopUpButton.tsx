@@ -122,7 +122,7 @@ export default function TopUpButton({ onPress }: any) {
       </View>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
