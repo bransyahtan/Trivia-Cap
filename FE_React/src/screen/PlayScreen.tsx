@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   Image,
   ImageBackground,
@@ -9,17 +9,100 @@ import {
   TouchableOpacity,
   View,
 } from "react-native"
-import TopUpButton from "../components/TopUpButton"
+import questions from "../data/questions"
+import { socket } from "../utils/socket"
 import { useNavigation } from "@react-navigation/native"
+import { AntDesign } from "@expo/vector-icons"
+
+interface Quize {
+  a: string
+  answer: string
+  b: string
+  c: string
+  id: number
+  question: string
+}
 
 const PlayScreen = () => {
+  const [quizes, setQuizes] = useState<Quize[]>([])
   const navigation = useNavigation()
 
-  const LoginNavigate = () => {
-    navigation.navigate("Login" as never)
-  }
+  const data = questions
+  const currentQuestions = data[0]
+  const totalQuestions = data.length
+  // console.log(currentQuestions)
+
+  //score
+  const [score, setScore] = useState(0)
+
+  //index of the question
+  const [index, setIndex] = useState(0)
+
+  //answer status (true or false)
+  const [answerStatus, setAnswerStatus] = useState(null)
+
+  //answer
+  const [answer, setAnswer] = useState([])
+
+  //select answer
+  const [selectAnswer, setSelectAnswer] = useState(null)
+
+  //counter
+  const [counter, setCounter] = useState(10)
+
+  let interval = null
 
   const [selectedOption, setSelectedOption] = useState(null)
+
+  // useEffect(() => {
+  //   if (selectAnswer !== null) {
+  //     if (selectAnswer === currentQuestions?.correctAnswerIndex) {
+  //       setScore(score + 10)
+  //       setAnswerStatus(true)
+  //       answer.push({ question: index + 1, answer: true })
+  //     } else {
+  //       setAnswerStatus(false)
+  //       answer.push({ question: index + 1, answer: false })
+  //     }
+  //   }
+  // }, [selectAnswer])
+
+  // useEffect(() => {
+  //   setSelectAnswer(null)
+  //   setAnswerStatus(null)
+  // }, [currentQuestions])
+
+  // useEffect(() => {
+  //   const myInterval = () => {
+  //     if (counter >= 1) {
+  //       setCounter((counter) => counter - 1)
+  //     }
+  //     if (counter === 0) {
+  //       setIndex(index + 1)
+  //       setCounter(15)
+  //     }
+  //   }
+  //   interval = setTimeout(myInterval, 1000)
+  //   //clean up
+  //   return () => {
+  //     clearTimeout(interval)
+  //   }
+  // }, [counter])
+
+  // useEffect(() => {
+  //   if (index + 1 > data.length) {
+  //     navigation.navigate("Congrats", {
+  //       answer: answer,
+  //       score: score,
+  //     })
+  //   }
+  // })
+
+  // useEffect(() => {
+  //   if (!interval) {
+  //     setCounter(15)
+  //   }
+  // }, [index])
 
   const checkAnswer = (selected: any) => {
     const correctAnswer = "Rusia"
@@ -33,6 +116,17 @@ const PlayScreen = () => {
     }
   }
 
+  useEffect(() => {
+    socket.connect()
+
+    socket.on("getQuizes", (data) => setQuizes(data))
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
+
+  console.log(quizes)
   return (
     <ImageBackground
       source={require("../../assets/images/bg_game.png")}
@@ -41,16 +135,24 @@ const PlayScreen = () => {
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
         <StatusBar />
 
-        <TopUpButton onPress={LoginNavigate} />
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-between", padding: 10 }}
+        >
+          <Text>Quiz Challenge</Text>
+          <Text>{counter}</Text>
+        </View>
 
-        <Image source={require("../../assets/images/2.png")} style={styles.iconText} />
-
-        <View style={styles.score}>
-          <Image
-            source={require("../../assets/images/score.png")}
-            style={{ width: 40, height: 40 }}
-          />
-          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>100</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 10,
+          }}
+        >
+          <Text>Your Progress</Text>
+          <Text>
+            ({index}/{totalQuestions}) question answered
+          </Text>
         </View>
 
         <View style={{ alignItems: "center", paddingHorizontal: 20, marginTop: 150 }}>
@@ -69,20 +171,71 @@ const PlayScreen = () => {
               textShadowRadius: 2,
             }}
           >
-            Negara apa yang paling luas di dunia?
+            {currentQuestions.question}
           </Text>
 
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              selectedOption === "Indonesia" && { backgroundColor: "#FF4D4D" },
-            ]}
-            onPress={() => checkAnswer("Indonesia")}
-          >
-            <Text style={styles.optionText}>A. Indonesia</Text>
-          </TouchableOpacity>
+          {currentQuestions?.options.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={
+                selectAnswer === index && index === currentQuestions.correctAnswerIndex
+                  ? {
+                      flexDirection: "row",
+                      backgroundColor: "green",
+                      padding: 8,
+                      borderRadius: 50,
+                      marginVertical: 10,
+                      width: 300,
+                      alignItems: "center",
+                    }
+                  : selectAnswer !== null && selectAnswer === index
+                  ? {
+                      flexDirection: "row",
+                      backgroundColor: "red",
+                      padding: 8,
+                      borderRadius: 50,
+                      marginVertical: 10,
+                      width: 300,
+                      alignItems: "center",
+                    }
+                  : {
+                      flexDirection: "row",
+                      backgroundColor: "#39A7FF",
+                      padding: 8,
+                      borderRadius: 50,
+                      marginVertical: 10,
+                      width: 300,
+                      alignItems: "center",
+                    }
+              }
+              onPress={() => selectAnswer === null && setSelectAnswer(index)}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {selectAnswer === index &&
+                index === currentQuestions?.correctAnswerIndex ? (
+                  <AntDesign
+                    style={styles.optionText}
+                    name="check"
+                    size={24}
+                    color="green"
+                  />
+                ) : selectAnswer != null && selectAnswer === index ? (
+                  <AntDesign
+                    style={styles.optionText}
+                    name="closecircle"
+                    size={24}
+                    color="red"
+                  />
+                ) : (
+                  <Text style={styles.optionText}>{item.options}</Text>
+                )}
 
-          <TouchableOpacity
+                <Text style={styles.answerText}>{item.answer}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+
+          {/* <TouchableOpacity
             style={[
               styles.optionButton,
               selectedOption === "Amerika" && { backgroundColor: "#FF4D4D" },
@@ -114,7 +267,7 @@ const PlayScreen = () => {
               source={require("../../assets/avatar/avatar3.png")}
               style={{ width: 30, height: 30, borderRadius: 15, marginLeft: 10 }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </ImageBackground>
@@ -125,13 +278,27 @@ const styles: StyleProp<any> = {
   optionButton: {
     flexDirection: "row",
     backgroundColor: "#39A7FF",
-    padding: 15,
-    borderRadius: 10,
+    padding: 8,
+    borderRadius: 50,
     marginVertical: 10,
     width: 300,
     alignItems: "center",
   },
   optionText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    borderWidth: 0.5,
+    borderColor: "white",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 5,
+  },
+  answerText: {
     color: "white",
     fontSize: 18,
     fontWeight: "bold",

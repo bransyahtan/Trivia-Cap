@@ -11,7 +11,7 @@ import {
   Text,
 } from "react-native"
 import { PiNotePencil } from "react-icons/pi"
-import { Avatar } from "./Avatar"
+import { Avatar } from "./AvatarItem"
 const ModalAvatar: React.FC<{
   setTriggerFetch: React.Dispatch<React.SetStateAction<number>>
 }> = ({ setTriggerFetch }) => {
