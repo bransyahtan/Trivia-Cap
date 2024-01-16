@@ -1,127 +1,173 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react";
 import {
   Image,
   ImageBackground,
   ScrollView,
   StatusBar,
-  StyleProp,
   Text,
   TouchableOpacity,
   View,
-} from "react-native"
-import TopUpButton from "../components/TopUpButton"
-import { useNavigation } from "@react-navigation/native"
+  StyleSheet,
+} from "react-native";
+import TopUpButton from "../components/TopUpButton";
+import { useNavigation } from "@react-navigation/native";
 
 const PlayScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const LoginNavigate = () => {
-    navigation.navigate("Login" as never)
-  }
+    navigation.navigate("Login" as never);
+  };
 
-  const [selectedOption, setSelectedOption] = useState(null)
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [answerOptions, setAnswerOptions] = useState([
+    {
+      label: "A. Indonesia",
+      value: "Indonesia",
+      isRight: false,
+      isWrong: false,
+    },
+    { label: "B. Amerika", value: "Amerika", isRight: false, isWrong: false },
+    { label: "C. Rusia", value: "Rusia", isRight: false, isWrong: false },
+  ]);
 
-  const checkAnswer = (selected: any) => {
-    const correctAnswer = "Rusia"
-    setSelectedOption(selected)
+  // Timer state and effect
+  const [timer, setTimer] = useState(10);
 
-    // Periksa apakah jawaban benar atau salah
-    if (selected === correctAnswer) {
-      console.log("Jawaban Benar!")
-    } else {
-      console.log("Jawaban Salah!")
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
+    }, 1000);
+    if (timer === 0) {
+      clearInterval(timerInterval);
+      revealAnswers();
     }
-  }
+
+    return () => clearInterval(timerInterval);
+  }, [timer]);
+
+  const revealAnswers = () => {
+    const correctAnswer = "Rusia";
+    const updatedOptions = [...answerOptions];
+    updatedOptions.forEach((option) => {
+      option.isRight = option.value === correctAnswer;
+      option.isWrong = option.value !== correctAnswer;
+    });
+    setAnswerOptions(updatedOptions);
+  };
+
+  const checkAnswer = (selected) => {
+    setSelectedOption(selected);
+  };
 
   return (
     <ImageBackground
       source={require("../../assets/images/bg_game.png")}
       style={{ flex: 1, opacity: 0.95 }}
     >
-      <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+      <ScrollView style={styles.container}>
         <StatusBar />
 
         <TopUpButton onPress={LoginNavigate} />
 
-        <Image source={require("../../assets/images/2.png")} style={styles.iconText} />
+        <Image
+          source={require("../../assets/images/2.png")}
+          style={styles.iconText}
+        />
 
-        <View style={styles.score}>
-          <Image
-            source={require("../../assets/images/score.png")}
-            style={{ width: 40, height: 40 }}
-          />
-          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>100</Text>
+        {/* Timer display */}
+        <View style={styles.timer}>
+          <Text style={styles.timerText}>Timer: {timer} seconds</Text>
         </View>
 
-        <View style={{ alignItems: "center", paddingHorizontal: 20, marginTop: 150 }}>
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: 20,
-              padding: 30,
-              borderRadius: 20,
-              backgroundColor: "#E1C78F",
-              textShadowColor: "black",
-              textShadowOffset: { width: 1, height: 1 },
-              textShadowRadius: 2,
-            }}
-          >
+        {/* Question */}
+        <View style={styles.questionContainer}>
+          <Text style={styles.questionText}>
             Negara apa yang paling luas di dunia?
           </Text>
+        </View>
 
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              selectedOption === "Indonesia" && { backgroundColor: "#FF4D4D" },
-            ]}
-            onPress={() => checkAnswer("Indonesia")}
-          >
-            <Text style={styles.optionText}>A. Indonesia</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              selectedOption === "Amerika" && { backgroundColor: "#FF4D4D" },
-            ]}
-            onPress={() => checkAnswer("Amerika")}
-          >
-            <Text style={styles.optionText}>B. Amerika</Text>
-            <View style={{ flexDirection: "row", marginLeft: 10 }}>
-              <Image
-                source={require("../../assets/avatar/avatar2.png")}
-                style={{ width: 30, height: 30, borderRadius: 15 }}
-              />
-              <Image
-                source={require("../../assets/avatar/avatar1.png")}
-                style={{ width: 30, height: 30, borderRadius: 15 }}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.optionButton,
-              selectedOption === "Rusia" && { backgroundColor: "#00CC66" },
-            ]}
-            onPress={() => checkAnswer("Rusia")}
-          >
-            <Text style={styles.optionText}>C. Rusia</Text>
-            <Image
-              source={require("../../assets/avatar/avatar3.png")}
-              style={{ width: 30, height: 30, borderRadius: 15, marginLeft: 10 }}
-            />
-          </TouchableOpacity>
+        {/* Answer Options */}
+        <View style={styles.answerOptionsContainer}>
+          {answerOptions.map((option, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.optionButton,
+                option.isRight && styles.correctOption,
+                option.isWrong && styles.incorrectOption,
+              ]}
+              onPress={() => checkAnswer(option.value)}
+            >
+              <Text style={styles.optionText}>{option.label}</Text>
+              {option.isWrong && (
+                <Image
+                  source={require("../../assets/avatar/avatar2.png")}
+                  style={styles.optionImage}
+                />
+              )}
+              {option.isRight && (
+                <Image
+                  source={require("../../assets/avatar/avatar3.png")}
+                  style={[styles.optionImage, { marginLeft: 10 }]}
+                />
+              )}
+            </TouchableOpacity>
+          ))}
         </View>
       </ScrollView>
     </ImageBackground>
-  )
-}
+  );
+};
 
-const styles: StyleProp<any> = {
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  iconText: {
+    width: 180,
+    height: 180,
+    marginRight: 5,
+    position: "absolute",
+    top: -55,
+    left: -30,
+    zIndex: 1,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  timer: {
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  timerText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  questionContainer: {
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  questionText: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+    padding: 30,
+    borderRadius: 20,
+    backgroundColor: "#E1C78F",
+    textShadowColor: "black",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  answerOptionsContainer: {
+    alignItems: "center",
+    marginTop: 20,
+  },
   optionButton: {
     flexDirection: "row",
     backgroundColor: "#39A7FF",
@@ -136,28 +182,17 @@ const styles: StyleProp<any> = {
     fontSize: 18,
     fontWeight: "bold",
   },
-  iconText: {
-    width: 180,
-    height: 180,
-    marginRight: 5,
-    position: "absolute",
-    top: -55,
-    left: -30,
-    zIndex: 1,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
+  correctOption: {
+    backgroundColor: "#00CC66",
   },
-  score: {
-    marginRight: 5,
-    position: "absolute",
-    top: 10,
-    left: 150,
-    zIndex: 1,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
+  incorrectOption: {
+    backgroundColor: "#FF4D4D",
   },
-}
+  optionImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+  },
+});
 
-export default PlayScreen
+export default PlayScreen;
