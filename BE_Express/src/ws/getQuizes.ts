@@ -6,7 +6,7 @@ const fetchQuizes = async () => {
   const res = await API.get("/quizes");
   if (res.data.status == "OK") {
     const quizes: Quize[] = res.data.data;
-    return quizes.sort(() => Math.random() - 0.5);
+    return quizes.sort(() => Math.random() - 0.5).slice(0, 9);
   }
 };
 
@@ -16,7 +16,7 @@ export default async function getQuizes(io: Server, socket: Socket) {
 
     socket.on("getQuizes", message => {
       const idx = message.idx;
-      if (message.idx > data.length) {
+      if (message.idx == data.length) {
         socket.emit("getQuizes", false);
         return;
       }
