@@ -1,22 +1,31 @@
-import React from "react"
-import { View, Text, FlatList, StyleSheet, ImageBackground, Image } from "react-native"
+import React from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ImageBackground,
+  Image,
+} from "react-native";
 
-import avatar1 from "../../assets/avatar/avatar1.png"
-import avatar2 from "../../assets/avatar/avatar2.png"
-import avatar3 from "../../assets/avatar/avatar3.png"
-import crown from "../../assets/images/crown.png"
-import medali1 from "../../assets/images/medali1.png"
-import medali2 from "../../assets/images/medali2.png"
-import medali3 from "../../assets/images/medali3.png"
+import avatar1 from "../../assets/avatar/avatar1.png";
+import avatar2 from "../../assets/avatar/avatar2.png";
+import avatar3 from "../../assets/avatar/avatar3.png";
+import crown from "../../assets/images/crown.png";
+import medali1 from "../../assets/images/medali1.png";
+import medali2 from "../../assets/images/medali2.png";
+import medali3 from "../../assets/images/medali3.png";
 
 const leaderboardData = [
-  { id: "1", name: "Player 1", score: 10000, avatar: avatar1 },
-  { id: "2", name: "Player 2", score: 40, avatar: avatar2 },
+  { id: "1", name: "a", score: 10000, avatar: avatar1 },
+  { id: "2", name: "b", score: 10000, avatar: avatar2 },
   { id: "3", name: "Player 3", score: 11000, avatar: avatar3 },
-]
+];
 
 const Leaderboard = () => {
-  const sortedLeaderboard = [...leaderboardData].sort((a, b) => b.score - a.score)
+  const sortedLeaderboard = [...leaderboardData].sort(
+    (a, b) => b.score - a.score
+  );
 
   return (
     <ImageBackground
@@ -46,17 +55,23 @@ const Leaderboard = () => {
                 <Text style={styles.playerName}>{item.name}</Text>
                 <Text style={styles.score}>{item.score} points</Text>
               </View>
-              {index === 0 ? <Image source={medali1} style={styles.medal} /> : null}
-              {index === 1 ? <Image source={medali2} style={styles.medal} /> : null}
-              {index === 2 ? <Image source={medali3} style={styles.medal} /> : null}
+              {index === 0 ? (
+                <Image source={medali1} style={styles.medal} />
+              ) : null}
+              {index === 1 ? (
+                <Image source={medali2} style={styles.medal} />
+              ) : null}
+              {index === 2 ? (
+                <Image source={medali3} style={styles.medal} />
+              ) : null}
             </View>
           )}
         />
       </View>
       {/* hehehe */}
     </ImageBackground>
-  )
-}
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,6 +149,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderRadius: 20,
   },
-})
+});
 
-export default Leaderboard
+export default Leaderboard;
