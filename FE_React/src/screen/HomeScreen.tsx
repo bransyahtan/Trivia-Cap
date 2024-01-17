@@ -19,14 +19,7 @@ import { API } from "../utils/api"
 import ModalAvatar from "../components/ModalAvatar"
 import ModalEditProfile from "../components/ModalEditProfile"
 import { useIsFocused } from "@react-navigation/native"
-
-interface UserInfo {
-  email: string
-  name: string
-  avatar: string
-  id: number
-  wallet: number
-}
+import { UserInfo } from "../interface/User"
 
 export default function HomeScreen() {
   const navigation = useNavigation()
@@ -128,7 +121,7 @@ export default function HomeScreen() {
               text="Play Game"
               background="#39A7FF"
               textColor="white"
-              navigateTo="Lobby"
+              navigateTo="Play"
             />
             <MyButton
               text="Logout"

@@ -1,25 +1,33 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
-import { API } from "../utils/api";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Button } from "react-native";
-import Modal from "react-native-modal";
-import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import React, { useEffect, useState } from "react"
+import { API } from "../utils/api"
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Button,
+} from "react-native"
+import Modal from "react-native-modal"
+import MyButton from "./Button"
 
 export const Avatar = ({ setTriggerFetch }) => {
-  const [avatar, setAvatar] = useState([]);
-  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
-  const [isFailedModalVisible, setIsFailedModalVisible] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [avatar, setAvatar] = useState([])
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
+  const [isFailedModalVisible, setIsFailedModalVisible] = useState(false)
+  const [selectedAvatar, setSelectedAvatar] = useState(null)
 
-  const handleCLickAvatar = avatar => {
-    setSelectedAvatar(avatar);
-    setIsConfirmationModalVisible(true);
-  };
+  const handleCLickAvatar = (avatar) => {
+    setSelectedAvatar(avatar)
+    setIsConfirmationModalVisible(true)
+  }
 
   const confirmPurchase = async () => {
     try {
-      const token = await AsyncStorage.getItem("user");
+      const token = await AsyncStorage.getItem("user")
       const response = await API.post(
         "api/v1/add-avatar",
         {
@@ -31,50 +39,62 @@ export const Avatar = ({ setTriggerFetch }) => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
-      );
+        },
+      )
 
       if (response.status == 500) {
-        setIsFailedModalVisible(true);
+        setIsFailedModalVisible(true)
       } else {
-        setIsSuccessModalVisible(true);
-        setTriggerFetch(prev => prev + 1);
+        setIsSuccessModalVisible(true)
+        setTriggerFetch((prev) => prev + 1)
       }
     } catch (error) {
-      setIsFailedModalVisible(true);
+      setIsFailedModalVisible(true)
     } finally {
-      setIsConfirmationModalVisible(false);
+      setIsConfirmationModalVisible(false)
     }
-  };
+  }
 
   const getAvatar = async () => {
     try {
-      const token = await AsyncStorage.getItem("user");
+      const token = await AsyncStorage.getItem("user")
       const response = await API.get("api/v1/avatars", {
         headers: {
           Authorization: "Bearer " + token,
         },
-      });
-      setAvatar(response.data.data);
+      })
+      setAvatar(response.data.data)
     } catch (error) {
-      console.error("Error fetching avatars:", error);
+      console.error("Error fetching avatars:", error)
     }
-  };
+  }
 
   useEffect(() => {
-    getAvatar();
-  }, []);
+    getAvatar()
+  }, [])
 
   return (
     <View>
       <ScrollView>
-        <View style={styles.diamondsContainer}>
+        <Text style={styles.avatarTitle}>Avatar</Text>
+        <View style={styles.avatarContainer}>
           {avatar.map((avatar, index) => (
-            <TouchableOpacity key={index} style={styles.diamondItem} onPress={() => handleCLickAvatar(avatar)}>
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.avatarItem,
+                selectedAvatar == avatar && {
+                  borderColor: "red",
+                  borderWidth: 2,
+                  backgroundColor: "rgba(0,0,0,0.7)",
+                },
+              ]}
+              onPress={() => handleCLickAvatar(avatar)}
+            >
               <Image source={{ uri: avatar.image_url }} style={styles.avatarImage} />
               <Text
                 style={{
-                  ...styles.diamondValue,
+                  ...styles.avatarValue,
                   color: parseInt(avatar.price) === 0 ? "gray" : "red",
                 }}
               >
@@ -88,27 +108,52 @@ export const Avatar = ({ setTriggerFetch }) => {
       <Modal isVisible={isConfirmationModalVisible} style={styles.itemModal}>
         <View style={styles.modalContent}>
           <Text style={styles.confirmationText}>Confirm Purchase</Text>
-          <Image source={{ uri: selectedAvatar ? selectedAvatar.image_url : "" }} style={styles.avatarImage} />
-          <Text
-            style={{
-              ...styles.diamondValue,
-              color: selectedAvatar && parseInt(selectedAvatar.price) === 0 ? "gray" : "red",
-            }}
-          >
-            {selectedAvatar ? (parseInt(selectedAvatar.price) === 0 ? "Free" : selectedAvatar.price) : ""}
-          </Text>
-          <Button
-            title="Confirm"
-            onPress={confirmPurchase}
-            // style={{ marginTop: 10 }}
-          />
-          <Button
-            title="Cancel"
-            onPress={() => setIsConfirmationModalVisible(false)}
-            // style={{ marginTop: 10 }}
-          />
+          <View style={styles.avatarContent}>
+            <Image
+              source={{ uri: selectedAvatar ? selectedAvatar.image_url : "" }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                borderColor: "white",
+                borderWidth: 3,
+              }}
+            />
+
+            <Text
+              style={{
+                ...styles.avatarValueContent,
+                color:
+                  selectedAvatar && parseInt(selectedAvatar.price) === 0 ? "gray" : "red",
+              }}
+            >
+              {selectedAvatar
+                ? parseInt(selectedAvatar.price) === 0
+                  ? "Free"
+                  : selectedAvatar.price
+                : ""}
+            </Text>
+          </View>
+
+          <View>
+            <MyButton
+              text="Buy"
+              textColor="#fff"
+              background="#39A7FF"
+              onPress={confirmPurchase}
+            />
+          </View>
+          <View style={{ marginTop: -10 }}>
+            <MyButton
+              text="Cancel"
+              textColor="#fff"
+              background="tomato"
+              onPress={() => setIsConfirmationModalVisible(false)}
+            />
+          </View>
         </View>
       </Modal>
+
       {/* success modal yeyeye */}
       <Modal isVisible={isSuccessModalVisible} style={styles.itemModal}>
         <View style={styles.modalContent}>
@@ -116,6 +161,7 @@ export const Avatar = ({ setTriggerFetch }) => {
           <Button title="OK" onPress={() => setIsSuccessModalVisible(false)} />
         </View>
       </Modal>
+
       {/* failure modal */}
       <Modal isVisible={isFailedModalVisible} style={styles.itemModal}>
         <View style={styles.modalContentFailed}>
@@ -124,35 +170,70 @@ export const Avatar = ({ setTriggerFetch }) => {
         </View>
       </Modal>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
-  diamondsContainer: {
-    flexDirection: "row",
+  avatarContainer: {
+    width: 250,
     flexWrap: "wrap",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: 10,
   },
-  diamondItem: {
+  avatarTitle: {
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: 10,
+    fontSize: 23,
+    fontWeight: "bold",
+  },
+  avatarItem: {
+    display: "flex",
     flexDirection: "column",
+    flexWrap: "wrap",
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
-    width: "48%",
+    backgroundColor: "#39A7",
+    padding: 5,
+    borderRadius: 10,
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
   },
-  diamondValue: {
+  avatarValue: {
     fontSize: 18,
+    marginTop: -10,
     fontWeight: "bold",
   },
   avatarImage: {
     borderRadius: 50,
-    width: 80,
-    height: 80,
+    width: 65,
+    height: 65,
     marginBottom: 10,
+    borderColor: "white",
+    borderWidth: 2,
   },
   itemModal: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  avatarContent: {
+    backgroundColor: "#39A7",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+  },
+  avatarValueContent: {
+    fontSize: 18,
+    // marginTop: -14,
+    fontWeight: "bold",
   },
   modalContent: {
     backgroundColor: "white",
@@ -182,4 +263,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-});
+})

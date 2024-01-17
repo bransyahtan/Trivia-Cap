@@ -1,19 +1,19 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "../screen/HomeScreen";
-import ProfileScreen from "../screen/ProfileScreen";
-import ShopScreen from "../screen/ShopScreen";
-import LobyScreen from "../screen/LobyScreen";
-import EditProfileScreen from "../screen/EditProfileScreen";
-import LoginScreen from "../screen/LoginScreen";
-import PlayScreen from "../screen/PlayScreen";
-import CongratsScreen from "../screen/CongratsScreen";
-import Leaderboard from "../screen/LeaderboardScreen";
-import SelectProfileScreen from "../screen/SelectProfileScreen";
+import React from "react"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { createStackNavigator } from "@react-navigation/stack"
+import HomeScreen from "../screen/HomeScreen"
+import ProfileScreen from "../screen/ProfileScreen"
+import ShopScreen from "../screen/ShopScreen"
+import LobyScreen from "../screen/LobyScreen"
+import EditProfileScreen from "../screen/EditProfileScreen"
+import LoginScreen from "../screen/LoginScreen"
+import PlayScreen from "../screen/PlayScreen"
+import CongratsScreen from "../screen/CongratsScreen"
+import Leaderboard from "../screen/LeaderboardScreen"
+import SelectProfileScreen from "../screen/SelectProfileScreen"
 
-const Stack = createStackNavigator();
-const ProfileStack = createStackNavigator();
+const Stack = createStackNavigator()
+const ProfileStack = createStackNavigator()
 
 const ProfileStackNavigator = () => {
   return (
@@ -29,12 +29,12 @@ const ProfileStackNavigator = () => {
         options={{ headerShown: false }}
       />
     </ProfileStack.Navigator>
-  );
-};
+  )
+}
 
 const Route = () => {
   return (
-    <Stack.Navigator initialRouteName="Play">
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
         name="Login"
         component={LoginScreen}
@@ -45,21 +45,13 @@ const Route = () => {
         component={EditProfileScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="Lobby"
         component={LobyScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="Play"
-        component={PlayScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Play" component={PlayScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="Congrats"
         component={CongratsScreen}
@@ -81,13 +73,9 @@ const Route = () => {
         options={{ headerShown: false }}
       />
 
-      <Stack.Screen
-        name="Shop"
-        component={ShopScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Shop" component={ShopScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
-  );
-};
+  )
+}
 
-export default Route;
+export default Route
