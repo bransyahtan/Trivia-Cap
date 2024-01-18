@@ -35,7 +35,7 @@ const ModalEditProfile = ({ getUser }) => {
       </View>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {

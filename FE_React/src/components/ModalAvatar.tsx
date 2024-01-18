@@ -27,10 +27,10 @@ const ModalAvatar: React.FC<{
               <View>
                 <Image
                   source={require("../../assets/images/store.png")}
-                  style={{ width: 50, height: 50 }}
+                  style={{ width: 70, height: 70 }}
                 />
-                <Text style={{ color: "white", fontSize: 10, marginTop: -10 }}>
-                  shop avatar
+                <Text style={{ color: "white", fontSize: 10, textAlign: 'center' }}>
+                  Avatar Shop
                 </Text>
               </View>
             </TouchableOpacity>
@@ -39,7 +39,7 @@ const ModalAvatar: React.FC<{
       </View>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {

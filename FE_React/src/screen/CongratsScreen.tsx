@@ -42,7 +42,7 @@ export default function CongratsScreen() {
           <Text
             style={{ color: "white", fontSize: 35, fontWeight: "bold", marginTop: 80 }}
           >
-            CONGRATS
+            Congratulations!
           </Text>
 
           <View
@@ -71,14 +71,11 @@ export default function CongratsScreen() {
             />
             <Text
               style={{
-                color: "white",
+                color: "black",
                 fontSize: 25,
                 fontWeight: "bold",
                 textAlign: "center",
-                textShadowColor: "black",
-                textShadowOffset: { width: 1, height: 1 },
-                textShadowRadius: 1,
-              }}
+                }}
             >
               User 1
             </Text>
@@ -125,9 +122,6 @@ const styles = StyleSheet.create({
   optionButton: {
     flexDirection: "row",
     backgroundColor: "#bbb",
-    textShadowColor: "black",
-    textShadowRadius: 2,
-    textShadowOffset: { width: 2, height: 2 },
     padding: 15,
     borderRadius: 20,
     marginVertical: 10,
@@ -135,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   optionText: {
-    color: "white",
+    color: "black",
     fontSize: 20,
     fontWeight: "bold",
   },
