@@ -1,36 +1,43 @@
 import { Server, Socket } from "socket.io";
 import { API } from "../lib/API";
 import { Quize } from "../interfaces/Quize";
-
-const fetchQuizes = async () => {
-  const res = await API.get("/quizes");
-  if (res.data.status == "OK") {
-    const quizes: Quize[] = res.data.data;
-    return quizes.sort(() => Math.random() - 0.5).slice(0, 9);
-  }
-};
+import { rooms } from "./room";
 
 export default async function getQuizes(io: Server, socket: Socket) {
   try {
-    const data = await fetchQuizes();
+    // const data = await fetchQuizes();
 
     socket.on("getQuizes", message => {
-      const idx = message.idx;
-      if (message.idx == data.length) {
-        socket.emit("getQuizes", false);
-        return;
-      }
+      // check if someone is emiting event
+      // to prevent duplicate event
+      if (!rooms.room_1.isEmited) {
+        rooms.room_1.isEmited = true;
+        rooms.room_1.isFinished = false;
+        const idx = message.idx;
+        console.log(rooms.room_1.quizes[+idx]);
 
-      const quize: Quize = { ...data[idx], time: 5 };
-
-      const idInterval = setInterval(() => {
-        socket.emit("getQuizes", quize);
-
-        if (quize.time == 0) {
-          clearInterval(idInterval);
+        // finish game
+        if (message.idx == rooms.room_1.quizes.length) {
+          rooms.room_1.isEmited = false;
+          rooms.room_1.isFinished = true;
+          rooms.room_1.quizes = [];
+          io.to("room_1").emit("getQuizes", false);
+          return;
         }
-        quize.time -= 1;
-      }, 1000);
+
+        const quize: Quize = { ...rooms.room_1.quizes[+idx], time: 5 };
+
+        const idInterval = setInterval(() => {
+          io.to("room_1").emit("getQuizes", quize);
+
+          // timeout
+          if (quize.time == 0) {
+            rooms.room_1.isEmited = false;
+            clearInterval(idInterval);
+          }
+          quize.time -= 1;
+        }, 1000);
+      }
     });
   } catch (error) {
     console.log(error.message);
