@@ -1,17 +1,19 @@
 import { Server, Socket } from "socket.io";
+import { rooms } from "./room";
 
 export default async function user(io: Server, socket: Socket) {
-  const user = {
-    name: "",
-    score: 0,
-  };
-
   // menerima
   socket.on("user", message => {
-    user.name = message.name;
-    user.score += message.score;
+    const users = rooms.room_1.users.map(u => {
+      if (socket.id == u.id) {
+        u.score += message.score;
+      }
+      return u;
+    });
+
+    rooms.room_1.users = [...new Set(users)];
 
     // mengirim
-    socket.emit("user", user);
+    socket.emit("user", rooms.room_1.users);
   });
 }
