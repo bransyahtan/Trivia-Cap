@@ -1,27 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { API } from "../utils/api";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Button,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Button } from "react-native";
 import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
 
 export const Avatar = ({ setTriggerFetch }) => {
   const [avatar, setAvatar] = useState([]);
-  const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
-    useState(false);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const [isFailedModalVisible, setIsFailedModalVisible] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
 
-  const handleCLickAvatar = (avatar) => {
+  const handleCLickAvatar = avatar => {
     setSelectedAvatar(avatar);
     setIsConfirmationModalVisible(true);
   };
@@ -47,7 +38,7 @@ export const Avatar = ({ setTriggerFetch }) => {
         setIsFailedModalVisible(true);
       } else {
         setIsSuccessModalVisible(true);
-        setTriggerFetch((prev) => prev + 1);
+        setTriggerFetch(prev => prev + 1);
       }
     } catch (error) {
       setIsFailedModalVisible(true);
@@ -79,15 +70,8 @@ export const Avatar = ({ setTriggerFetch }) => {
       <ScrollView>
         <View style={styles.diamondsContainer}>
           {avatar.map((avatar, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.diamondItem}
-              onPress={() => handleCLickAvatar(avatar)}
-            >
-              <Image
-                source={{ uri: avatar.image_url }}
-                style={styles.avatarImage}
-              />
+            <TouchableOpacity key={index} style={styles.diamondItem} onPress={() => handleCLickAvatar(avatar)}>
+              <Image source={{ uri: avatar.image_url }} style={styles.avatarImage} />
               <Text
                 style={{
                   ...styles.diamondValue,
@@ -104,24 +88,14 @@ export const Avatar = ({ setTriggerFetch }) => {
       <Modal isVisible={isConfirmationModalVisible} style={styles.itemModal}>
         <View style={styles.modalContent}>
           <Text style={styles.confirmationText}>Confirm Purchase</Text>
-          <Image
-            source={{ uri: selectedAvatar ? selectedAvatar.image_url : "" }}
-            style={styles.avatarImage}
-          />
+          <Image source={{ uri: selectedAvatar ? selectedAvatar.image_url : "" }} style={styles.avatarImage} />
           <Text
             style={{
               ...styles.diamondValue,
-              color:
-                selectedAvatar && parseInt(selectedAvatar.price) === 0
-                  ? "gray"
-                  : "red",
+              color: selectedAvatar && parseInt(selectedAvatar.price) === 0 ? "gray" : "red",
             }}
           >
-            {selectedAvatar
-              ? parseInt(selectedAvatar.price) === 0
-                ? "Free"
-                : selectedAvatar.price
-              : ""}
+            {selectedAvatar ? (parseInt(selectedAvatar.price) === 0 ? "Free" : selectedAvatar.price) : ""}
           </Text>
           <Button
             title="Confirm"

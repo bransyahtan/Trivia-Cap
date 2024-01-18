@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   Image,
   ScrollView,
@@ -8,13 +8,14 @@ import {
   View,
   Modal,
   Button,
-} from "react-native";
-import { PiNotePencil } from "react-icons/pi";
-import { Avatar } from "./Avatar";
+  Text,
+} from "react-native"
+import { PiNotePencil } from "react-icons/pi"
+import { Avatar } from "./Avatar"
 const ModalAvatar: React.FC<{
-  setTriggerFetch: React.Dispatch<React.SetStateAction<number>>;
+  setTriggerFetch: React.Dispatch<React.SetStateAction<number>>
 }> = ({ setTriggerFetch }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false)
 
   return (
     <>
@@ -24,7 +25,7 @@ const ModalAvatar: React.FC<{
           <View style={styles.cardWrapper}></View>
           <View style={styles.cardWrapper}>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <PiNotePencil
+              {/* <PiNotePencil
                 size={24}
                 color="black"
                 style={{
@@ -32,7 +33,16 @@ const ModalAvatar: React.FC<{
                   borderRadius: 10,
                   padding: 3,
                 }}
-              />
+              /> */}
+              <View>
+                <Image
+                  source={require("../../assets/images/store.png")}
+                  style={{ width: 50, height: 50 }}
+                />
+                <Text style={{ color: "white", fontSize: 10, marginTop: -10 }}>
+                  shop avatar
+                </Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -43,7 +53,7 @@ const ModalAvatar: React.FC<{
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setModalVisible(!modalVisible)
         }}
       >
         <View style={styles.centeredView}>
@@ -53,16 +63,13 @@ const ModalAvatar: React.FC<{
                 <Avatar setTriggerFetch={setTriggerFetch} />
               </View>
             </ScrollView>
-            <Button
-              title="Cancel"
-              onPress={() => setModalVisible(!modalVisible)}
-            />
+            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
           </View>
         </View>
       </Modal>
     </>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -151,5 +158,5 @@ const styles = StyleSheet.create({
     height: 80,
     marginBottom: 10,
   },
-});
-export default ModalAvatar;
+})
+export default ModalAvatar
