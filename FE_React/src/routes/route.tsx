@@ -34,7 +34,7 @@ const ProfileStackNavigator = () => {
 
 const Route = () => {
   return (
-    <Stack.Navigator initialRouteName="Play">
+    <Stack.Navigator initialRouteName="Congrats">
       <Stack.Screen
         name="Login"
         component={LoginScreen}
