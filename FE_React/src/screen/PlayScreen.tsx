@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Image,
   ImageBackground,
@@ -8,57 +8,87 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-} from "react-native";
-import TopUpButton from "../components/TopUpButton";
-import { useNavigation } from "@react-navigation/native";
+} from "react-native"
+import { useIsFocused, useNavigation } from "@react-navigation/native"
+import { socket } from "../utils/socket"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { jwtDecode } from "jwt-decode"
+import { UserInfo } from "../interface/User"
+import { ProgressBar, MD3Colors } from "react-native-paper"
+
+interface Quiz {
+  question: string
+  a: string
+  b: string
+  c: string
+  answer: string
+  time: number
+}
 
 const PlayScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
+  const isFocused = useIsFocused()
+  const [user, setUser] = useState<UserInfo & { score: number }>({
+    avatar: "",
+    email: "",
+    id: 0,
+    name: "",
+    score: 0,
+    wallet: 0,
+  })
 
-  const LoginNavigate = () => {
-    navigation.navigate("Login" as never);
-  };
+  const [selectedOption, setSelectedOption] = useState(null)
+  const [quize, setQuize] = useState<Quiz>({
+    question: "...",
+    a: "",
+    b: "",
+    c: "",
+    answer: "",
+    time: 0.01,
+  })
+  const [idx, setIdx] = useState(0)
 
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [answerOptions, setAnswerOptions] = useState([
-    {
-      label: "A. Indonesia",
-      value: "Indonesia",
-      isRight: false,
-      isWrong: false,
-    },
-    { label: "B. Amerika", value: "Amerika", isRight: false, isWrong: false },
-    { label: "C. Rusia", value: "Rusia", isRight: false, isWrong: false },
-  ]);
+  const multipleChoice = ["a", "b", "c"]
 
-  // Timer state and effect
-  const [timer, setTimer] = useState(10);
+  const getAuth = async () => {
+    const token = await AsyncStorage.getItem("user")
+    const decoded = jwtDecode(token) as UserInfo
+    setUser({ ...decoded, score: 0 })
+  }
+
+  const handleAnswer = (selected) => {
+    setSelectedOption(selected)
+  }
 
   useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
-    }, 1000);
-    if (timer === 0) {
-      clearInterval(timerInterval);
-      revealAnswers();
+    if (quize.time === 0) {
+      setTimeout(() => {
+        setIdx((prev) => prev + 1)
+        socket.emit("getQuizes", { idx: idx + 1 })
+        if (selectedOption == quize.answer) {
+          socket.emit("user", {
+            name: user.name,
+            score: 10,
+          })
+        }
+      }, 3000)
     }
+  }, [quize.time])
 
-    return () => clearInterval(timerInterval);
-  }, [timer]);
+  useEffect(() => {
+    getAuth()
+    socket.emit("getQuizes", { idx })
+    socket.on("getQuizes", (data) => {
+      if (!data) {
+        navigation.navigate("Leaderboard" as never)
+      }
+      setQuize(data)
+    })
 
-  const revealAnswers = () => {
-    const correctAnswer = "Rusia";
-    const updatedOptions = [...answerOptions];
-    updatedOptions.forEach((option) => {
-      option.isRight = option.value === correctAnswer;
-      option.isWrong = option.value !== correctAnswer;
-    });
-    setAnswerOptions(updatedOptions);
-  };
-
-  const checkAnswer = (selected) => {
-    setSelectedOption(selected);
-  };
+    socket.on("user", (data) => {
+      setUser((prev) => ({ ...prev, score: data.score }))
+    })
+  }, [isFocused])
 
   return (
     <ImageBackground
@@ -67,58 +97,119 @@ const PlayScreen = () => {
     >
       <ScrollView style={styles.container}>
         <StatusBar />
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "row",
+            padding: 10,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
+            {idx + 1} / 10
+          </Text>
 
-        <TopUpButton onPress={LoginNavigate} />
-
-        <Image
-          source={require("../../assets/images/2.png")}
-          style={styles.iconText}
-        />
+          <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <Image
+              source={require("../../assets/images/score.png")}
+              style={{ width: 40, height: 40 }}
+            />
+            <Text style={styles.score}>{user.score}</Text>
+          </View>
+        </View>
+        <View>
+          <ProgressBar
+            progress={idx / 10}
+            color={MD3Colors.primary50}
+            style={{ height: 10, width: "90%", marginHorizontal: "auto" }}
+          />
+        </View>
 
         {/* Timer display */}
         <View style={styles.timer}>
-          <Text style={styles.timerText}>Timer: {timer} seconds</Text>
+          <Text style={styles.timerText}>
+            Timer: <Text style={{ fontSize: 24, fontWeight: "bold" }}>{quize.time}</Text>{" "}
+            seconds
+          </Text>
         </View>
 
         {/* Question */}
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>
-            Negara apa yang paling luas di dunia?
-          </Text>
+          <Text style={styles.questionText}>{quize.question}</Text>
         </View>
 
         {/* Answer Options */}
         <View style={styles.answerOptionsContainer}>
-          {answerOptions.map((option, index) => (
+          {multipleChoice.map((option) => (
             <TouchableOpacity
-              key={index}
+              key={option}
               style={[
                 styles.optionButton,
-                option.isRight && styles.correctOption,
-                option.isWrong && styles.incorrectOption,
+                // check if option is selected
+                selectedOption == quize[option] && styles.selectedAnswer,
+
+                // check if option is correct
+
+                selectedOption == quize[option] && quize.time === 0
+                  ? selectedOption == quize.answer
+                    ? {
+                        backgroundColor: "#66f01d",
+                        borderColor: "green",
+                      }
+                    : {
+                        backgroundColor: "tomato",
+                        borderColor: "red",
+                      }
+                  : {
+                      backgroundColor: "#f5f5f5",
+                    },
+
+                // quize.time === 0
+                //   ? quize[option] == selectedOption && quize.answer == quize[option]
+                //     ? {
+                //         backgroundColor: "#66f01d",
+                //         borderColor: "green",
+                //       }
+                //     : {
+                //         backgroundColor: "tomato",
+                //         borderColor: "red",
+                //       }
+                //   : {
+                //       backgroundColor: "#f5f5f5",
+                //     },
               ]}
-              onPress={() => checkAnswer(option.value)}
+              disabled={quize.time === 0}
+              onPress={() => handleAnswer(quize[option])}
             >
-              <Text style={styles.optionText}>{option.label}</Text>
-              {option.isWrong && (
+              <Text
+                style={[
+                  styles.optionText,
+                  selectedOption == quize[option] && { fontWeight: "bold" },
+                ]}
+              >
+                {option.toUpperCase()} {quize[option]}
+              </Text>
+              {selectedOption == quize[option] && (
                 <Image
                   source={require("../../assets/avatar/avatar2.png")}
                   style={styles.optionImage}
                 />
               )}
-              {option.isRight && (
-                <Image
-                  source={require("../../assets/avatar/avatar3.png")}
-                  style={[styles.optionImage, { marginLeft: 10 }]}
-                />
-              )}
             </TouchableOpacity>
           ))}
+
+          {quize.time === 0 && (
+            <Text style={{ fontSize: 24, fontWeight: "bold", color: "whitesmoke" }}>
+              Jawaban Benar:{" "}
+              <Text style={{ display: "flex", color: "white" }}>{quize.answer}</Text>
+            </Text>
+          )}
         </View>
       </ScrollView>
     </ImageBackground>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -144,12 +235,16 @@ const styles = StyleSheet.create({
   timerText: {
     color: "white",
     fontSize: 18,
-    fontWeight: "bold",
   },
   questionContainer: {
     alignItems: "center",
     paddingHorizontal: 20,
     marginTop: 20,
+  },
+  score: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   questionText: {
     color: "white",
@@ -168,16 +263,44 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  correctAnswer: {
+    backgroundColor: "#66f01d",
+    opacity: 1,
+    borderColor: "green",
+    borderWidth: 5,
+    color: "white",
+  },
+  wrongAnswer: {
+    backgroundColor: "red",
+    opacity: 1,
+    borderColor: "tomato",
+    borderWidth: 5,
+    color: "white",
+  },
   optionButton: {
     flexDirection: "row",
-    backgroundColor: "#39A7FF",
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: "#f5f5f5",
+    padding: 8,
+    borderRadius: 50,
     marginVertical: 10,
     width: 300,
     alignItems: "center",
+    opacity: 0.8,
+    borderWidth: 5,
+    borderColor: "transparent",
   },
   optionText: {
+    fontWeight: "normal",
+    fontSize: 15,
+    padding: 5,
+  },
+  selectedAnswer: {
+    backgroundColor: "white",
+    opacity: 1,
+    borderColor: "#E1C78F",
+    borderWidth: 5,
+  },
+  answerText: {
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
@@ -193,6 +316,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
   },
-});
+})
 
-export default PlayScreen;
+export default PlayScreen

@@ -11,8 +11,9 @@ import {
 } from "react-native"
 import { PiNotePencil } from "react-icons/pi"
 import EditProfileItem from "./EditProfileItem"
+import MyButton from "./Button"
 
-const ModalEditProfile = ({getUser}) => {
+const ModalEditProfile = ({ getUser }) => {
   const [modalVisible, setModalVisible] = useState(false)
 
   return (
@@ -34,7 +35,7 @@ const ModalEditProfile = ({getUser}) => {
       </View>
 
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
@@ -45,10 +46,18 @@ const ModalEditProfile = ({getUser}) => {
           <View style={styles.modalView}>
             <ScrollView>
               <View style={styles.selectProfileContainer}>
-                <EditProfileItem getUser={getUser}/>
+                <EditProfileItem getUser={getUser} />
               </View>
             </ScrollView>
-            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
+            {/* <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} /> */}
+            <View>
+              <MyButton
+                text="Cancel"
+                textColor="#fff"
+                background="tomato"
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+            </View>
           </View>
         </View>
       </Modal>
