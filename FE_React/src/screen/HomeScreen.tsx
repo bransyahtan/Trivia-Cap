@@ -15,21 +15,11 @@ import MyButton from "../components/Button"
 import TopUpButton from "../components/TopUpButton"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from "@react-navigation/core"
-import { jwtDecode } from "jwt-decode"
-import Modal from "react-native-modal"
 import { API } from "../utils/api"
 import ModalAvatar from "../components/ModalAvatar"
-import axios from "axios"
 import ModalEditProfile from "../components/ModalEditProfile"
 import { useIsFocused } from "@react-navigation/native"
-
-interface UserInfo {
-  email: string
-  name: string
-  avatar: string
-  id: number
-  wallet: number
-}
+import { UserInfo } from "../interface/User"
 
 export default function HomeScreen() {
   const navigation = useNavigation()
@@ -131,7 +121,7 @@ export default function HomeScreen() {
               text="Play Game"
               background="#39A7FF"
               textColor="white"
-              navigateTo="Lobby"
+              navigateTo="Play"
             />
             <MyButton
               text="Logout"

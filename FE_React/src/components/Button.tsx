@@ -1,14 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MyButton({
   text,
   background,
   textColor,
   onPress,
-  navigateTo,
+  navigateTo,//
 }: {
   text: string;
   background: string;
