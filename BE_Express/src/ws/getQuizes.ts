@@ -14,7 +14,6 @@ export default async function getQuizes(io: Server, socket: Socket) {
         rooms.room_1.isEmited = true;
         rooms.room_1.isFinished = false;
         const idx = message.idx;
-        console.log(rooms.room_1.quizes[+idx]);
 
         // finish game
         if (message.idx == rooms.room_1.quizes.length) {
