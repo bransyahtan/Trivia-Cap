@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react"
 import {
   Image,
   ImageBackground,
@@ -9,86 +8,12 @@ import {
   View,
   StyleSheet,
 } from "react-native"
-import { useIsFocused, useNavigation } from "@react-navigation/native"
-import { socket } from "../utils/socket"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { jwtDecode } from "jwt-decode"
-import { UserInfo } from "../interface/User"
-import { ProgressBar, MD3Colors } from "react-native-paper"
 
-interface Quiz {
-  question: string
-  a: string
-  b: string
-  c: string
-  answer: string
-  time: number
-}
+import { ProgressBar, MD3Colors } from "react-native-paper"
+import usePlay from "../hooks/usePlay"
 
 const PlayScreen = () => {
-  const navigation = useNavigation()
-  const isFocused = useIsFocused()
-  const [user, setUser] = useState<UserInfo & { score: number }>({
-    avatar: "",
-    email: "",
-    id: 0,
-    name: "",
-    score: 0,
-    wallet: 0,
-  })
-
-  const [selectedOption, setSelectedOption] = useState(null)
-  const [quize, setQuize] = useState<Quiz>({
-    question: "...",
-    a: "",
-    b: "",
-    c: "",
-    answer: "",
-    time: 0.01,
-  })
-  const [idx, setIdx] = useState(0)
-
-  const multipleChoice = ["a", "b", "c"]
-
-  const getAuth = async () => {
-    const token = await AsyncStorage.getItem("user")
-    const decoded = jwtDecode(token) as UserInfo
-    setUser({ ...decoded, score: 0 })
-  }
-
-  const handleAnswer = (selected) => {
-    setSelectedOption(selected)
-  }
-
-  useEffect(() => {
-    if (quize.time === 0) {
-      setTimeout(() => {
-        setIdx((prev) => prev + 1)
-        socket.emit("getQuizes", { idx: idx + 1 })
-        if (selectedOption == quize.answer) {
-          socket.emit("user", {
-            name: user.name,
-            score: 10,
-          })
-        }
-      }, 3000)
-    }
-  }, [quize.time])
-
-  useEffect(() => {
-    getAuth()
-    socket.emit("getQuizes", { idx })
-    socket.on("getQuizes", (data) => {
-      if (!data) {
-        navigation.navigate("Leaderboard" as never)
-      }
-      setQuize(data)
-    })
-
-    socket.on("user", (data) => {
-      setUser((prev) => ({ ...prev, score: data.score }))
-    })
-  }, [isFocused])
+  const { user, selectedOption, quize, idx, multipleChoice, handleAnswer } = usePlay()
 
   return (
     <ImageBackground
@@ -107,8 +32,17 @@ const PlayScreen = () => {
           }}
         >
           <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
-            {idx + 1} / 10
+            {idx + 1} / {10}
           </Text>
+
+          {/* Timer display */}
+          <View style={styles.timer}>
+            <Text style={styles.timerText}>
+              Timer:{" "}
+              <Text style={{ fontSize: 24, fontWeight: "bold" }}>{quize.time}</Text>{" "}
+              seconds
+            </Text>
+          </View>
 
           <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
             <Image
@@ -124,14 +58,6 @@ const PlayScreen = () => {
             color={MD3Colors.primary50}
             style={{ height: 10, width: "90%", marginHorizontal: "auto" }}
           />
-        </View>
-
-        {/* Timer display */}
-        <View style={styles.timer}>
-          <Text style={styles.timerText}>
-            Timer: <Text style={{ fontSize: 24, fontWeight: "bold" }}>{quize.time}</Text>{" "}
-            seconds
-          </Text>
         </View>
 
         {/* Question */}

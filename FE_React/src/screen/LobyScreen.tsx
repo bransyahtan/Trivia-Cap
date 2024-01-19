@@ -1,6 +1,6 @@
-import { useNavigation } from "@react-navigation/core";
-import React from "react";
-import { FaAnglesLeft } from "react-icons/fa6";
+import { useNavigation } from "@react-navigation/core"
+import React, { useEffect, useState } from "react"
+import { FaAnglesLeft } from "react-icons/fa6"
 import {
   FlatList,
   Image,
@@ -11,16 +11,17 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-
-const data = [
-  { id: 1, name: "User 1", avatar: require("../../assets/avatar/avatar1.png") },
-  { id: 2, name: "User 2", avatar: require("../../assets/avatar/avatar2.png") },
-  { id: 3, name: "com", avatar: require("../../assets/avatar/avatar-bot.png") },
-];
+} from "react-native"
+import { socket } from "../utils/socket"
+import useAuth from "../hooks/useAuth"
 
 export default function LobyScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
+
+  const { user } = useAuth()
+  const [data, setData] = useState<{ name: string; avatar: string; id: string }[]>([])
+  const [time, setTime] = useState(20)
+
   const renderItem = ({ item }: any) => (
     <View style={styles.table}>
       <View style={styles.avatarContainer}>
@@ -28,7 +29,28 @@ export default function LobyScreen() {
         <Text style={styles.avatarName}>{item.name}</Text>
       </View>
     </View>
-  );
+  )
+
+  useEffect(() => {
+    if (user) {
+      socket.emit("joinRoom", {
+        name: user.name,
+        avatar: user.avatar,
+      })
+
+      socket.on("joinRoom", (user, timeout) => {
+        setTime(timeout)
+
+        if (user === "start") {
+          setTimeout(() => {
+            navigation.navigate("Play" as never)
+          }, 3000)
+          return
+        }
+        setData(user)
+      })
+    }
+  }, [user])
 
   return (
     <ImageBackground
@@ -36,38 +58,36 @@ export default function LobyScreen() {
       style={{ flex: 1, opacity: 0.95 }}
     >
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
-        <StatusBar />
+        <StatusBar backgroundColor={"white"} barStyle={"light-content"} />
 
-        <Image
-          source={require("../../assets/images/2.png")}
-          style={[styles.iconText]}
-        />
-
-        <View style={[styles.score]}>
-          <Image
-            source={require("../../assets/images/score.png")}
-            style={{ width: 40, height: 40 }}
-          />
-          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-            100
-          </Text>
-        </View>
-
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Home" as never);
-            }}
+        <View>
+          <View
             style={{
-              position: "absolute",
-              top: 10,
-              right: 10,
-              zIndex: 1,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "row",
+              paddingHorizontal: 10,
+              marginTop: -20,
             }}
           >
-            <FaAnglesLeft color="white" fontSize={25} />
-          </TouchableOpacity>
-          <View style={{ marginTop: 52 }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Home" as never)
+              }}
+            >
+              <FaAnglesLeft color="white" fontSize={25} />
+            </TouchableOpacity>
+
+            <View>
+              <Image
+                source={require("../../assets/images/2.png")}
+                style={[styles.iconText]}
+              />
+            </View>
+          </View>
+
+          <View style={{ marginTop: -20 }}>
             <View style={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <Text
                 style={{
@@ -77,7 +97,7 @@ export default function LobyScreen() {
                   textAlign: "center",
                 }}
               >
-                20 S
+                {time} s
               </Text>
 
               <Text
@@ -99,7 +119,7 @@ export default function LobyScreen() {
                   textAlign: "center",
                 }}
               >
-                2 / 3
+                {data.length} / 3
               </Text>
             </View>
             <FlatList
@@ -109,12 +129,11 @@ export default function LobyScreen() {
               keyExtractor={(item) => item.id.toString()}
               contentContainerStyle={{ marginTop: 30 }}
             />
-            V
           </View>
         </View>
       </ScrollView>
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -122,6 +141,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 8,
     marginTop: 20,
+  },
+  spinner: {
+    marginBottom: 50,
   },
   avatarContainer: {
     display: "flex",
@@ -138,16 +160,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   iconText: {
-    width: 180,
-    height: 180,
-    marginRight: 5,
-    position: "absolute",
-    top: -55,
-    left: -30,
-    zIndex: 1,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    width: 55,
+    height: 100,
   },
   score: {
     marginRight: 5,
@@ -159,4 +173,4 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-});
+})
