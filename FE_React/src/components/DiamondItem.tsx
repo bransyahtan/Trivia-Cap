@@ -65,15 +65,6 @@ export default function DiamondItem({ setTrigger }) {
     getDiamond()
   }, [])
 
-  // const diamonds = [
-  //   { value: 50, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 100, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 250, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 500, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 700, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 1200, imageSource: require("../../assets/images/diamond.png") },
-  // ]
-
   return (
     <View style={styles.centeredView}>
       <View>

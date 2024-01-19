@@ -1,32 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
-  FlatList,
   Image,
   ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-} from "react-native";
-import MyButton from "../components/Button";
-import TopUpButton from "../components/TopUpButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/core";
-import ModalEditProfile from "../components/ModalEditProfile";
-import { jwtDecode } from "jwt-decode";
+} from "react-native"
+import TopUpButton from "../components/TopUpButton"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from "@react-navigation/core"
+import { jwtDecode } from "jwt-decode"
+import ModalEditProfile from "../components/ModalEditProfile"
 
 interface UserInfo {
-  picture?: string;
-  email: string;
-  verified_email: boolean;
-  name: string;
+  picture?: string
+  email: string
+  verified_email: boolean
+  name: string
 }
 
 export default function ProfileScreen() {
-  const navigation = useNavigation();
-  const [user, setUser] = useState<UserInfo | null>(null);
+  const navigation = useNavigation()
+  const [user, setUser] = useState<UserInfo | null>(null)
 
   // const renderItem = ({ item }: any) => (
   //   <TouchableOpacity
@@ -43,28 +40,31 @@ export default function ProfileScreen() {
 
   const getUser = async () => {
     try {
-      const data = await AsyncStorage.getItem("user");
-      console.log(data);
+      const data = await AsyncStorage.getItem("user")
+      console.log(data)
       if (data) {
-        const userData = jwtDecode(data) as UserInfo;
-        setUser(userData);
+        const userData = jwtDecode(data) as UserInfo
+        setUser(userData)
       }
     } catch (error) {
-      console.error("Error getting user data:", error);
+      console.error("Error getting user data:", error)
     }
-  };
+  }
 
   const handleTopUp = () => {
-    navigation.navigate("Shop" as never);
-    console.log("whyyy boommmmm");
-  };
+    navigation.navigate("Shop" as never)
+    console.log("whyyy boommmmm")
+  }
 
   useEffect(() => {
-    getUser();
-  }, []);
+    getUser()
+  }, [])
 
   return (
-    <ImageBackground source={require("../../assets/images/bg_game.png")} style={{ flex: 1, opacity: 0.95 }}>
+    <ImageBackground
+      source={require("../../assets/images/bg_game.png")}
+      style={{ flex: 1, opacity: 0.95 }}
+    >
       <View style={{ flex: 1, justifyContent: "center" }}>
         <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
           <StatusBar />
@@ -135,7 +135,7 @@ export default function ProfileScreen() {
         </ScrollView>
       </View>
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -162,4 +162,4 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginBottom: 8,
   },
-});
+})

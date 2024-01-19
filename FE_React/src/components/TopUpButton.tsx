@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/core"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { API } from "../utils/api"
 import DiamondItem from "./DiamondItem"
+import MyButton from "./Button"
 
 export default function TopUpButton({ onPress }: any) {
   const [diamond, setDiamond] = useState(0)
@@ -36,25 +37,6 @@ export default function TopUpButton({ onPress }: any) {
   return (
     <>
       <View>
-        {/* <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: 20,
-            right: 15,
-            zIndex: 1,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            borderRadius: 10,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        > */}
-        {/* <Image
-            source={require("../../assets/images/diamond.png")}
-            style={{ width: 20, height: 20, marginRight: 5 }}
-          />
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
-            {diamond}
-          </Text> */}
         <View
           style={{
             position: "relative",
@@ -136,7 +118,12 @@ export default function TopUpButton({ onPress }: any) {
                 <DiamondItem setTrigger={diamondWallet} />
               </View>
             </ScrollView>
-            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
+            <MyButton
+              text="Cancel"
+              textColor="#fff"
+              background="tomato"
+              onPress={() => setModalVisible(!modalVisible)}
+            />
           </View>
         </View>
       </Modal>

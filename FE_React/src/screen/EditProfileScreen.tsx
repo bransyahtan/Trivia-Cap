@@ -6,13 +6,11 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import MyTextInput from "../components/FormInput";
 import MyButton from "../components/Button";
-import { API } from "../utils/api";
 
 const data = [
   { id: 1, image: require("../../assets/avatar/avatar1.png") },

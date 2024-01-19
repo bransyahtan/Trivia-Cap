@@ -4,7 +4,6 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   View,
 } from "react-native"
 import React, { useState } from "react"
@@ -14,7 +13,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from "@react-navigation/native"
 import * as WebBrowser from "expo-web-browser"
 import axios from "axios"
-import { API, BASE_URL } from "../utils/api"
 import { jwtDecode } from "jwt-decode"
 
 interface UserInfo {
@@ -59,8 +57,6 @@ export default function LoginScreen() {
       }
     } else {
       navigate.navigate("Home" as never)
-      // console.log(user);
-      // console.log("loaded locally");
     }
   }
 

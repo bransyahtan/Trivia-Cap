@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
   Modal,
-  Button,
 } from "react-native"
 import { PiNotePencil } from "react-icons/pi"
 import EditProfileItem from "./EditProfileItem"

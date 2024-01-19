@@ -1,6 +1,6 @@
 import React from "react"
-import { View, Text, FlatList, StyleSheet, ImageBackground, Image } from "react-native"
-
+import { View, Text, FlatList, StyleSheet, ImageBackground, Image, TouchableOpacity } from "react-native"
+import { MdOutlineLogout } from "react-icons/md"
 import avatar1 from "../../assets/avatar/avatar1.png"
 import avatar2 from "../../assets/avatar/avatar2.png"
 import avatar3 from "../../assets/avatar/avatar3.png"
@@ -8,6 +8,7 @@ import crown from "../../assets/images/crown.png"
 import medali1 from "../../assets/images/medali1.png"
 import medali2 from "../../assets/images/medali2.png"
 import medali3 from "../../assets/images/medali3.png"
+import { useNavigation } from "@react-navigation/native"
 
 const leaderboardData = [
   { id: "1", name: "Player 1", score: 10000, avatar: avatar1 },
@@ -17,6 +18,7 @@ const leaderboardData = [
 
 const Leaderboard = () => {
   const sortedLeaderboard = [...leaderboardData].sort((a, b) => b.score - a.score)
+  const navigation = useNavigation()
 
   return (
     <ImageBackground
@@ -53,7 +55,13 @@ const Leaderboard = () => {
           )}
         />
       </View>
-      {/* hehehe */}
+      
+      {/* <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <TouchableOpacity style={styles.homeNavigate} onPress={() => navigation.navigate("Home" as never)}>
+            <MdOutlineLogout size={20} />
+            Back home
+          </TouchableOpacity>
+        </View> */}
     </ImageBackground>
   )
 }
@@ -133,6 +141,24 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     paddingBottom: 20,
     borderRadius: 20,
+  },
+
+  homeNavigate: {
+    backgroundColor: "skyblue",
+    width: 150,
+    paddingVertical: 10,
+    color: "#000",
+    fontWeight: "bold",
+    textShadowColor: "white",
+    textShadowRadius: 2,
+    textShadowOffset: { width: 1, height: 1 },
+    borderRadius: 10,
+    marginTop: 18,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 5,
   },
 })
 
