@@ -26,7 +26,7 @@ export default function DiamondItem({ setTrigger }) {
       //   },
       // });
 
-      const response = await axios.get("http://192.168.18.238:8000/api/diamonds", {
+      const response = await API.get("/api/diamonds", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,15 +64,6 @@ export default function DiamondItem({ setTrigger }) {
   useEffect(() => {
     getDiamond()
   }, [])
-
-  // const diamonds = [
-  //   { value: 50, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 100, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 250, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 500, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 700, imageSource: require("../../assets/images/diamond.png") },
-  //   { value: 1200, imageSource: require("../../assets/images/diamond.png") },
-  // ]
 
   return (
     <View style={styles.centeredView}>

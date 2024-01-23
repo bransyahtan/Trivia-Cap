@@ -7,7 +7,7 @@ export default function MyButton({
   background,
   textColor,
   onPress,
-  navigateTo,//
+  navigateTo,
 }: {
   text: string;
   background: string;

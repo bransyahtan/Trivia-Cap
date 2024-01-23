@@ -8,54 +8,38 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Button,
 } from "react-native"
 
 import MyButton from "../components/Button"
 import TopUpButton from "../components/TopUpButton"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from "@react-navigation/core"
-import { API } from "../utils/api"
 import ModalAvatar from "../components/ModalAvatar"
 import ModalEditProfile from "../components/ModalEditProfile"
+import useAuth from "../hooks/useAuth"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useIsFocused } from "@react-navigation/native"
-import { UserInfo } from "../interface/User"
+import { socket } from "../utils/socket"
 
 export default function HomeScreen() {
   const navigation = useNavigation()
-  const isFocused = useIsFocused()
-  const [user, setUser] = useState<UserInfo | null>(null)
   const [triggerFetch, setTriggerFetch] = useState(0)
-
-  const getUser = async () => {
-    try {
-      const response = await API.get("api/v1/detail-user", {
-        headers: {
-          Authorization: "Bearer " + (await AsyncStorage.getItem("user")),
-        },
-      })
-      setUser(response.data.data)
-    } catch (error) {
-      console.error("Error getting user data:", error)
-    }
-  }
-
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem("user")
-      setUser(null)
-    } catch (error) {
-      console.error("Error during logout:", error)
-    }
-  }
+  const { getUser, user, handleLogout } = useAuth()
+  const isFocused = useIsFocused()
 
   const handleTopUp = () => {
     navigation.navigate("Shop" as never)
   }
 
+  const clearIdRoom = async () => {
+    await AsyncStorage.removeItem("idRoom")
+  }
+
+
+
   useEffect(() => {
-    getUser()
-  }, [triggerFetch, isFocused])
+    clearIdRoom()
+    socket.emit("clear", true)
+  }, [isFocused])
 
   return (
     <ImageBackground
@@ -65,6 +49,18 @@ export default function HomeScreen() {
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
         <StatusBar />
         <TopUpButton onPress={handleTopUp} />
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Leaderboard" as never)}
+          style={{ marginTop: -25, alignItems: "center" }}
+        >
+          <Image
+            source={require("../../assets/images/leaderboard-1.png")}
+            style={{ width: 35, height: 35 }}
+          />
+          <Text style={{ color: "white", fontSize: 10, marginTop: -8 }}>Leaderboard</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={{
             position: "absolute",
@@ -81,7 +77,7 @@ export default function HomeScreen() {
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/images/2.png")}
-            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 10 }}
+            style={{ width: 430, height: 130, borderRadius: 65, marginTop: 40 }}
           />
           <View style={{ marginTop: 20 }}>
             <Image
@@ -121,7 +117,7 @@ export default function HomeScreen() {
               text="Play Game"
               background="#39A7FF"
               textColor="white"
-              navigateTo="Play"
+              navigateTo="Lobby"
             />
             <MyButton
               text="Logout"
