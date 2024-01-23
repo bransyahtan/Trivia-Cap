@@ -38,10 +38,7 @@ export default function CongratsScreen() {
   }, [idRoom])
 
   return (
-    <ImageBackground
-      source={require("../../assets/images/bg_game.png")}
-      style={{ flex: 1, opacity: 0.95 }}
-    >
+    <ImageBackground source={require("../../assets/images/bg_game.png")} style={{ flex: 1, opacity: 0.95 }}>
       <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
         <StatusBar />
 
@@ -50,11 +47,7 @@ export default function CongratsScreen() {
         <Image source={require("../../assets/images/2.png")} style={[styles.iconText]} />
 
         <View style={{ alignItems: "center" }}>
-          <Text
-            style={{ color: "white", fontSize: 35, fontWeight: "bold", marginTop: 30 }}
-          >
-            CONGRATS
-          </Text>
+          <Text style={{ color: "white", fontSize: 35, fontWeight: "bold", marginTop: 30 }}>Congratulations!</Text>
 
           {data.length !== 0 &&
             data.map((user, idx) => (
@@ -79,7 +72,7 @@ export default function CongratsScreen() {
         </View>
       </ScrollView>
     </ImageBackground>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -122,7 +115,7 @@ const styles = StyleSheet.create({
   },
 
   optionText: {
-    color: "white",
+    color: "black",
     fontSize: 20,
     fontWeight: "bold",
     textShadowColor: "black",
@@ -188,4 +181,4 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 5,
   },
-})
+});
