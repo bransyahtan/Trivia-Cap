@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native"
 import * as WebBrowser from "expo-web-browser"
 import axios from "axios"
 import { jwtDecode } from "jwt-decode"
+import { API } from "../utils/api"
 
 interface UserInfo {
   picture?: string
@@ -42,7 +43,7 @@ export default function LoginScreen() {
       const result = await promptAsync()
       if (result.type == "success") {
         const user = await getUserInfo(result?.authentication?.accessToken || "")
-        const response = await axios.post("http://192.168.18.188:8080/api/v1/user", {
+        const response = await API.post("/api/v1/user", {
           email: user.email,
           avatar: user.picture,
           name: user.name,

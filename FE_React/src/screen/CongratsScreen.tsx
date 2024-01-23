@@ -13,26 +13,30 @@ import TopUpButton from "../components/TopUpButton"
 import { useNavigation } from "@react-navigation/native"
 import { socket } from "../utils/socket"
 import { MdOutlineLogout } from "react-icons/md"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function CongratsScreen() {
   const navigation = useNavigation()
   const [data, setData] = useState([])
+  const [idRoom, setIdRoom] = useState("")
 
-  const LoginNavigate = () => {
-    navigation.navigate("Login" as never)
-  }
+  const LoginNavigate = () => navigation.navigate("Login" as never)
 
-  const HomeNavigate = () => {
-    navigation.navigate("Home" as never)
+  const HomeNavigate = () => navigation.navigate("Home" as never)
+
+  const getIdRoom = async () => {
+    const idRoom = await AsyncStorage.getItem("idRoom")
+    setIdRoom(idRoom)
   }
 
   useEffect(() => {
-    socket.emit("user", { score: 0 })
-    socket.on("user", (user) => {
+    getIdRoom()
+    socket.on("finish", async (user) => {
       setData(user.sort((a, b) => b.score - a.score))
-      console.log(user)
+      await AsyncStorage.removeItem("idRoom")
     })
-  }, [])
+  }, [idRoom])
+
   return (
     <ImageBackground
       source={require("../../assets/images/bg_game.png")}
@@ -45,14 +49,6 @@ export default function CongratsScreen() {
 
         <Image source={require("../../assets/images/2.png")} style={[styles.iconText]} />
 
-        {/* <View style={[styles.score]}>
-          <Image
-            source={require("../../assets/images/score.png")}
-            style={{ width: 40, height: 40 }}
-          />
-          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>100</Text>
-        </View> */}
-
         <View style={{ alignItems: "center" }}>
           <Text
             style={{ color: "white", fontSize: 35, fontWeight: "bold", marginTop: 30 }}
@@ -62,56 +58,16 @@ export default function CongratsScreen() {
 
           {data.length !== 0 &&
             data.map((user, idx) => (
-              <>
-                {idx == 0 && (
-                  <View
-                    style={{
-                      marginTop: 20,
-                      backgroundColor: "#F4CE14",
-                      paddingHorizontal: 40,
-                      paddingVertical: 20,
-                      borderRadius: 10,
-                      marginBottom: 13,
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 20,
-                    }}
-                  >
-                    <Image
-                      source={user.avatar}
-                      style={{
-                        width: 130,
-                        height: 130,
-                        borderRadius: 65,
-                        borderColor: "white",
-                        borderWidth: 2,
-                      }}
-                    />
-                    <Text style={styles.nameText}>{user.name}</Text>
-                  </View>
-                )}
-
-                {idx !== 0 && (
-                  <View style={[styles.optionButton]}>
-                    <Image
-                      source={user.avatar}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 100,
-                        marginRight: 20,
-                        borderColor: "white",
-                        borderWidth: 2,
-                      }}
-                    />
-                    <View style={{ marginLeft: 5 }}>
-                      <Text style={styles.optionText}>{user.name}</Text>
-                      <Text style={styles.scoreText}>Score: {user.score}</Text>
-                    </View>
-                  </View>
-                )}
-              </>
+              <View style={idx == 0 ? styles.podiumFirst : styles.podiumX} key={idx}>
+                <Image
+                  source={user.avatar}
+                  style={idx == 0 ? styles.imageFirst : styles.imageX}
+                />
+                <View>
+                  <Text style={styles.optionText}>{user.name}</Text>
+                  <Text style={styles.scoreText}>Score: {user.score}</Text>
+                </View>
+              </View>
             ))}
         </View>
 
@@ -127,7 +83,34 @@ export default function CongratsScreen() {
 }
 
 const styles = StyleSheet.create({
-  optionButton: {
+  podiumFirst: {
+    marginTop: 20,
+    backgroundColor: "#F4CE14",
+    paddingHorizontal: 40,
+    paddingVertical: 20,
+    borderRadius: 10,
+    marginBottom: 13,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+  },
+  imageFirst: {
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    borderColor: "white",
+    borderWidth: 2,
+  },
+  imageX: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    marginRight: 20,
+    borderColor: "white",
+    borderWidth: 2,
+  },
+  podiumX: {
     flexDirection: "row",
     backgroundColor: "#bbb",
     textShadowColor: "black",

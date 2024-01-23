@@ -14,6 +14,7 @@ import {
 } from "react-native"
 import { socket } from "../utils/socket"
 import useAuth from "../hooks/useAuth"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function LobyScreen() {
   const navigation = useNavigation()
@@ -38,7 +39,8 @@ export default function LobyScreen() {
         avatar: user.avatar,
       })
 
-      socket.on("joinRoom", (user, timeout) => {
+      socket.on("joinRoom", async (user, timeout, idRoom) => {
+        await AsyncStorage.setItem("idRoom", idRoom)
         setTime(timeout)
 
         if (user === "start") {

@@ -16,15 +16,30 @@ import { useNavigation } from "@react-navigation/core"
 import ModalAvatar from "../components/ModalAvatar"
 import ModalEditProfile from "../components/ModalEditProfile"
 import useAuth from "../hooks/useAuth"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useIsFocused } from "@react-navigation/native"
+import { socket } from "../utils/socket"
 
 export default function HomeScreen() {
   const navigation = useNavigation()
   const [triggerFetch, setTriggerFetch] = useState(0)
   const { getUser, user, handleLogout } = useAuth()
+  const isFocused = useIsFocused()
 
   const handleTopUp = () => {
     navigation.navigate("Shop" as never)
   }
+
+  const clearIdRoom = async () => {
+    await AsyncStorage.removeItem("idRoom")
+  }
+
+
+
+  useEffect(() => {
+    clearIdRoom()
+    socket.emit("clear", true)
+  }, [isFocused])
 
   return (
     <ImageBackground

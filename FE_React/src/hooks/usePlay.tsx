@@ -9,6 +9,7 @@ import { Quiz } from "../types"
 export default function usePlay() {
   const navigation = useNavigation()
   const isFocused = useIsFocused()
+  const [idRoom, setIdRoom] = useState("")
   const [user, setUser] = useState<UserInfo & { score: number }>({
     avatar: "",
     email: "",
@@ -42,10 +43,11 @@ export default function usePlay() {
   }
 
   useEffect(() => {
+    // timeout
     if (quize.time === 0) {
       setTimeout(() => {
         setIdx((prev) => prev + 1)
-        socket.emit("getQuizes", { idx: idx + 1 })
+        socket.emit("getQuizes", { idx: idx + 1, idRoom })
         if (selectedOption == quize.answer) {
           socket.emit("user", {
             score: 10,
@@ -56,21 +58,27 @@ export default function usePlay() {
   }, [quize.time])
 
   useEffect(() => {
-    socket.emit("getQuizes", { idx })
-    socket.on("getQuizes", (data) => {
-      if (!data) {
-        navigation.navigate("Congrats" as never)
-      }
-      setQuize(data)
-    })
+    // Mulai pertanyaan
+    if (idRoom) {
+      socket.emit("getQuizes", { idx, idRoom })
+      socket.on("getQuizes", (data) => {
+        if (!data) {
+          navigation.navigate("Congrats" as never)
+          return
+        }
+        setQuize(data)
+      })
 
-    socket.on("user", async (data) => {
-      const token = await AsyncStorage.getItem("user")
-      const decoded = jwtDecode(token) as UserInfo
-      const res = data.filter((u) => u.name == decoded.name)[0]
-      setUser((prev) => ({ ...prev, score: res.score }))
-    })
-  }, [isFocused])
+      socket.on("user", async (data) => {
+        const token = await AsyncStorage.getItem("user")
+        const decoded = jwtDecode(token) as UserInfo
+        const res = data.filter((u) => u.name == decoded.name)[0]
+        setUser((prev) => ({ ...prev, score: res.score }))
+      })
+    }
+  }, [isFocused, idRoom])
+
+  // console.log(quize)
 
   return {
     user,
@@ -78,6 +86,8 @@ export default function usePlay() {
     quize,
     idx,
     multipleChoice,
+    setIdRoom,
+    idRoom,
     handleAnswer,
   }
 }

@@ -26,7 +26,7 @@ export default function DiamondItem({ setTrigger }) {
       //   },
       // });
 
-      const response = await axios.get("http://192.168.18.238:8000/api/diamonds", {
+      const response = await API.get("/api/diamonds", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
