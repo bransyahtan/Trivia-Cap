@@ -5,5 +5,6 @@ export interface Quize {
   b: string;
   c: string;
   answer: string;
-  time: number;
+  created_at: string;
+  updated_at: string;
 }

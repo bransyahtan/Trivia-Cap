@@ -19,7 +19,7 @@ const port = 3000;
 app.use(cors());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("OK");
+  res.send("Express Trivia-Cap");
 });
 
 // Socket.IO middleware
