@@ -17,13 +17,8 @@ import medali2 from "../../assets/images/medali2.png";
 import medali3 from "../../assets/images/medali3.png";
 
 const leaderboardData = [
-<<<<<<< HEAD
-  { id: "1", name: "a", score: 10000, avatar: avatar1 },
-  { id: "2", name: "b", score: 10000, avatar: avatar2 },
-=======
   { id: "1", name: "Player 1", score: 10000, avatar: avatar1 },
   { id: "2", name: "Player 2", score: 400000, avatar: avatar2 },
->>>>>>> f344472de63ae8efdeddaf0fe24175d232312ba3
   { id: "3", name: "Player 3", score: 11000, avatar: avatar3 },
 ];
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import {
   Image,
   ImageBackground,
@@ -8,26 +8,26 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-} from "react-native"
-import { useIsFocused, useNavigation } from "@react-navigation/native"
-import { socket } from "../utils/socket"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { jwtDecode } from "jwt-decode"
-import { UserInfo } from "../interface/User"
-import { ProgressBar, MD3Colors } from "react-native-paper"
+} from "react-native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { socket } from "../utils/socket";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import { UserInfo } from "../interface/User";
+import { ProgressBar, MD3Colors } from "react-native-paper";
 
 interface Quiz {
-  question: string
-  a: string
-  b: string
-  c: string
-  answer: string
-  time: number
+  question: string;
+  a: string;
+  b: string;
+  c: string;
+  answer: string;
+  time: number;
 }
 
 const PlayScreen = () => {
-  const navigation = useNavigation()
-  const isFocused = useIsFocused()
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [user, setUser] = useState<UserInfo & { score: number }>({
     avatar: "",
     email: "",
@@ -35,9 +35,9 @@ const PlayScreen = () => {
     name: "",
     score: 0,
     wallet: 0,
-  })
+  });
 
-  const [selectedOption, setSelectedOption] = useState(null)
+  const [selectedOption, setSelectedOption] = useState(null);
   const [quize, setQuize] = useState<Quiz>({
     question: "...",
     a: "",
@@ -45,50 +45,50 @@ const PlayScreen = () => {
     c: "",
     answer: "",
     time: 0.01,
-  })
-  const [idx, setIdx] = useState(0)
+  });
+  const [idx, setIdx] = useState(0);
 
-  const multipleChoice = ["a", "b", "c"]
+  const multipleChoice = ["a", "b", "c"];
 
   const getAuth = async () => {
-    const token = await AsyncStorage.getItem("user")
-    const decoded = jwtDecode(token) as UserInfo
-    setUser({ ...decoded, score: 0 })
-  }
+    const token = await AsyncStorage.getItem("user");
+    const decoded = jwtDecode(token) as UserInfo;
+    setUser({ ...decoded, score: 0 });
+  };
 
   const handleAnswer = (selected) => {
-    setSelectedOption(selected)
-  }
+    setSelectedOption(selected);
+  };
 
   useEffect(() => {
     if (quize.time === 0) {
       setTimeout(() => {
-        setIdx((prev) => prev + 1)
-        socket.emit("getQuizes", { idx: idx + 1 })
+        setIdx((prev) => prev + 1);
+        socket.emit("getQuizes", { idx: idx + 1 });
         if (selectedOption == quize.answer) {
           socket.emit("user", {
             name: user.name,
             score: 10,
-          })
+          });
         }
-      }, 3000)
+      }, 3000);
     }
-  }, [quize.time])
+  }, [quize.time]);
 
   useEffect(() => {
-    getAuth()
-    socket.emit("getQuizes", { idx })
+    getAuth();
+    socket.emit("getQuizes", { idx });
     socket.on("getQuizes", (data) => {
       if (!data) {
-        navigation.navigate("Leaderboard" as never)
+        navigation.navigate("Leaderboard" as never);
       }
-      setQuize(data)
-    })
+      setQuize(data);
+    });
 
     socket.on("user", (data) => {
-      setUser((prev) => ({ ...prev, score: data.score }))
-    })
-  }, [isFocused])
+      setUser((prev) => ({ ...prev, score: data.score }));
+    });
+  }, [isFocused]);
 
   return (
     <ImageBackground
@@ -110,7 +110,13 @@ const PlayScreen = () => {
             {idx + 1} / 10
           </Text>
 
-          <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <Image
               source={require("../../assets/images/score.png")}
               style={{ width: 40, height: 40 }}
@@ -129,7 +135,10 @@ const PlayScreen = () => {
         {/* Timer display */}
         <View style={styles.timer}>
           <Text style={styles.timerText}>
-            Timer: <Text style={{ fontSize: 24, fontWeight: "bold" }}>{quize.time}</Text>{" "}
+            Timer:{" "}
+            <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+              {quize.time}
+            </Text>{" "}
             seconds
           </Text>
         </View>
@@ -200,16 +209,20 @@ const PlayScreen = () => {
           ))}
 
           {quize.time === 0 && (
-            <Text style={{ fontSize: 24, fontWeight: "bold", color: "whitesmoke" }}>
+            <Text
+              style={{ fontSize: 24, fontWeight: "bold", color: "whitesmoke" }}
+            >
               Jawaban Benar:{" "}
-              <Text style={{ display: "flex", color: "white" }}>{quize.answer}</Text>
+              <Text style={{ display: "flex", color: "white" }}>
+                {quize.answer}
+              </Text>
             </Text>
           )}
         </View>
       </ScrollView>
     </ImageBackground>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -316,6 +329,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
   },
-})
+});
 
-export default PlayScreen
+export default PlayScreen;
