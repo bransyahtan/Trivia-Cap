@@ -1,0 +1,39 @@
+#quiz proto
+#protoc --go_out resources/quizes/dilevery/grpc --go-grpc_out resources/quizes/dilevery/grpc ./internal/proto/*.proto
+
+server :
+	protoc --go_out resources/quizes/dilevery/grpc --go-grpc_out resources/quizes/dilevery/grpc ./internal/proto/*.proto
+
+
+generate :
+	protoc -I ./internal/proto --grpc-gateway_out ./resources/quizes/dilevery/grpc \
+        --grpc-gateway_opt paths=source_relative \
+        --grpc-gateway_opt generate_unbound_methods=true \
+        internal/proto/*.proto
+
+generate2 :
+	protoc -I . --proto_path=/path/to/protoc/include \
+		   --grpc-gateway_out ./gen/go \
+		   --grpc-gateway_opt paths=source_relative \
+		   --grpc-gateway_opt generate_unbound_methods=true \
+		   internal/proto/*.proto
+
+generateQuizzes :
+		   protoc -I ./internal/proto \
+               --go_out ./internal/pb/quiz --go_opt paths=source_relative \
+               --go-grpc_out ./internal/pb/quiz --go-grpc_opt paths=source_relative \
+               --grpc-gateway_out ./internal/pb/quiz --grpc-gateway_opt paths=source_relative \
+               internal/proto/quizzz.proto
+
+generateDiamondWallet :
+			protoc -I ./internal/proto \
+						   --go_out ./internal/pb/diamond_wallet --go_opt paths=source_relative \
+						   --go-grpc_out ./internal/pb/diamond_wallet --go-grpc_opt paths=source_relative \
+						   --grpc-gateway_out ./internal/pb/diamond_wallet --grpc-gateway_opt paths=source_relative \
+						   internal/proto/diamond_wallet.proto
+
+run_quiz :
+	go run resources/quizes/dilevery/grpc/main.go
+
+run_diamond_wallet :
+	go run resources/diamond_wallet/delivery/grpc/main.go

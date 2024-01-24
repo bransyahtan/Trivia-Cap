@@ -3,14 +3,15 @@ package http
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/rdwansch/Trivia-Cap/domain"
-	"github.com/rdwansch/Trivia-Cap/internal/component"
-	microservice "github.com/rdwansch/Trivia-Cap/internal/microservice"
 	"io"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/rdwansch/Trivia-Cap/domain"
+	"github.com/rdwansch/Trivia-Cap/internal/component"
+	microservice "github.com/rdwansch/Trivia-Cap/internal/microservice"
 )
 
 type articleHandler struct {
