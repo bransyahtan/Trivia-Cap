@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="010cbf13-ae25-4ad8-815c-7265d7e9eb08" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/BE_Golang/app/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/BE_Golang/app/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE_Golang/domain/quize.go" beforeDir="false" afterPath="$PROJECT_DIR$/BE_Golang/domain/quize.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE_Golang/resources/quizes/dilevery/http/quizes.go" beforeDir="false" afterPath="$PROJECT_DIR$/BE_Golang/resources/quizes/dilevery/http/quizes.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2b6K54BC22Qu2xfIYSCj5ybslPR" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Luthfi"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>

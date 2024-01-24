@@ -29,4 +29,5 @@ type DiamondWalletUseCase interface {
 	Update(updateWallet dto.WalletUpdateReq) (dto.WalletResponse, error)
 	CreateWallet(createWallet dto.WalletReq) (dto.WalletResponse, error)
 	UpdateAfterTopUp(updateWallet dto.WalletUpdateReq) error
+	ListenDiamondWallet(send *dto.PaymentNotificationSend) (dto.WalletResponse, error)
 }
