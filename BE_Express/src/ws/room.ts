@@ -5,34 +5,11 @@ import { v4 as uuidv4 } from "uuid";
 import { Room } from "../interfaces/Room";
 
 const fetchQuizes = async () => {
-  // const res = await API.get("/quizes");
-  // if (res.data.status == "OK") {
-  //   const quizes: Quize[] = res.data.data;
-  //   return quizes;
-  // }
-
-  return [
-    {
-      id: 0,
-      question: "Wilayah Antartika yang diklaim oleh beberapa negara, termasuk Argentina dan Britania Raya, disebut sebagai",
-      a: "Victoria",
-      b: "Weddell",
-      c: "Marie Byrd",
-      answer: "Weddell",
-      created_at: "2024-01-17T04:04:05.000000Z",
-      updated_at: "2024-01-17T04:04:05.000000Z",
-    },
-    {
-      id: 1,
-      question: "Apa nama gunung tertinggi di Pulau Utara Selandia Baru yang terletak di Tongariro National Park?",
-      a: "Gunung Cook",
-      b: "Gunung Aspiring",
-      c: "Gunung Ruapehu",
-      answer: ":Gunung Ruapehu",
-      created_at: "2024-01-17T04:03:17.000000Z",
-      updated_at: "2024-01-17T04:03:17.000000Z",
-    },
-  ];
+  const res = await API.get("/quizes");
+  if (res.data.status == "OK") {
+    const quizes: Quize[] = res.data.data;
+    return quizes;
+  }
 };
 
 let roomGame = getRoom();
@@ -56,7 +33,7 @@ export default async function room(io: Server, socket: Socket) {
     const roomLength = Object.keys(rooms).length;
     let currentLength = 1;
     for (const key in rooms) {
-      console.log("room id:", key, "has<>", rooms[key].users.length);
+      console.log(key);
       if (rooms[key].users.length === 3) {
         if (roomLength - currentLength > 0) {
           // jika saat ini currentLength adalah 1 yang artinya ada room
@@ -79,8 +56,6 @@ export default async function room(io: Server, socket: Socket) {
       }
       currentId = key;
     }
-
-    console.log("room id:", currentId, "has", rooms[currentId].users.length);
 
     // check if quizes is null
     // then suffling quizes

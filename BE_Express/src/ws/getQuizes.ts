@@ -23,7 +23,7 @@ export default async function getQuizes(io: Server, socket: Socket) {
           return;
         }
 
-        const quize: Quize & { time: number } = { ...rooms[idRoom].quizes[+idx], time: 10 };
+        const quize: Quize & { time: number } = { ...rooms[idRoom].quizes[+idx], time: 12 };
 
         const idInterval = setInterval(() => {
           io.to(idRoom).emit("getQuizes", quize);

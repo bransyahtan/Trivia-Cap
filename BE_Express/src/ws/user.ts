@@ -25,6 +25,11 @@ export default async function user(io: Server, socket: Socket) {
     io.to(id_room).emit("user", users);
 
     io.to(id_room).emit("finish", users);
+
+    // if (rooms[idRoom].isFinished) {
+    //   console.log("delete rooms", idRoom);
+    //   delete rooms[idRoom];
+    // }
   });
 
   socket.on("answer", message => {
