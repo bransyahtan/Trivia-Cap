@@ -37,3 +37,6 @@ run_quiz :
 
 run_diamond_wallet :
 	go run resources/diamond_wallet/delivery/grpc/main.go
+
+run_mux_grpc_gateway :
+	go run internal/grpc_gateway/main.go

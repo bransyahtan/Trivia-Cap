@@ -20,6 +20,25 @@ func GRPCServerRun() error {
 	
 	mux := runtime.NewServeMux()
 	
+	corsHandler := func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			origin := r.Header.Get("Origin")
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			
+			if r.Method == "OPTIONS" {
+				// Handle preflight requests
+				w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+				w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+			
+			h.ServeHTTP(w, r)
+		})
+	}
+	
+	handler := corsHandler(mux)
+	
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	
 	err := quiz.RegisterQuizzesServiceHandlerFromEndpoint(ctx, mux, quizPort, opts)
@@ -28,5 +47,5 @@ func GRPCServerRun() error {
 		log.Fatalln(err)
 	}
 	
-	return http.ListenAndServe(":9200", mux)
+	return http.ListenAndServe(":9200", handler)
 }
