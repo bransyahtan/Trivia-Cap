@@ -24,6 +24,8 @@ func NewDiamondWalletUseCase(diamondRepository domain.DiamondWalletRepository, r
 	}
 }
 
+var listenChannel = make(chan dto.WalletResponse)
+
 func (u *diamondWalletUseCase) FindById(id int64) (dto.WalletResponse, error) {
 	var ctx = context.Background()
 	diamondWallet, err := u.diamondRepository.FindByIdUser(ctx, id)
@@ -39,8 +41,79 @@ func (u *diamondWalletUseCase) FindById(id int64) (dto.WalletResponse, error) {
 	}, nil
 }
 
+func (u *diamondWalletUseCase) ListenDiamondWallet(send *dto.PaymentNotificationSend) (dto.WalletResponse, error) {
+	ctx := context.Background()
+	
+	fmt.Println("masuk listen", <-listenChannel)
+	
+	go func() {
+		diamondWallet, _ := u.diamondRepository.FindByIdUser(ctx, send.UserId)
+		
+		for {
+			select {
+			case value := <-listenChannel:
+				fmt.Println(value)
+			default:
+				listenChannel <- dto.WalletResponse{
+					ID:             diamondWallet.ID,
+					UserId:         diamondWallet.UserID,
+					AccountNumber:  diamondWallet.AccountNumber,
+					BalanceDiamond: diamondWallet.BalanceDiamond,
+				}
+			}
+		}
+	}()
+	
+	//if err != nil {
+	//	log.Println("Error listening:", err)
+	//	time.Sleep(500 * time.Millisecond)
+	//} else {
+	//	listenChannel <- dto.WalletResponse{
+	//		ID:             diamondWallet.ID,
+	//		UserId:         diamondWallet.UserID,
+	//		AccountNumber:  diamondWallet.AccountNumber,
+	//		BalanceDiamond: diamondWallet.BalanceDiamond,
+	//	}
+	//}
+	//
+	//labelBreak:
+	//	select {
+	//	case <-ctx.Done():
+	//		break labelBreak
+	//	case <-listenChannel:
+	//		listenChannel <- dto.WalletResponse{
+	//			ID:             diamondWallet.ID,
+	//			UserId:         diamondWallet.UserID,
+	//			AccountNumber:  diamondWallet.AccountNumber,
+	//			BalanceDiamond: diamondWallet.BalanceDiamond,
+	//		}
+	//	}
+	
+	//if listenChannel == nil {
+	//	go func() {
+	//		//label
+	//		diamondWallet, err := u.diamondRepository.FindByIdUser(ctx, send.UserId)
+	//		if err != nil {
+	//			log.Println("Error listening:", err)
+	//			time.Sleep(500 * time.Millisecond)
+	//		} else {
+	//			listenChannel <- dto.WalletResponse{
+	//				ID:             diamondWallet.ID,
+	//				UserId:         diamondWallet.UserID,
+	//				AccountNumber:  diamondWallet.AccountNumber,
+	//				BalanceDiamond: diamondWallet.BalanceDiamond,
+	//			}
+	//		}
+	//
+	//	}()
+	//}
+	
+	return <-listenChannel, nil
+}
+
 func (u *diamondWalletUseCase) FindByAccountNumber(accountNumber string) (domain.DiamondWallet, error) {
 	var ctx = context.Background()
+	
 	diamondWallet, err := u.diamondRepository.FindByAccountNumber(ctx, accountNumber)
 	if err != nil {
 		return domain.DiamondWallet{}, err
@@ -107,6 +180,22 @@ func (u *diamondWalletUseCase) UpdateAfterTopUp(updateWallet dto.WalletUpdateReq
 	}
 	
 	if status == "settlement" {
+		//go func() {
+		//	//label
+		//	diamondWallet, err := u.diamondRepository.FindByIdUser(ctx, tuData.IdUser)
+		//	if err != nil {
+		//		log.Println("Error listening:", err)
+		//		time.Sleep(500 * time.Millisecond)
+		//	} else {
+		//		listenChannel <- dto.WalletResponse{
+		//			ID:             diamondWallet.ID,
+		//			UserId:         diamondWallet.UserID,
+		//			AccountNumber:  diamondWallet.AccountNumber,
+		//			BalanceDiamond: diamondWallet.BalanceDiamond,
+		//		}
+		//	}
+		//
+		//}()
 		err := u.diamondRepository.Update(ctx, &domain.DiamondWallet{
 			UserID:         tuData.IdUser,
 			BalanceDiamond: uint64(tuData.AmountDiamond),

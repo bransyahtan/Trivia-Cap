@@ -1,5 +1,10 @@
 package domain
 
+import (
+	"context"
+	"github.com/rdwansch/Trivia-Cap/dto"
+)
+
 type Quizes struct {
 	ID        int64  `json:"id"`
 	Question  string `json:"question"`
@@ -14,4 +19,14 @@ type Quizes struct {
 type QuizzesResponse struct {
 	Status string   `json:"status"`
 	Data   []Quizes `json:"data"`
+}
+
+type QuizzesRepository interface {
+	SetQuizToRedis()
+	GetDataRedis(ctx context.Context) (string, error)
+}
+
+type QuizzesUseCase interface {
+	ReDoQuizRedis()
+	GetDataRedisJson() (dto.QuizzesResponse, error)
 }

@@ -18,3 +18,8 @@ type WalletUpdateReq struct {
 	BalanceDiamond uint64 `json:"balance_diamond"`
 	OrderId        string `json:"order_id"`
 }
+
+type PaymentNotificationSend struct {
+	UserId  int64  `json:"user_id"`
+	OrderId string `json:"order_id"`
+}

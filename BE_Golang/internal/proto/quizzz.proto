@@ -1,0 +1,33 @@
+syntax = "proto3";
+package proto;
+
+option go_package = "/quiz";
+
+import "google/api/annotations.proto";
+
+message Quizzes{
+  string status = 1;
+  repeated Quiz data = 2;
+}
+
+message Quiz{
+  int64 id = 1;
+  string question = 2;
+  string a = 3;
+  string b = 4;
+  string c = 5;
+  string answer = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message Empty {
+}
+
+service QuizzesService {
+  rpc FindAllQuiz(Empty) returns (Quizzes){
+    option (google.api.http) = {
+      get: "/quizzes"
+    };
+  };
+}
