@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import {
   Image,
   ScrollView,
@@ -7,32 +7,31 @@ import {
   TouchableOpacity,
   View,
   Modal,
-  Button,
-  Text,
-} from "react-native"
-import { Avatar } from "./AvatarItem"
-import MyButton from "./Button"
-const ModalAvatar: React.FC<{
-  setTriggerFetch: React.Dispatch<React.SetStateAction<number>>
-}> = ({ setTriggerFetch }) => {
-  const [modalVisible, setModalVisible] = useState(false)
+} from "react-native";
+import { PiNotePencil } from "react-icons/pi";
+import EditProfileItem from "./EditProfileItem";
+import MyButton from "../Button";
+
+const ModalEditProfile = ({ getUser }) => {
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
       <StatusBar />
       <View style={styles.container}>
         <View style={styles.cardsContainer}>
+          <View style={styles.cardWrapper}></View>
           <View style={styles.cardWrapper}>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <View>
-                <Image
-                  source={require("../../assets/images/store.png")}
-                  style={{ width: 70, height: 70 }}
-                />
-                <Text style={{ color: "white", fontSize: 10, textAlign: 'center' }}>
-                  Avatar Shop
-                </Text>
-              </View>
+              <PiNotePencil
+                size={24}
+                color="black"
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 10,
+                  padding: 3,
+                }}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -43,16 +42,18 @@ const ModalAvatar: React.FC<{
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible)
+          setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <ScrollView>
-              <Avatar setTriggerFetch={setTriggerFetch} />
+              <View style={styles.selectProfileContainer}>
+                <EditProfileItem getUser={getUser} />
+              </View>
             </ScrollView>
-
-            <View style={styles.buttonModal}>
+            {/* <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} /> */}
+            <View>
               <MyButton
                 text="Cancel"
                 textColor="#fff"
@@ -64,8 +65,8 @@ const ModalAvatar: React.FC<{
         </View>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -74,14 +75,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "white",
+  },
   cardsContainer: {
     flexDirection: "column",
+    justifyContent: "space-around",
     alignItems: "center",
+    width: "100%",
     paddingHorizontal: 20,
   },
   cardWrapper: {
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  image: {
+    width: 300,
+    height: 300,
+    marginTop: -80,
   },
   centeredView: {
     justifyContent: "center",
@@ -105,12 +120,40 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  buttonModal: {
-    marginTop: 10,
-    width: 80,
-    display: "flex",
-    justifyContent: "center",
+  selectProfileContainer: {
+    columnGap: 20,
+    flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
   },
-})
-export default ModalAvatar
+  diamondsRow: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 15,
+  },
+  diamondItem: {
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: 15,
+    width: "48%",
+  },
+  diamondImage: {
+    width: 80,
+    height: 80,
+    marginBottom: 10,
+  },
+  diamondValue: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  avatarImage: {
+    borderRadius: 50,
+    width: 80,
+    height: 80,
+    marginBottom: 10,
+  },
+});
+export default ModalEditProfile;

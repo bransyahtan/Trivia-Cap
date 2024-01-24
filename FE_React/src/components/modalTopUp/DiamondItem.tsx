@@ -6,20 +6,20 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native"
-import React, { useEffect, useState } from "react"
-import { API } from "../utils/api"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import axios from "axios"
-import * as WebBrowser from "expo-web-browser"
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { API } from "../../utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import * as WebBrowser from "expo-web-browser";
 
 export default function DiamondItem({ setTrigger }) {
-  const [modalVisible, setModalVisible] = useState(false)
-  const [diamond, setDiamond] = useState([])
+  const [modalVisible, setModalVisible] = useState(false);
+  const [diamond, setDiamond] = useState([]);
 
   const getDiamond = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       // const response = await API.get("api/v1/diamonds", {
       //   headers: {
       //     Authorization: `Bearer ${token}`,
@@ -30,17 +30,17 @@ export default function DiamondItem({ setTrigger }) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
-      setDiamond(response.data.data)
+      setDiamond(response.data.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const handleClickDiamond = async (obj) => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       const response = await API.post(
         "api/v1/topup",
         {
@@ -51,19 +51,19 @@ export default function DiamondItem({ setTrigger }) {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
-      )
-      WebBrowser.openBrowserAsync(response.data.data.snap_url)
-      setModalVisible(false)
-      setTrigger()
+        }
+      );
+      WebBrowser.openBrowserAsync(response.data.data.snap_url);
+      setModalVisible(false);
+      setTrigger();
     } catch (error) {
-      console.error("Error fetching diamond:", error)
+      console.error("Error fetching diamond:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    getDiamond()
-  }, [])
+    getDiamond();
+  }, []);
 
   return (
     <View style={styles.centeredView}>
@@ -103,7 +103,7 @@ export default function DiamondItem({ setTrigger }) {
                     onPress={() => handleClickDiamond(d)}
                   >
                     <Image
-                      source={require("../../assets/images/diamonds.png")}
+                      source={require("../../../assets/images/diamonds.png")}
                       style={{ width: 120, height: 120 }}
                     />
                     <Text style={styles.diamondValue}>{d.amount}</Text>
@@ -116,7 +116,7 @@ export default function DiamondItem({ setTrigger }) {
         </ScrollView>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -184,4 +184,4 @@ const styles = StyleSheet.create({
     height: 80,
     marginBottom: 10,
   },
-})
+});

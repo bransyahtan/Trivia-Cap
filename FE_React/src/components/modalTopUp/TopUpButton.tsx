@@ -7,32 +7,31 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native"
-import React, { useEffect, useState } from "react"
-import { useNavigation } from "@react-navigation/core"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { API } from "../utils/api"
-import DiamondItem from "./DiamondItem"
-import MyButton from "./Button"
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API } from "../../utils/api";
+import DiamondItem from "./DiamondItem";
+import MyButton from "../Button";
 
 export default function TopUpButton({ onPress }: any) {
-  const [diamond, setDiamond] = useState(0)
-  const [modalVisible, setModalVisible] = useState(false)
+  const [diamond, setDiamond] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const diamondWallet = async () => {
-    const token = await AsyncStorage.getItem("user")
+    const token = await AsyncStorage.getItem("user");
     const response = await API.get("api/v1/detail-wallet", {
       headers: {
         Authorization: "Bearer " + token,
       },
-    })
-    setDiamond(response.data.data.balance_diamond)
+    });
+    setDiamond(response.data.data.balance_diamond);
     // setDiamond(55);
-  }
+  };
 
   useEffect(() => {
-    diamondWallet()
-  }, [])
+    diamondWallet();
+  }, []);
 
   return (
     <>
@@ -86,7 +85,7 @@ export default function TopUpButton({ onPress }: any) {
             }}
           >
             <Image
-              source={require("../../assets/images/diamond.png")}
+              source={require("../../../assets/images/diamond.png")}
               style={{ width: 25, height: 25, marginRight: 5 }}
             />
             <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
@@ -108,7 +107,7 @@ export default function TopUpButton({ onPress }: any) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible)
+          setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
@@ -128,7 +127,7 @@ export default function TopUpButton({ onPress }: any) {
         </View>
       </Modal>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -178,4 +177,4 @@ const styles = StyleSheet.create({
       height: 2,
     },
   },
-})
+});
