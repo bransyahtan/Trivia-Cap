@@ -31,4 +31,4 @@ io.use((socket, next) => {
 io.on("connection", socket => {
   socketRoutes(io, socket);
 });
-server.listen(port, "192.168.18.238", () => console.log("server running at :" + port));
+server.listen(port, () => console.log("server running at :" + port));
