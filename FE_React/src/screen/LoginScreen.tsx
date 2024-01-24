@@ -3,120 +3,120 @@ import {
   ImageBackground,
   ScrollView,
   StatusBar,
-  StyleSheet,
   View,
-} from "react-native"
-import React, { useState } from "react"
-import MyButton from "../components/Button"
-import * as Google from "expo-auth-session/providers/google"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useNavigation } from "@react-navigation/native"
-import * as WebBrowser from "expo-web-browser"
-import axios from "axios"
-import { jwtDecode } from "jwt-decode"
-import { API } from "../utils/api"
+} from "react-native";
+import React, { useState } from "react";
+import MyButton from "../components/Button";
+import * as Google from "expo-auth-session/providers/google";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import * as WebBrowser from "expo-web-browser";
+import { jwtDecode } from "jwt-decode";
+import { API } from "../utils/api";
+import { styles } from "../styles/loginScreenStyle";
 
 interface UserInfo {
-  picture?: string
-  email: string
-  verified_email: boolean
-  name: string
+  picture?: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
 }
 
-// test
-WebBrowser.maybeCompleteAuthSession()
+WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
-  const [authInProgress, setAuthInProgress] = useState(false)
-  const navigate = useNavigation()
+  const [authInProgress, setAuthInProgress] = useState(false);
+  const navigate = useNavigation();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     webClientId:
       "226355358927-33ikf3sl0pbvc283t9vk7ehmcrb26nda.apps.googleusercontent.com",
-  })
+  });
 
   const handleEffect = async () => {
-    const user = await getLocalUser()
+    const user = await getLocalUser();
 
     if (!user) {
-      setAuthInProgress(true)
-      const result = await promptAsync()
+      setAuthInProgress(true);
+      const result = await promptAsync();
       if (result.type == "success") {
-        const user = await getUserInfo(result?.authentication?.accessToken || "")
+        const user = await getUserInfo(
+          result?.authentication?.accessToken || ""
+        );
         const response = await API.post("/api/v1/user", {
           email: user.email,
           avatar: user.picture,
           name: user.name,
-        })
+        });
 
-        await AsyncStorage.setItem("user", response.data.token)
+        await AsyncStorage.setItem("user", response.data.token);
         if (response.data.is_register) {
-          navigate.navigate("Home" as never)
+          navigate.navigate("Home" as never);
         } else {
-          navigate.navigate("SelectProfile" as never)
+          navigate.navigate("SelectProfile" as never);
         }
       }
     } else {
-      navigate.navigate("Home" as never)
+      navigate.navigate("Home" as never);
     }
-  }
+  };
 
   const getLocalUser = async () => {
     try {
-      const data = await AsyncStorage.getItem("user")
-      if (!data) return null
-      return jwtDecode(data) as UserInfo
+      const data = await AsyncStorage.getItem("user");
+      if (!data) return null;
+      return jwtDecode(data) as UserInfo;
     } catch (error) {
-      console.log("Error getting local user:", error)
-      return null
+      console.log("Error getting local user:", error);
+      return null;
     }
-  }
+  };
 
   const getUserInfo = async (token: string): Promise<UserInfo> => {
-    if (!token) return
+    if (!token) return;
     try {
-      const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const response = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      const user = await response.json()
+      const user = await response.json();
 
-      setAuthInProgress(false)
-      return user
+      setAuthInProgress(false);
+      return user;
     } catch (error) {
-      console.log("Error fetching user info:", error)
-      setAuthInProgress(false)
+      console.log("Error fetching user info:", error);
+      setAuthInProgress(false);
     }
-  }
+  };
 
   return (
     <ImageBackground
       source={require("../../assets/images/bg-game.png")}
-      style={{ flex: 1, opacity: 0.95 }}
+      style={styles.container}
     >
-      <ScrollView style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+      <ScrollView style={styles.scrollView}>
         <StatusBar />
         <View style={{ alignItems: "center" }}>
           <View style={{ marginTop: 12 }}>
             <Image
               source={require("../../assets/images/1.png")}
-              style={{ width: 480, height: 480 }}
+              style={styles.image}
             />
           </View>
 
-          <View style={{ marginTop: 10, alignItems: "center" }}>
+          <View style={styles.buttonContainer}>
             <MyButton
               text="Login"
               background="#39A7FF"
               textColor="white"
               onPress={handleEffect}
-              // navigateTo="MainApp"
             />
           </View>
         </View>
       </ScrollView>
     </ImageBackground>
-  )
+  );
 }
-
-const styles = StyleSheet.create({})

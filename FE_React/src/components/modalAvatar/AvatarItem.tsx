@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useEffect, useState } from "react"
-import { API } from "../utils/api"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import { API } from "../../utils/api";
 import {
   Image,
   ScrollView,
@@ -9,25 +9,26 @@ import {
   TouchableOpacity,
   View,
   Button,
-} from "react-native"
-import Modal from "react-native-modal"
-import MyButton from "./Button"
+} from "react-native";
+import Modal from "react-native-modal";
+import MyButton from "../Button";
 
 export const Avatar = ({ setTriggerFetch }) => {
-  const [avatar, setAvatar] = useState([])
-  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
-  const [isFailedModalVisible, setIsFailedModalVisible] = useState(false)
-  const [selectedAvatar, setSelectedAvatar] = useState(null)
+  const [avatar, setAvatar] = useState([]);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
+    useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [isFailedModalVisible, setIsFailedModalVisible] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   const handleCLickAvatar = (avatar) => {
-    setSelectedAvatar(avatar)
-    setIsConfirmationModalVisible(true)
-  }
+    setSelectedAvatar(avatar);
+    setIsConfirmationModalVisible(true);
+  };
 
   const confirmPurchase = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       const response = await API.post(
         "api/v1/add-avatar",
         {
@@ -39,39 +40,39 @@ export const Avatar = ({ setTriggerFetch }) => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
-      )
+        }
+      );
 
       if (response.status == 500) {
-        setIsFailedModalVisible(true)
+        setIsFailedModalVisible(true);
       } else {
-        setIsSuccessModalVisible(true)
-        setTriggerFetch((prev) => prev + 1)
+        setIsSuccessModalVisible(true);
+        setTriggerFetch((prev) => prev + 1);
       }
     } catch (error) {
-      setIsFailedModalVisible(true)
+      setIsFailedModalVisible(true);
     } finally {
-      setIsConfirmationModalVisible(false)
+      setIsConfirmationModalVisible(false);
     }
-  }
+  };
 
   const getAvatar = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       const response = await API.get("api/v1/avatars", {
         headers: {
           Authorization: "Bearer " + token,
         },
-      })
-      setAvatar(response.data.data)
+      });
+      setAvatar(response.data.data);
     } catch (error) {
-      console.error("Error fetching avatars:", error)
+      console.error("Error fetching avatars:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    getAvatar()
-  }, [])
+    getAvatar();
+  }, []);
 
   return (
     <View>
@@ -91,7 +92,10 @@ export const Avatar = ({ setTriggerFetch }) => {
               ]}
               onPress={() => handleCLickAvatar(avatar)}
             >
-              <Image source={{ uri: avatar.image_url }} style={styles.avatarImage} />
+              <Image
+                source={{ uri: avatar.image_url }}
+                style={styles.avatarImage}
+              />
               <Text
                 style={{
                   ...styles.avatarValue,
@@ -124,7 +128,9 @@ export const Avatar = ({ setTriggerFetch }) => {
               style={{
                 ...styles.avatarValueContent,
                 color:
-                  selectedAvatar && parseInt(selectedAvatar.price) === 0 ? "gray" : "red",
+                  selectedAvatar && parseInt(selectedAvatar.price) === 0
+                    ? "gray"
+                    : "red",
               }}
             >
               {selectedAvatar
@@ -170,8 +176,8 @@ export const Avatar = ({ setTriggerFetch }) => {
         </View>
       </Modal>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   avatarContainer: {
@@ -263,4 +269,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-})
+});

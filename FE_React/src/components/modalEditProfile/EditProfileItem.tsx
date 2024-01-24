@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -9,22 +9,22 @@ import {
   View,
   Text,
   Button,
-} from "react-native"
-import MyTextInput from "./FormInput"
-import MyButton from "./Button"
-import { API } from "../utils/api"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import Modal from "react-native-modal"
-import Toast from "react-native-toast-message"
+} from "react-native";
+import MyTextInput from "../FormInput";
+import MyButton from "../Button";
+import { API } from "../../utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Modal from "react-native-modal";
+import Toast from "react-native-toast-message";
 
 export default function EditProfileItem({ getUser }) {
-  const [avatar, setAvatar] = useState([])
-  const [username, setUsername] = useState("")
+  const [avatar, setAvatar] = useState([]);
+  const [username, setUsername] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState({
     avatar: "",
     id_avatar: -1,
-  })
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
+  });
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -38,32 +38,32 @@ export default function EditProfileItem({ getUser }) {
     >
       <Image source={item.avatar} style={styles.avatarImage} />
     </TouchableOpacity>
-  )
+  );
 
   const handleAvatarClick = (avatar) => {
     setSelectedAvatar({
       avatar: avatar.avatar,
       id_avatar: avatar.id_avatar,
-    })
-  }
+    });
+  };
 
   const getAvatar = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       const response = await API.get("api/v1/my-avatars", {
         headers: {
           Authorization: "Bearer " + token,
         },
-      })
-      setAvatar(response.data.data)
+      });
+      setAvatar(response.data.data);
     } catch (error) {
-      console.error("Error fetching avatars:", error)
+      console.error("Error fetching avatars:", error);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     try {
-      const token = await AsyncStorage.getItem("user")
+      const token = await AsyncStorage.getItem("user");
       await API.put(
         "api/v1/update-profile",
         {
@@ -75,24 +75,24 @@ export default function EditProfileItem({ getUser }) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
-      )
+        }
+      );
 
-      getUser()
-      setIsSuccessModalVisible(true)
+      getUser();
+      setIsSuccessModalVisible(true);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       Toast.show({
         type: "error",
         text1: "Error",
         text2: "An error occurred while updating the profile.",
-      })
+      });
     }
-  }
+  };
 
   useEffect(() => {
-    getAvatar()
-  }, [])
+    getAvatar();
+  }, []);
 
   return (
     <>
@@ -148,7 +148,7 @@ export default function EditProfileItem({ getUser }) {
         </View>
       </Modal>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -184,4 +184,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-})
+});
